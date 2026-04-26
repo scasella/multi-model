@@ -1,0 +1,203 @@
+{
+  "tag": "aime_thinking_n16",
+  "variant": "thinking_native",
+  "base_model": "Qwen/Qwen3-30B-A3B",
+  "system_prompt": null,
+  "chat_template": "Qwen3-30B-A3B hybrid via tokenizer.apply_chat_template(enable_thinking=True)",
+  "n_problems": 20,
+  "n_samples_per_problem": 16,
+  "total_samples": 320,
+  "n_correct_samples": 234,
+  "avg_hit_rate": 0.73125,
+  "wilson_ci95": [
+    0.6801456123405724,
+    0.7768679399640109
+  ],
+  "pass_at_n_count": 18,
+  "pass_at_n_rate": 0.9,
+  "per_problem": [
+    {
+      "year": 2024,
+      "problem_idx": 0,
+      "gold": "204",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 1,
+      "gold": "113",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 2,
+      "gold": "371",
+      "n_samples": 16,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 3,
+      "gold": "385",
+      "n_samples": 16,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 4,
+      "gold": "110",
+      "n_samples": 16,
+      "n_correct": 14,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 5,
+      "gold": "104",
+      "n_samples": 16,
+      "n_correct": 12,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 6,
+      "gold": "721",
+      "n_samples": 16,
+      "n_correct": 11,
+      "avg": 0.6875,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 7,
+      "gold": "025",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 8,
+      "gold": "809",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 9,
+      "gold": "116",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 0,
+      "gold": "70",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 1,
+      "gold": "588",
+      "n_samples": 16,
+      "n_correct": 14,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 2,
+      "gold": "16",
+      "n_samples": 16,
+      "n_correct": 11,
+      "avg": 0.6875,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 3,
+      "gold": "117",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 4,
+      "gold": "279",
+      "n_samples": 16,
+      "n_correct": 14,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 5,
+      "gold": "504",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 6,
+      "gold": "821",
+      "n_samples": 16,
+      "n_correct": 4,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 7,
+      "gold": "77",
+      "n_samples": 16,
+      "n_correct": 16,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 8,
+      "gold": "62",
+      "n_samples": 16,
+      "n_correct": 9,
+      "avg": 0.5625,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 9,
+      "gold": "81",
+      "n_samples": 16,
+      "n_correct": 1,
+      "avg": 0.0625,
+      "pass_at_n": true
+    }
+  ],
+  "temperature": 1.0,
+  "max_tokens": 16384,
+  "elapsed_sec": 2700.1337990760803
+}

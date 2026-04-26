@@ -1,0 +1,21 @@
+{
+  "tag": "panel_smoke",
+  "arm": "panel",
+  "base_model": "Qwen/Qwen3-30B-A3B-Base",
+  "checkpoint": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+  "n_problems": 8,
+  "n_samples_per_problem": 4,
+  "temperature": 1.0,
+  "max_tokens": 8192,
+  "bands": {
+    "variance_band": 1,
+    "all_zero": 7
+  },
+  "bands_by_source": {
+    "hmmt": {
+      "variance_band": 1,
+      "all_zero": 7
+    }
+  },
+  "elapsed_sec": 78.67926406860352
+}

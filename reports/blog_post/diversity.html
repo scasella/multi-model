@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The diversity effect — multi-model lab</title>
+  <meta name="description" content="A panel-of-experts scaffold produces wider per-sample search than a <think> monologue (+78% / +76% on MATH500 and AIME). Followup: the diversity translates to RL gradient signal — panel has 1.83× more variance-band problems than Qwen3 thinking on a fresh 877-problem olympiad pool, and 100 RL steps double panel's olympiad held-out pass rate (14% → 29%)." />
+  <meta property="og:title" content="The diversity effect" />
+  <meta property="og:description" content="Wider per-sample search converts to faster RLVR hill-climbing on olympiad math." />
+  <meta property="og:type" content="article" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================
+       Design tokens
+       ========================================================== */
+    :root {
+      --bg:           #F9F9F6;
+      --accent:       #090909;
+      --fg:           #3B3B39;
+      --fg-soft:      #3B3B39;
+      --fg-mute:      #595856;
+      --fg-faint:     #969592;
+      --on-dark:      #DFDEDA;
+      --surface-muted:#EFEFEB;
+
+      /* Chart palette — muted earth tones, harmonised with body */
+      --chart-primary:   #3B3B39;
+      --chart-secondary: #969592;
+      --chart-axis:      #C8C7C2;
+      --chart-grid:      #E4E3DE;
+      --chart-accent-1:  #5C8A95;  /* sage-teal */
+      --chart-accent-2:  #8B6F8C;  /* dusty mauve */
+
+      --font-serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+      --font-sans:  'Inter', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      overflow-y: scroll;
+      scrollbar-color: #bbb #f4f4f4;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+      font-variant-ligatures: common-ligatures contextual;
+      font-variant-numeric: oldstyle-nums proportional-nums;
+      font-optical-sizing: auto;
+      font-synthesis: none;
+    }
+    html::-webkit-scrollbar { width: 16px; }
+    html::-webkit-scrollbar-track { background: #f4f4f4; }
+    html::-webkit-scrollbar-thumb { background: #bbb; border-radius: 5px; }
+
+    ::selection { background: rgba(0,0,0,0.08); color: inherit; }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font-serif);
+      background: var(--bg);
+      color: var(--accent);
+      display: flex;
+      flex-direction: column;
+      text-wrap: pretty;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .subtitle { text-wrap: balance; }
+
+    /* ==========================================================
+       Layout primitives
+       ========================================================== */
+    .page-surface {
+      background: var(--bg);
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+      width: 100%;
+    }
+    .main { flex: 1; }
+
+    /* ==========================================================
+       Header
+       ========================================================== */
+    .perspectives-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 2.5rem;
+      width: 100%;
+    }
+    .logo-centered {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: var(--fg-soft);
+      text-decoration: none;
+    }
+    .logo-centered .accent { color: var(--accent); }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0.75rem;
+      margin-right: -0.75rem;
+      border-radius: 999px;
+      color: var(--fg);
+      transition: background 240ms cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+    }
+    .contact-link:hover, .contact-link:focus-visible {
+      background: var(--surface-muted);
+    }
+
+    /* ==========================================================
+       Article layout
+       ========================================================== */
+    .benchmarks-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 2rem 6rem;
+    }
+    .benchmarks-content h1 {
+      font-size: 48px;
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      margin-top: 144px;
+    }
+    .benchmarks-content .subtitle {
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--fg);
+      margin-top: 10px;
+      margin-bottom: 0.5em;
+    }
+    .benchmarks-content .date {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--fg-faint);
+      margin-top: 1em;
+      text-transform: uppercase;
+    }
+
+    .paper-links {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 26px 0;
+      flex-wrap: wrap;
+    }
+    .paper-links .btn-pill {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1;
+      color: var(--fg);
+      text-decoration: none;
+      background: #fff;
+      border-radius: 999px;
+      padding: 0.85rem 1.2rem 0.95rem;
+      transition: background 240ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .paper-links .btn-pill:hover { background: var(--surface-muted); }
+
+    /* ==========================================================
+       Article body
+       ========================================================== */
+    .benchmarks-body { margin: 96px 0 48px; }
+
+    .benchmarks-body .body-main {
+      font-size: 17px;
+      line-height: 1.6;
+      margin-top: 1lh;
+    }
+    .benchmarks-body p {
+      font-weight: 400;
+      color: var(--fg-soft);
+      margin-bottom: 1lh;
+    }
+    .benchmarks-body em { font-style: italic; }
+    .benchmarks-body strong { font-weight: 500; color: var(--fg); }
+
+    .benchmarks-body a, .benchmarks-body a:visited {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--fg-faint);
+      padding-bottom: 1px;
+    }
+    .benchmarks-body a:hover { border-bottom-color: var(--accent); }
+
+    .benchmarks-body h2 {
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--fg);
+      margin: 1.75lh 0 24px;
+      letter-spacing: -0.005em;
+    }
+    .benchmarks-body h3 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--fg);
+      margin: 1.5lh 0 16px;
+      letter-spacing: -0.005em;
+    }
+
+    .benchmarks-body ul, .benchmarks-body ol {
+      padding-left: 1.25em;
+      margin-bottom: 1.5em;
+    }
+    .benchmarks-body ul { list-style: disc; }
+    .benchmarks-body ol { list-style: decimal; }
+    .benchmarks-body li {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--fg-soft);
+      margin-bottom: 0.6em;
+    }
+    .benchmarks-body li::marker { color: var(--fg-faint); }
+
+    .benchmarks-body code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.82em;
+      background: rgba(0,0,0,0.05);
+      padding: 0.08em 0.3em;
+      border-radius: 4px;
+    }
+    .benchmarks-body pre {
+      background: rgba(0,0,0,0.05);
+      padding: 14px 18px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 1lh 0;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .benchmarks-body pre code {
+      background: none; padding: 0; border-radius: 0; font-size: inherit;
+    }
+    pre .c { color: var(--fg-faint); font-style: italic; }
+    pre .k { color: var(--accent); }
+    pre .s { color: var(--fg); }
+
+    /* ==========================================================
+       TL;DR — pulled-quote treatment
+       ========================================================== */
+    .tldr {
+      margin: 32px 0 48px;
+      padding: 0 0 0 24px;
+      border-left: 2px solid var(--fg-mute);
+    }
+    .tldr-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .tldr p {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--fg);
+    }
+    .tldr p + p { margin-top: 0.8em; }
+
+    /* ==========================================================
+       Inline callout
+       ========================================================== */
+    .callout {
+      margin: 1.5lh 0;
+      padding: 20px 24px;
+      background: var(--surface-muted);
+      border-radius: 10px;
+    }
+    .callout-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--fg-mute);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .callout p {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--fg);
+      margin-bottom: 0;
+    }
+
+    /* ==========================================================
+       Stat row — minimal numbers
+       ========================================================== */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      margin: 1.5lh 0;
+      border-top: 1px solid var(--chart-grid);
+      border-bottom: 1px solid var(--chart-grid);
+    }
+    @media (min-width: 600px) {
+      .stat-row { grid-template-columns: repeat(4, 1fr); }
+    }
+    .stat {
+      padding: 18px 18px;
+      border-right: 1px solid var(--chart-grid);
+    }
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: 0; }
+    @media (max-width: 599px) {
+      .stat:nth-child(2n) { border-right: 0; }
+      .stat:nth-child(n+3) { border-top: 1px solid var(--chart-grid); }
+    }
+    .stat .k {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .stat .v {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--fg);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+    .stat .s {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--fg-faint);
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    /* ==========================================================
+       Mode/method cards
+       ========================================================== */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin: 1.5lh 0;
+    }
+    @media (min-width: 600px) { .mode-grid { grid-template-columns: repeat(2, 1fr); } }
+    .mode-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 22px 22px;
+      border: 1px solid var(--chart-grid);
+    }
+    .mode-card .tag {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      display: block;
+      margin-bottom: 10px;
+    }
+    .mode-card .t {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--fg);
+      display: block;
+      margin-bottom: 8px;
+      letter-spacing: -0.005em;
+    }
+    .mode-card .desc {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: var(--fg-soft);
+    }
+
+    /* ==========================================================
+       Tables
+       ========================================================== */
+    .table-wrap {
+      margin: 1.5lh 0;
+    }
+    .table-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      margin-bottom: 12px;
+    }
+    .table-label .id { color: var(--fg); margin-right: 12px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+      font-family: var(--font-serif);
+    }
+    th, td {
+      padding: 11px 14px 11px 0;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 400;
+      border-bottom: 1px solid var(--chart-grid);
+      color: var(--fg);
+    }
+    th {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      color: var(--fg-mute);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--fg-mute);
+    }
+    td.num { font-variant-numeric: tabular-nums; color: var(--fg); }
+    td.pos { color: var(--accent); }
+    td.neg { color: var(--fg-faint); }
+    tr:last-child td { border-bottom: none; }
+    tr.highlight td { background: var(--surface-muted); }
+    tr.totals td { border-top: 1px solid var(--fg-mute); font-weight: 400; }
+
+    /* ==========================================================
+       Figures / chart cards
+       ========================================================== */
+    figure.chart { margin: 1.5lh 0; }
+    figure.chart svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: var(--bg);
+    }
+    figcaption {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--fg-mute);
+      line-height: 1.5;
+      margin-top: 16px;
+    }
+    figcaption strong { color: var(--fg); font-weight: 500; }
+
+    @media (min-width: 960px) {
+      .body-main > figure.chart {
+        width: min(1200px, calc(100vw - 3rem));
+        max-width: none;
+        margin-left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+    @media (min-width: 1400px) {
+      .body-main > figure.chart {
+        width: min(1320px, calc(100vw - 3rem));
+      }
+    }
+
+    /* ==========================================================
+       Honest-scope list
+       ========================================================== */
+    .neg-list {
+      margin: 1.5lh 0;
+      padding: 0;
+      border-top: 1px solid var(--chart-grid);
+    }
+    .neg-list-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-faint);
+      margin: 16px 0 8px;
+      display: block;
+    }
+    .neg-list ul { list-style: none; padding: 0; margin: 0; }
+    .neg-list li {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--chart-grid);
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--fg-soft);
+    }
+    .neg-list li:last-child { border-bottom: 0; }
+    .neg-list li strong { color: var(--fg); font-weight: 500; }
+
+    /* ==========================================================
+       Section break
+       ========================================================== */
+    .break {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 4rem 0 3rem;
+      color: var(--fg-faint);
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.6em;
+    }
+
+    /* ==========================================================
+       Footer
+       ========================================================== */
+    .site-footer {
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      margin-top: auto;
+      padding: 0;
+    }
+    .site-footer .footer-inner {
+      max-width: 720px;
+      width: 100%;
+      margin: 2rem auto 0;
+      padding: 0 2rem 140px;
+    }
+    .footer-subscribe {
+      display: flex;
+      flex-direction: column;
+      gap: 1lh;
+      max-width: 480px;
+    }
+    .footer-subscribe-label {
+      font-size: 17px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--on-dark);
+      display: block;
+    }
+    .footer-subscribe-row {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 4px;
+      transition: border-color 150ms ease, background 150ms ease;
+    }
+    .footer-subscribe-row:focus-within {
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.12);
+    }
+    .footer-subscribe-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: 0;
+      outline: none;
+      padding: 0.6rem 1rem;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 300;
+      color: #fff;
+    }
+    .footer-subscribe-input::placeholder { color: rgba(255,255,255,0.45); }
+    .footer-subscribe-button {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1;
+      color: var(--accent);
+      background: #fff;
+      border: 0;
+      border-radius: 999px;
+      padding: 0 1.1rem;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+    .footer-subscribe-button:hover { background: var(--surface-muted); }
+    .footer-meta {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--fg-faint);
+      margin-top: 2rem;
+      line-height: 1.6;
+    }
+    .footer-meta a { color: var(--on-dark); text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.25); }
+    .footer-meta a:hover { color: #fff; border-bottom-color: #fff; }
+
+    /* ==========================================================
+       Responsive
+       ========================================================== */
+    @media (max-width: 768px) {
+      .perspectives-header { padding: 1.5rem 1.5rem; }
+      .benchmarks-content { padding: 3rem 1.5rem 4rem; }
+      .benchmarks-content h1 { font-size: 44px; margin-top: 120px; }
+      .benchmarks-body { margin: 72px 0 32px; }
+      .site-footer .footer-inner { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+    @media (max-width: 480px) {
+      .perspectives-header { padding: 1.25rem 1.25rem; }
+      .benchmarks-content { padding: 2rem 1.25rem 3rem; }
+      .benchmarks-content h1 { font-size: 38px; margin-top: 80px; }
+      .benchmarks-content .subtitle { font-size: 18px; }
+      .benchmarks-body h2 { font-size: 26px; }
+      .benchmarks-body h3 { font-size: 20px; }
+      .benchmarks-body .body-main { font-size: 18px; }
+      .benchmarks-body li { font-size: 18px; }
+      .tldr p { font-size: 18px; }
+      .stat .v { font-size: 24px; }
+      .site-footer .footer-inner { padding: 0 1.25rem 80px; }
+    }
+  </style>
+</head>
+<body class="benchmarks-page">
+  <div class="page-surface">
+
+    <header class="perspectives-header">
+      <a href="#" class="logo-centered">MULTI<span class="accent">·</span>MODEL</a>
+      <a href="mailto:contact@example.com" class="contact-link" aria-label="Contact">Contact</a>
+    </header>
+
+    <main class="main">
+      <article class="benchmarks-content">
+
+        <h1>The diversity effect</h1>
+        <p class="subtitle">What a panel-of-experts scaffold does to RL-trained reasoning, and what happens when the diversity it produces meets RLVR on olympiad math.</p>
+        <p class="date">STEPHEN CASELLA · APRIL 2026</p>
+
+        <div class="paper-links">
+          <a href="#" class="btn-pill">Github</a>
+          <a href="#" class="btn-pill">Recipe</a>
+        </div>
+
+        <div class="benchmarks-body">
+          <div class="body-main">
+
+            <div class="tldr">
+              <span class="tldr-label">TL;DR</span>
+              <p>
+                The same backbone, post-trained two ways. Trained as a panel of experts arguing inside a debate tag, it produces reasoning traces that sit <strong>+78.2%</strong> further apart in mpnet-space on MATH500 (paired t = 5.91, p &lt; 10⁻⁸) and <strong>+75.6%</strong> further apart on AIME (t = 4.72, p &lt; 10⁻⁵) than the same model post-trained to think privately. The pass@k gap to Qwen3-thinking narrows monotonically in k across three independent slices.
+              </p>
+              <p>
+                <strong>Update — Apr 25.</strong> Wider per-sample search shows up where it matters for RL. On a fresh 877-problem olympiad pool the panel has 382 variance-band problems against thinking's 209: the only regime where group-relative RLVR generates non-zero gradient, and a <strong>1.83×</strong> ratio in panel's favor. 100 RL steps on that band carry panel from 14% to 29% on a shared held-out, with per-source gains scaling with training-pool representation. Training adapter: LoRA rank 32 on the frozen base, four to five orders of magnitude under the baseline's post-training compute.
+              </p>
+            </div>
+
+            <h2 id="question">The question we couldn't skip</h2>
+
+            <p>
+              The default reasoning scaffold is <code>&lt;think&gt;</code>: a long private monologue, often tens of thousands of tokens, before the answer. Every frontier lab ships a thinking model. The format has become invisible the way <em>"let's think step by step"</em> became invisible a few years before it.
+            </p>
+            <p>
+              But the format is a choice. Train a base model to deliberate as a panel of experts instead, and the comparison the field will ask for first is obvious.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">The question</span>
+              <p>Does the panel scaffold actually reason differently from <code>&lt;think&gt;</code>, or is the difference cosmetic?</p>
+            </div>
+
+            <p>
+              Two benchmarks, paired significance tests, and a mechanical check on pass@k say it reasons differently. Each panel sample covers more of the solution surface than each thinking sample. Successive panel samples add more marginal coverage than successive thinking samples. Same coin, two sides: search that's wider per sample and compounds over k. The cost is single-shot accuracy. Every property that depends on sampling more than once moves the other way.
+            </p>
+
+            <h2 id="setup">Setup — one backbone, two scaffolds</h2>
+
+            <p>The result depends on a matched comparison, so the setup deserves more attention than the headline.</p>
+
+            <h3>The backbone</h3>
+            <p>
+              Qwen3-30B-A3B. A 30B-parameter mixture-of-experts model with roughly 3B active parameters per token. Three releases on the same architecture: a pure <em>Base</em>, a production <em>hybrid</em> that toggles <code>&lt;think&gt;</code> via a chat-template flag, and a dedicated <em>Thinking-2507</em> variant.
+            </p>
+
+            <h3>The model under test</h3>
+            <p>
+              The panel adapter starts from <code>Base</code>. Pure RL, no SFT warmup, no distillation. The prompt instructs the model to deliberate inside <code>&lt;mutipersonaDebate&gt;…&lt;/mutipersonaDebate&gt;</code> and commit a final answer inside <code>&lt;answer&gt;…&lt;/answer&gt;</code>. Reward is outcome correctness plus a small tag-validity term. Two stages: 128 GSM8K gradient steps, then a few dozen on MATH. LoRA rank 32 throughout. That is the entire recipe.
+            </p>
+
+<pre><code><span class="c"># Panel prompt template (used at both train and eval time)</span>
+<span class="k">A conversation between User and Multi-Persona Panel of Experts.</span>
+<span class="k">The user asks a question, and the Panel solves it. The Panel first</span>
+<span class="k">deliberates and debates the reasoning process with each other and</span>
+<span class="k">then provides the user with the answer.</span>
+
+<span class="k">User:</span> <span class="s">{problem}</span>
+<span class="k">Assistant:</span> <span class="s">&lt;mutipersonaDebate&gt; … &lt;/mutipersonaDebate&gt; &lt;answer&gt; … &lt;/answer&gt;</span></code></pre>
+
+            <h3>The baseline</h3>
+            <p>
+              Qwen's production thinking model. Same base architecture, same parameter count, full proprietary post-training stack. We access it through <code>apply_chat_template(enable_thinking=True)</code>, which routes the request to the post-trained policy that emits <code>&lt;think&gt;…&lt;/think&gt;</code> before the answer. It is the closest peer the architecture allows.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">What makes this comparison fair</span>
+              <p>Same backbone, same parameter count, same temperature (1.0), same benchmarks, same n, same grader. Two axes vary: the reasoning format each model was post-trained to emit, and the amount of post-training behind it.</p>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="k">Panel recipe</span>
+                <div class="v">~200 steps</div>
+                <div class="s">LoRA rank 32 · single node</div>
+              </div>
+              <div class="stat">
+                <span class="k">Trainable params</span>
+                <div class="v">~50 M</div>
+                <div class="s">&lt; 0.2% of 30B backbone</div>
+              </div>
+              <div class="stat">
+                <span class="k">Qwen pipeline</span>
+                <div class="v">SFT + RL</div>
+                <div class="s">Industrial GPU budget · full weights</div>
+              </div>
+              <div class="stat">
+                <span class="k">Post-train ratio</span>
+                <div class="v">~10⁴–10⁵×</div>
+                <div class="s">Baseline vs ours · conservative</div>
+              </div>
+            </div>
+
+            <h2 id="method">Measuring "different reasoning"</h2>
+
+            <p>
+              Diversity is one of those words that means too many things to be useful without an operational definition. The one we used: draw N completions from each model on the same problem at temperature 1.0, group them per problem and per model, and look at where they sit in semantic space relative to each other. A scaffold that explores more of the solution surface per sample should produce traces that sit further apart.
+            </p>
+
+            <div class="mode-grid">
+              <div class="mode-card">
+                <span class="tag">01 · extract</span>
+                <span class="t">Isolate the reasoning</span>
+                <span class="desc">Strip the final answer. Keep the contents of <code>&lt;mutipersonaDebate&gt;</code> (panel) or <code>&lt;think&gt;</code> (thinking). Tag-extraction hit rate: 200/200 on both variants — no fallback artifacts.</span>
+              </div>
+              <div class="mode-card">
+                <span class="tag">02 · embed</span>
+                <span class="t">Encode the opening</span>
+                <span class="desc">First 2,000 characters per trace, <code>sentence-transformers/all-mpnet-base-v2</code>. The opening is where strategy is chosen; the rest is elaboration. Stable at an 8,000-char window too.</span>
+              </div>
+              <div class="mode-card">
+                <span class="tag">03 · score</span>
+                <span class="t">Mean pairwise distance</span>
+                <span class="desc">For each group of N embeddings, compute mean pairwise cosine distance. Average across problems. Paired t-test on problem-level deltas: same problem, panel vs thinking, whose samples are further apart?</span>
+              </div>
+              <div class="mode-card">
+                <span class="tag">04 · sanity</span>
+                <span class="t">Discrete-mode check</span>
+                <span class="desc">DBSCAN on the embeddings (eps=0.25, cosine). If spread goes up but cluster count is flat, the lift is continuous-variance — same one strategy explored from more angles.</span>
+              </div>
+            </div>
+
+            <p>The pipeline ran on two benchmarks, paired problem-for-problem. Every comparison below is same-problem, same-n.</p>
+
+            <h2 id="result">The headline — wider search per sample</h2>
+
+            <p>
+              Mean pairwise cosine distance across the N traces a model produces on one problem is a direct proxy for per-sample search volume: how much of the solution surface a single independent sample touches before committing. Higher distance, wider search. Panel's per-sample volume is larger than thinking's on both benchmarks, with nearly identical relative effect sizes.
+            </p>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="k">MATH500 Δ rel</span>
+                <div class="v">+78.2%</div>
+                <div class="s">t = 5.91 · p &lt; 10⁻⁸</div>
+              </div>
+              <div class="stat">
+                <span class="k">AIME Δ rel</span>
+                <div class="v">+75.6%</div>
+                <div class="s">t = 4.72 · p &lt; 10⁻⁵</div>
+              </div>
+              <div class="stat">
+                <span class="k">Per character</span>
+                <div class="v">~6× wider</div>
+                <div class="s">Panel uses ~⅛ the tokens</div>
+              </div>
+              <div class="stat">
+                <span class="k">Pass@k closure</span>
+                <div class="v">+15.6 pp</div>
+                <div class="s">k=1 → k=16 on AIME</div>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <div class="table-label"><span class="id">Table 01</span>Per-variant diversity, paired on same problems</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Benchmark</th>
+                    <th>Panel</th>
+                    <th>Thinking</th>
+                    <th>Δ abs</th>
+                    <th>Δ rel</th>
+                    <th>t</th>
+                    <th>n</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MATH500 L1–L5</td>
+                    <td class="num">0.095</td>
+                    <td class="num">0.053</td>
+                    <td class="num pos">+0.042</td>
+                    <td class="num pos">+78.2%</td>
+                    <td class="num">+5.91</td>
+                    <td class="num">50</td>
+                  </tr>
+                  <tr>
+                    <td>AIME 2024+2025</td>
+                    <td class="num">0.119</td>
+                    <td class="num">0.068</td>
+                    <td class="num pos">+0.051</td>
+                    <td class="num pos">+75.6%</td>
+                    <td class="num">+4.72</td>
+                    <td class="num">20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              The two benchmarks sample different difficulty regimes. MATH500 is near-saturated for thinking (pass@3 = 1.000 on the stratified slice). AIME is not; thinking solves 73% per sample. If the diversity effect were an artifact of both models converging on the same easy answers, the result would shrink on the harder benchmark. It doesn't; the relative effect size is essentially identical.
+            </p>
+
+            <h3>The lift is not from verbosity</h3>
+            <p>
+              Panel's traces are roughly 1,400 characters on AIME against thinking's 11,300. Thinking writes about 8× as much text per sample. Panel achieves its diversity lift in one-eighth the token budget. Per character, the spread is about 6× wider. The scaffold is not more diverse because it is longer; it is more divergent at every length.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">DBSCAN check</span>
+              <p>Cluster count holds at ~1.0 for both models on both benchmarks. The lift is continuous-variance, not discrete-mode. Both scaffolds commit to one strategy per problem; panel orbits that strategy across a wider arc.</p>
+            </div>
+
+            <h2 id="passk">The pass@k signature — search that compounds</h2>
+
+            <p>
+              An mpnet result on its own is fair to doubt. The next step was to look for a mechanical consequence with no embeddings inside it. If panel really covers more solution surface per sample, each additional panel sample should add more marginal coverage than each additional thinking sample. The two pass@k curves should converge as k grows.
+            </p>
+
+            <figure class="chart">
+              <svg viewBox="0 0 960 460" role="img" aria-label="Matched pass@k, panel vs thinking on AIME 2024+2025 at n=16">
+                <rect x="0" y="0" width="960" height="460" fill="#F9F9F6" />
+
+                <text x="480" y="30" text-anchor="middle" fill="#3B3B39"
+                      font-family="Libre Baskerville, Georgia, serif" font-size="18" font-weight="400">
+                  Pass@k on AIME 2024+25 (n=16, 20 problems)
+                </text>
+                <text x="480" y="54" text-anchor="middle" fill="#969592"
+                      font-family="Inter, Helvetica Neue, sans-serif" font-size="12" font-weight="400">
+                  Panel trails at every k but the gap narrows monotonically — +15.6 pp closure from k=1 to k=16.
+                </text>
+
+                <line x1="370" y1="78" x2="402" y2="78" stroke="#3B3B39" stroke-width="2" />
+                <text x="408" y="82" fill="#3B3B39"
+                      font-family="Inter, Helvetica Neue, sans-serif" font-size="12">panel (ours)</text>
+                <line x1="498" y1="78" x2="530" y2="78" stroke="#969592" stroke-width="2" stroke-dasharray="4 3" />
+                <text x="536" y="82" fill="#3B3B39"
+                      font-family="Inter, Helvetica Neue, sans-serif" font-size="12">Qwen3 thinking</text>
+
+                <line x1="80" y1="380"   x2="880" y2="380"   stroke="#C8C7C2" stroke-width="1" />
+                <line x1="80" y1="312.5" x2="880" y2="312.5" stroke="#E4E3DE" stroke-width="1" />
+                <line x1="80" y1="245"   x2="880" y2="245"   stroke="#E4E3DE" stroke-width="1" />
+                <line x1="80" y1="177.5" x2="880" y2="177.5" stroke="#E4E3DE" stroke-width="1" />
+                <line x1="80" y1="110"   x2="880" y2="110"   stroke="#E4E3DE" stroke-width="1" />
+
+                <text x="72" y="384" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">0%</text>
+                <text x="72" y="316" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">25%</text>
+                <text x="72" y="249" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">50%</text>
+                <text x="72" y="181" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">75%</text>
+                <text x="72" y="114" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">100%</text>
+
+                <polyline points="180,319.25 380,271.46 580,249.59 780,231.5"
+                          fill="none" stroke="#3B3B39" stroke-width="2.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="180" cy="319.25" r="4" fill="#3B3B39" />
+                <circle cx="380" cy="271.46" r="4" fill="#3B3B39" />
+                <circle cx="580" cy="249.59" r="4" fill="#3B3B39" />
+                <circle cx="780" cy="231.5"  r="4" fill="#3B3B39" />
+
+                <polyline points="180,182.63 380,151.04 580,144.29 780,137.0"
+                          fill="none" stroke="#969592" stroke-width="2"
+                          stroke-dasharray="5 4" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="180" cy="182.63" r="3.5" fill="#fff" stroke="#969592" stroke-width="1.5" />
+                <circle cx="380" cy="151.04" r="3.5" fill="#fff" stroke="#969592" stroke-width="1.5" />
+                <circle cx="580" cy="144.29" r="3.5" fill="#fff" stroke="#969592" stroke-width="1.5" />
+                <circle cx="780" cy="137.0"  r="3.5" fill="#fff" stroke="#969592" stroke-width="1.5" />
+
+                <text x="180" y="338" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.225</text>
+                <text x="380" y="290" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.402</text>
+                <text x="580" y="269" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.483</text>
+                <text x="780" y="251" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.550</text>
+
+                <text x="180" y="404" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="12">k = 1</text>
+                <text x="380" y="404" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="12">k = 4</text>
+                <text x="580" y="404" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="12">k = 8</text>
+                <text x="780" y="404" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="12">k = 16</text>
+
+                <text x="180" y="424" text-anchor="middle" fill="#969592" font-family="Inter, sans-serif" font-size="11">Δ −50.6pp</text>
+                <text x="380" y="424" text-anchor="middle" fill="#969592" font-family="Inter, sans-serif" font-size="11">Δ −44.6pp</text>
+                <text x="580" y="424" text-anchor="middle" fill="#969592" font-family="Inter, sans-serif" font-size="11">Δ −39.0pp</text>
+                <text x="780" y="424" text-anchor="middle" fill="#969592" font-family="Inter, sans-serif" font-size="11">Δ −35.0pp</text>
+
+                <text x="80" y="448" fill="#969592" font-family="Inter, sans-serif" font-size="11">
+                  Closure: −50.6pp → −35.0pp = +15.6pp over 16× sampling.
+                </text>
+              </svg>
+              <figcaption>
+                <strong>Figure 1.</strong> Matched pass@k on AIME 2024+25, both models sampled at n=16 across 20 problems. Unbiased Codex-paper estimator: pass@k = 1 − C(n−c, k) / C(n, k). Panel never crosses thinking in the measured range, but the gap narrows monotonically with k — the signature the diversity hypothesis predicts.
+              </figcaption>
+            </figure>
+
+            <p>
+              The signature replicates on three independent slices, not just AIME.
+            </p>
+
+            <div class="table-wrap">
+              <div class="table-label"><span class="id">Table 02</span>Gap closure across slices — the diversity signature replicates</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Slice</th>
+                    <th>k range</th>
+                    <th>Gap at k=1</th>
+                    <th>Gap at k_max</th>
+                    <th>Closure</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MATH500 L1–L5 stratified</td>
+                    <td class="num">k=1 → 4</td>
+                    <td class="num neg">−16.5pp</td>
+                    <td class="num neg">−10.0pp</td>
+                    <td class="num pos">+6.5pp</td>
+                  </tr>
+                  <tr>
+                    <td>MATH500 L5 full sweep</td>
+                    <td class="num">k=1 → 4</td>
+                    <td class="num neg">−32.5pp</td>
+                    <td class="num neg">−17.8pp</td>
+                    <td class="num pos">+14.7pp</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>AIME 2024+2025</td>
+                    <td class="num">k=1 → 16</td>
+                    <td class="num neg">−50.6pp</td>
+                    <td class="num neg">−35.0pp</td>
+                    <td class="num pos">+15.6pp</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Three slices, three positive closures, all monotone in k. The pass@k mechanism agrees with the embedding measurement, and it does so without knowing anything about embeddings.
+            </p>
+
+            <h2 id="limits">Bounds on the claim</h2>
+
+            <p>A few honest bounds, so the result is not over-claimed on the way out.</p>
+
+            <div class="callout">
+              <span class="callout-label">What the result is not</span>
+              <p>Per-sample accuracy on the panel is lower than on thinking: about 33 pp lower on MATH500 L5, about 51 pp lower on AIME. In the k range we tested the curves converge but never cross. On AIME, panel solves a strict subset of what thinking solves (11/20 vs 18/20, no panel-only wins). The MATH RL stage also compressed diversity from 0.174 to 0.095; the released checkpoint is an exploration–reliability compromise, not a pure-diversity win.</p>
+            </div>
+
+            <p>
+              The reviewer question we'd most like answered next: is the effect the scaffold, or is it our specific RL recipe? Answering it requires a matched-compute <code>&lt;think&gt;</code>-scaffolded LoRA trained with the same reward, same step count, same base. That experiment is still open.
+            </p>
+
+            <h2 id="rlvr">From wider search to faster hill-climbing</h2>
+
+            <p>
+              The original draft promised a third benchmark as the next step. The follow-up went further than that. Instead of a pass@k re-replication on a new dataset, we asked whether the per-sample diversity converts into gradient signal under RLVR.
+            </p>
+            <p>
+              Group-relative RLVR (GRPO, RLOO) only produces non-zero advantage when a group of rollouts on the same problem contains both correct and incorrect samples. The <em>variance band</em> — problems with 0 &lt; pass@G &lt; 1 — is therefore the only regime that contributes to the policy gradient. Wider per-sample search predicts a wider variance band: more rollouts that fall outside both ceilings, more problems with usable advantage, more trainable data.
+            </p>
+            <p>
+              The pool: 877 olympiad problems from HMMT 2024+25, AIME 2024+25, the OlympiadBench math/English/competition split, and AMC. Each problem was sampled G=8 times per arm at temperature 1.0 and sorted into <code>all_zero</code> (none correct), <code>variance_band</code> (1–7 of 8 correct), or <code>all_one</code> (all 8 correct). Variance band carries gradient. The other two cells are training dead weight under group-relative RLVR.
+            </p>
+
+            <h3>Variance-band size — diversity on the gradient axis</h3>
+
+            <p>On the same 877 problems, same G, same temperature:</p>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="k">Panel VB</span>
+                <div class="v">382</div>
+                <div class="s">43.6% of pool · 0 &lt; pass@8 &lt; 1</div>
+              </div>
+              <div class="stat">
+                <span class="k">Thinking VB</span>
+                <div class="v">209</div>
+                <div class="s">23.8% of pool</div>
+              </div>
+              <div class="stat">
+                <span class="k">VB ratio</span>
+                <div class="v">1.83×</div>
+                <div class="s">Panel / thinking</div>
+              </div>
+              <div class="stat">
+                <span class="k">Token-cost ratio</span>
+                <div class="v">~17×</div>
+                <div class="s">Thinking ac_tokens / panel</div>
+              </div>
+            </div>
+
+            <p>
+              Panel sees gradient signal on 382 of 877 problems. Thinking sees it on 209. The 1.83× ratio is the cleanest first-order test of the diversity claim, expressed on the property that controls RL throughput rather than embedding spread. The 17× token-cost ratio is the verbosity story sharpened: panel terminates compactly inside its debate; thinking runs near <code>max_tokens</code> on most problems.
+            </p>
+
+            <h3>Disjoint frontiers</h3>
+
+            <p>
+              The two arms' variance bands barely overlap. Cross-tabulating panel × thinking band assignments on the shared pool:
+            </p>
+
+            <div class="table-wrap">
+              <div class="table-label"><span class="id">Table 03</span>Joint band contingency on the 877-problem pool</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>panel \ thinking</th>
+                    <th>all_zero</th>
+                    <th>variance_band</th>
+                    <th>all_one</th>
+                    <th>row total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>all_zero</td>
+                    <td class="num">232</td>
+                    <td class="num">137</td>
+                    <td class="num">108</td>
+                    <td class="num">477</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>variance_band</td>
+                    <td class="num">30</td>
+                    <td class="num pos">72</td>
+                    <td class="num">280</td>
+                    <td class="num">382</td>
+                  </tr>
+                  <tr>
+                    <td>all_one</td>
+                    <td class="num">0</td>
+                    <td class="num">0</td>
+                    <td class="num">18</td>
+                    <td class="num">18</td>
+                  </tr>
+                  <tr class="totals">
+                    <td>column total</td>
+                    <td class="num">262</td>
+                    <td class="num">209</td>
+                    <td class="num">406</td>
+                    <td class="num">877</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Only 72 problems sit in both bands at once: 19% of panel's, 34% of thinking's. The largest off-diagonal cell on panel's row is the 280 problems where panel still has signal but thinking is saturated. The largest cell on thinking's column is the 137 problems where thinking has signal but panel is below the noise floor. The two scaffolds are working in different parts of problem-space, and panel's part is wider. A joint training pool would have discarded exactly the cells the diversity claim predicted.
+            </p>
+
+            <p>
+              Each arm therefore trains on its own variance band; both score on the same stratified 100-problem held-out (25 per source, drawn from the shared pool, excluded from both training pools). Hyperparameters held constant across arms: LoRA rank 32, lr 5e-6, group size 16, batch 8, temperature 1.0, max_tokens 12,288, 100 steps, eval_every 10.
+            </p>
+
+            <h3>Panel hill-climbs on its own variance band</h3>
+
+            <p>
+              Only the panel arm reached step 100. At ~17× the per-rollout token cost, the matched 100-step thinking run would have taken about 37 hours of Tinker compute against panel's ~2.6, and we hit a billing wall about three hours in. The panel trajectory:
+            </p>
+
+            <figure class="chart">
+              <svg viewBox="0 0 960 460" role="img" aria-label="Panel held-out pass@1 vs RL step on the 100-problem stratified held-out">
+                <rect x="0" y="0" width="960" height="460" fill="#F9F9F6" />
+
+                <text x="480" y="30" text-anchor="middle" fill="#3B3B39"
+                      font-family="Libre Baskerville, Georgia, serif" font-size="18" font-weight="400">
+                  Held-out pass@1 vs RL step (panel arm, 100 RL steps)
+                </text>
+                <text x="480" y="54" text-anchor="middle" fill="#969592"
+                      font-family="Inter, Helvetica Neue, sans-serif" font-size="12">
+                  +15 pp absolute (2.07×) over 100 RL steps · LoRA r32 on the panel variance band (354 train problems)
+                </text>
+
+                <line x1="350" y1="78" x2="382" y2="78" stroke="#5C8A95" stroke-width="2.5" />
+                <text x="388" y="82" fill="#3B3B39" font-family="Inter, sans-serif" font-size="12">held-out pass@1 (n=100)</text>
+                <line x1="568" y1="78" x2="600" y2="78" stroke="#969592" stroke-width="1.5" stroke-dasharray="4 4" />
+                <text x="606" y="82" fill="#3B3B39" font-family="Inter, sans-serif" font-size="12">batch-0 baseline</text>
+
+                <line x1="80" y1="380" x2="880" y2="380" stroke="#C8C7C2" stroke-width="1" />
+                <line x1="80" y1="303" x2="880" y2="303" stroke="#E4E3DE" stroke-width="1" />
+                <line x1="80" y1="226" x2="880" y2="226" stroke="#E4E3DE" stroke-width="1" />
+                <line x1="80" y1="149" x2="880" y2="149" stroke="#E4E3DE" stroke-width="1" />
+
+                <text x="72" y="384" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">0%</text>
+                <text x="72" y="307" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">10%</text>
+                <text x="72" y="230" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">20%</text>
+                <text x="72" y="153" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="11">30%</text>
+
+                <line x1="80" y1="272" x2="880" y2="272" stroke="#969592" stroke-width="1" stroke-dasharray="4 4" opacity="0.7" />
+
+                <polyline points="130,272 210,287.43 290,272 370,256.57 450,233.43 530,218 610,233.43 690,156.29 770,171.71 850,156.29"
+                          fill="none" stroke="#5C8A95" stroke-width="2.5"
+                          stroke-linecap="round" stroke-linejoin="round" />
+
+                <polygon points="130,272 210,287.43 290,272 370,256.57 450,233.43 530,218 610,233.43 690,156.29 770,171.71 850,156.29 850,380 130,380"
+                         fill="#5C8A95" opacity="0.08" />
+
+                <circle cx="130" cy="272"     r="4" fill="#5C8A95" />
+                <circle cx="210" cy="287.43"  r="4" fill="#5C8A95" />
+                <circle cx="290" cy="272"     r="4" fill="#5C8A95" />
+                <circle cx="370" cy="256.57"  r="4" fill="#5C8A95" />
+                <circle cx="450" cy="233.43"  r="4" fill="#5C8A95" />
+                <circle cx="530" cy="218"     r="4" fill="#5C8A95" />
+                <circle cx="610" cy="233.43"  r="4" fill="#5C8A95" />
+                <circle cx="690" cy="156.29"  r="5" fill="#3B3B39" />
+                <circle cx="770" cy="171.71"  r="4" fill="#5C8A95" />
+                <circle cx="850" cy="156.29"  r="5" fill="#3B3B39" />
+
+                <text x="130" y="266" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.140</text>
+                <text x="690" y="148" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.290</text>
+                <text x="850" y="148" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">.290</text>
+
+                <text x="876" y="268" text-anchor="end" fill="#969592" font-family="Inter, sans-serif" font-size="10">batch 0 = .140</text>
+
+                <text x="130" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">0</text>
+                <text x="210" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">10</text>
+                <text x="290" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">20</text>
+                <text x="370" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">30</text>
+                <text x="450" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">40</text>
+                <text x="530" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">50</text>
+                <text x="610" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">60</text>
+                <text x="690" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">70</text>
+                <text x="770" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">80</text>
+                <text x="850" y="402" text-anchor="middle" fill="#3B3B39" font-family="Inter, sans-serif" font-size="11">90</text>
+
+                <text x="480" y="426" text-anchor="middle" fill="#969592" font-family="Inter, sans-serif" font-size="11">RL step</text>
+
+                <text x="80" y="448" fill="#969592" font-family="Inter, sans-serif" font-size="11">
+                  Single-sample held-out (~3 pp aggregate stderr); per-source noise ~7–10 pp. Eval at every checkpoint, eval_every=10.
+                </text>
+              </svg>
+              <figcaption>
+                <strong>Figure 2.</strong> Panel held-out pass@1 across 100 RL steps on the panel variance band (354 training problems). Trajectory shape: brief weight-shock dip at batch 10 → monotone climb to batch 50 → step-jump at batch 70 → plateau at 27–29%. Vanilla Qwen3-thinking sits at <strong>~60% on the same held-out</strong> (off-chart); panel ends at roughly half of thinking's pre-RL pass rate, but more than doubles its own starting point.
+              </figcaption>
+            </figure>
+
+            <h3>The mechanism — gains scale with training-pool representation</h3>
+
+            <p>
+              Panel's training pool is unevenly distributed across sources because each source contributes a different fraction of problems to panel's variance band. The held-out gains track that distribution closely:
+            </p>
+
+            <div class="table-wrap">
+              <div class="table-label"><span class="id">Table 04</span>Per-source held-out gains scale with training-pool representation</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>source</th>
+                    <th>% of panel_train</th>
+                    <th>batch 0</th>
+                    <th>batch 90</th>
+                    <th>Δ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight">
+                    <td>OlympiadBench</td>
+                    <td class="num">88% (311/354)</td>
+                    <td class="num">20%</td>
+                    <td class="num">44%</td>
+                    <td class="num pos">+24pp</td>
+                  </tr>
+                  <tr>
+                    <td>AMC</td>
+                    <td class="num">10% (35/354)</td>
+                    <td class="num">32%</td>
+                    <td class="num">52%</td>
+                    <td class="num pos">+20pp</td>
+                  </tr>
+                  <tr>
+                    <td>AIME</td>
+                    <td class="num">2% (6/354)</td>
+                    <td class="num">4%</td>
+                    <td class="num">16%</td>
+                    <td class="num pos">+12pp</td>
+                  </tr>
+                  <tr>
+                    <td>HMMT</td>
+                    <td class="num">0.6% (2/354)</td>
+                    <td class="num">0%</td>
+                    <td class="num">4%</td>
+                    <td class="num pos">+4pp</td>
+                  </tr>
+                  <tr class="totals">
+                    <td>aggregate (n=100)</td>
+                    <td class="num">100%</td>
+                    <td class="num">14%</td>
+                    <td class="num">29%</td>
+                    <td class="num pos">+15pp</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Two readings of the table. First: the absolute gain is largest where the training pool is densest (OlympiadBench, +24 pp on 88% of train). Second: every source moved, including HMMT, which had effectively no direct training data. The pattern is transfer, not memorization. The 4 pp HMMT lift is one problem out of 25, so the absolute number is at the noise floor on its own. The monotone ordering across sources is not.
+            </p>
+
+            <h3>Diversity through RL — entropy collapses, length-spread doesn't</h3>
+
+            <p>
+              RL is a known diversity-killer. The natural worry was that 100 steps of RLVR would collapse the policy distribution and quietly erase the property the scaffold was chosen for. We tracked two diversity proxies across the run: per-token policy entropy, and trajectory-length spread within a group of 16 rollouts on the same problem.
+            </p>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="k">Token entropy (start)</span>
+                <div class="v">0.591</div>
+                <div class="s">batch 0–9 mean</div>
+              </div>
+              <div class="stat">
+                <span class="k">Token entropy (end)</span>
+                <div class="v">0.158</div>
+                <div class="s">batch 90–99 mean (−73%)</div>
+              </div>
+              <div class="stat">
+                <span class="k">Length CV (start)</span>
+                <div class="v">0.36</div>
+                <div class="s">ac_len within group, batch 0</div>
+              </div>
+              <div class="stat">
+                <span class="k">Length CV (end)</span>
+                <div class="v">0.66</div>
+                <div class="s">batch 90 (+83%)</div>
+              </div>
+            </div>
+
+            <p>
+              Entropy goes the way the textbook predicts. Length spread does not. Panel becomes more confident per token while producing increasingly varied trajectory lengths on the same problem. The signature reads as the three personas keeping their distinct verbosities even as each persona's per-token distribution sharpens.
+            </p>
+
+            <p>
+              Length CV is a cheap proxy, not a semantic one. The full mpnet-cosine measurement on a post-RL checkpoint, the same pipeline that produced the +78% / +76% numbers above, is not in this run. It is in the open list at the bottom of the post. The directional read here is consistent with the diversity story; the strong claim waits for the strong measurement.
+            </p>
+
+            <h3>What this section does and doesn't say</h3>
+
+            <div class="neg-list">
+              <span class="neg-list-label">Honest scope</span>
+              <ul>
+                <li><strong>Does say:</strong> the variance-band advantage the diversity claim predicts is real (382 vs 209 on the 877-problem pool). It converts to RL gradient signal: 100 steps double panel's olympiad held-out pass rate (14% → 29%), with per-source gains scaling with training-pool representation. The diversity reservoir survives the run on the proxy we measured — per-token entropy collapses, but length spread within a group grows.</li>
+                <li><strong>Does not say:</strong> the matched <code>&lt;think&gt;</code> RL comparison ran to completion. At ~17× the per-rollout token cost, the matched 100-step thinking run would have taken about 37 hours of Tinker compute, and we hit the billing wall first. The static reference is vanilla Qwen3-thinking on the shared held-out: ~60% pass@1 aggregate, ~55% on OlympiadBench, ~75% on AMC, all at G=8. Panel ends at 29%, about half. The result here is about rate of climb under matched hyperparameters, not absolute capability.</li>
+                <li><strong>Single seed, single run:</strong> the +15 pp number is one seed. The curve's shape replicates across the per-source breakdown; the absolute number wants a second seed before its CI gets reported.</li>
+              </ul>
+            </div>
+
+            <h2 id="next">What's next</h2>
+
+            <p>
+              The Apr 25 update closes the cross-benchmark item from the original list. Variance-band classifications now exist on HMMT, AIME, OlympiadBench, and AMC, with held-out evaluation across all four sources. The remaining items, ordered by how much each would sharpen the claim:
+            </p>
+
+            <h3>Matched-compute <code>&lt;think&gt;</code> RL arm</h3>
+            <p>
+              Run a 100-step RL on the thinking variance band (180 problems) at the same hyperparameters and put both curves on the same chart. Wall-time estimate: ~37 hours of Tinker compute. The training pool is ready (<code>data/olympiad_pool/thinking_train.jsonl</code>). The run was started and paused at the billing wall. This is the experiment that decides whether the effect is the scaffold or the recipe.
+            </p>
+
+            <h3>Multi-seed on the panel hill-climbing run</h3>
+            <p>
+              +15 pp on a 100-problem held-out is one seed and a wide CI. A second seed under matched hyperparameters gives the rate-of-climb claim a real number. ~2.6 hours of compute, panel-only.
+            </p>
+
+            <h3>Held-out diversity post-RL</h3>
+            <p>
+              We measured RL-time entropy (collapsed) and length CV (grew). The semantic measurement on a post-RL checkpoint, the same mpnet-cosine pipeline that produced the +78% and +76% numbers earlier, is the missing piece. If those numbers survive 100 steps of RL, the scaffold's diversity is a stable equilibrium under gradient pressure rather than a starting condition.
+            </p>
+
+            <h3>Scaling study on n</h3>
+            <p>
+              Does the gap-closure curve keep tightening past the sample budgets we tried? Pushing panel to n=64 or n=128 on the L5 slice gives the asymptote, which decides between "diversity that eventually catches up" and "diversity that plateaus below thinking." Current data points to the latter. The slope at n=16 is not zero.
+            </p>
+
+            <div class="break">· · ·</div>
+
+            <p>
+              The headline holds with the addition. A LoRA rank-32 adapter, a few hundred gradient steps, four to five orders of magnitude under the baseline's post-training compute. The scaffold widens per-sample search by 76–78% on two benchmarks. The widening compounds over k on three independent slices. On a fresh olympiad pool it puts 1.83× more problems in the gradient-signal-bearing band than the production thinking model. 100 RL steps on that band double the held-out pass rate. The mechanism that helped at inference time — more coverage per sample — helps at training time too, because group-relative RLVR only sees variance-band problems, and panel has more of them.
+            </p>
+            <p>
+              Scaffold choice is a lever, and it costs nothing at inference. The remaining questions narrow to three: matched <code>&lt;think&gt;</code> RL versus panel RL under the same recipe, semantic diversity on a post-RL checkpoint, and the asymptote at larger n. The further-out question — what a full post-training pipeline could do with a panel scaffold instead of against one — sits past the next set of experiments. The new data moves it closer.
+            </p>
+
+          </div>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <form class="footer-subscribe" novalidate>
+          <label class="footer-subscribe-label" for="footer-email">Get early access to research, products, and more.</label>
+          <div class="footer-subscribe-row">
+            <input class="footer-subscribe-input" type="email" id="footer-email" name="email" placeholder="you@example.com" autocomplete="email" required />
+            <button class="footer-subscribe-button" type="submit">Subscribe</button>
+          </div>
+          <p class="footer-subscribe-status" role="status" aria-live="polite"></p>
+        </form>
+        <div class="footer-meta">
+          Stephen Casella · multi-model lab · Apr 24 · updated Apr 25, 2026<br />
+          Backbone: Qwen/Qwen3-30B-A3B-Base · adapter: LoRA rank 32<br />
+          Code &amp; data: <a href="#">manifest</a> · <a href="#">eval scripts</a> · <a href="#">analysis</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

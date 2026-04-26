@@ -1,0 +1,44 @@
+# ---- secrets ----
+.env
+
+# ---- venvs ----
+.venv/
+venv/
+
+# ---- editors / OS ----
+.DS_Store
+.claude/
+.ipynb_checkpoints/
+
+# ---- python caches ----
+**/__pycache__/
+*.pyc
+.pytest_cache/
+
+# ---- local logs ----
+logs/
+/tmp/tinker-examples/
+
+# ---- pre-pivot history kept locally, not shipped ----
+archive/
+
+# ---- external papers we've downloaded for reference ----
+*.pdf
+
+# ---- data artifacts: ship schema + sample, not bulk ----
+data/seed/*.parquet
+data/seed/*.jsonl
+data/committee/*.jsonl
+data/committee/raw/*.jsonl
+data/sft/*.jsonl
+!data/**/SAMPLE.jsonl
+!data/**/schema.json
+
+# ---- eval raw rollouts: ship summary.json + aggregated tables, not per-sample ----
+reports/**/rollouts.jsonl
+eval/results/raw/
+!eval/results/aggregated.md
+!eval/results/examples.md
+
+# ---- exceptions we do want tracked ----
+!reports/spend.md

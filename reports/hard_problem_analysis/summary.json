@@ -1,0 +1,53 @@
+{
+  "n_problems": 134,
+  "think_pass_at_4_count": 128,
+  "panel_pass_at_8_count": 111,
+  "bucket_counts": {
+    "easy": 112,
+    "easy_maj": 10,
+    "hard_coin": 3,
+    "hard_fail": 6,
+    "hard_rare": 3
+  },
+  "panel_saves": {
+    "n_thinking_failures": 6,
+    "n_panel_saves": 3,
+    "n_joint_failures": 3,
+    "save_rate": 0.5,
+    "saved_uids": [
+      "test/counting_and_probability/765.json",
+      "test/geometry/817.json",
+      "test/precalculus/768.json"
+    ],
+    "joint_failure_uids": [
+      "test/geometry/711.json",
+      "test/geometry/880.json",
+      "test/intermediate_algebra/2015.json"
+    ]
+  },
+  "panel_fail_thinking_succeed": {
+    "n": 20,
+    "uids": [
+      "test/counting_and_probability/181.json",
+      "test/geometry/172.json",
+      "test/geometry/183.json",
+      "test/geometry/229.json",
+      "test/geometry/702.json",
+      "test/geometry/965.json",
+      "test/intermediate_algebra/1197.json",
+      "test/intermediate_algebra/1279.json",
+      "test/intermediate_algebra/1408.json",
+      "test/intermediate_algebra/1454.json",
+      "test/intermediate_algebra/1462.json",
+      "test/intermediate_algebra/1544.json",
+      "test/intermediate_algebra/1806.json",
+      "test/intermediate_algebra/183.json",
+      "test/intermediate_algebra/1930.json",
+      "test/intermediate_algebra/662.json",
+      "test/intermediate_algebra/960.json",
+      "test/prealgebra/1139.json",
+      "test/precalculus/1133.json",
+      "test/precalculus/902.json"
+    ]
+  }
+}

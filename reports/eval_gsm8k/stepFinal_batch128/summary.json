@@ -1,0 +1,23 @@
+{
+  "tag": "stepFinal_batch128",
+  "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+  "model_name": "Qwen/Qwen3-30B-A3B-Base",
+  "n_test_requested": 500,
+  "n_evaluated": 500,
+  "batch_size": 16,
+  "temperature": 1.0,
+  "max_tokens": 4096,
+  "tag_coef": 0.2,
+  "seed": 20260423,
+  "metrics": {
+    "correct": 0.842,
+    "tag_valid": 0.978,
+    "reward_total": 0.8376000000000002
+  },
+  "counts": {
+    "n_correct": 421,
+    "n_tag_valid": 489,
+    "n_total": 500
+  },
+  "elapsed_sec": 532.2316210269928
+}

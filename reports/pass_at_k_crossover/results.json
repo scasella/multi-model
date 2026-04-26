@@ -1,0 +1,86 @@
+[
+  {
+    "slice": "MATH500 stratified-50 (L1-L5, n=4 each)",
+    "rows": [
+      {
+        "k": 1,
+        "n_paired": 50,
+        "panel_pass_at_k": 0.805,
+        "thinking_pass_at_k": 0.97,
+        "delta_mean": -0.165,
+        "delta_se": 0.044383532522588524,
+        "t": -3.7175950318065607
+      },
+      {
+        "k": 2,
+        "n_paired": 50,
+        "panel_pass_at_k": 0.88,
+        "thinking_pass_at_k": 0.9966666666666667,
+        "delta_mean": -0.11666666666666665,
+        "delta_se": 0.043708475596870994,
+        "t": -2.669200082443932
+      },
+      {
+        "k": 3,
+        "n_paired": 50,
+        "panel_pass_at_k": 0.895,
+        "thinking_pass_at_k": 1.0,
+        "delta_mean": -0.105,
+        "delta_se": 0.042910680845358824,
+        "t": -2.4469432302507195
+      },
+      {
+        "k": 4,
+        "n_paired": 50,
+        "panel_pass_at_k": 0.9,
+        "thinking_pass_at_k": 1.0,
+        "delta_mean": -0.1,
+        "delta_se": 0.04285714285714286,
+        "t": -2.3333333333333335
+      }
+    ],
+    "crossover_k": null
+  },
+  {
+    "slice": "MATH500 L5-full (134 problems, panel n=8, thinking n=4)",
+    "rows": [
+      {
+        "k": 1,
+        "n_paired": 134,
+        "panel_pass_at_k": 0.5839552238805971,
+        "thinking_pass_at_k": 0.9085820895522388,
+        "delta_mean": -0.3246268656716418,
+        "delta_se": 0.03197610324137659,
+        "t": -10.15217092655554
+      },
+      {
+        "k": 2,
+        "n_paired": 134,
+        "panel_pass_at_k": 0.6993603411513859,
+        "thinking_pass_at_k": 0.9402985074626866,
+        "delta_mean": -0.24093816631130063,
+        "delta_se": 0.03345381482411128,
+        "t": -7.20211334874875
+      },
+      {
+        "k": 3,
+        "n_paired": 134,
+        "panel_pass_at_k": 0.7488006396588486,
+        "thinking_pass_at_k": 0.9496268656716418,
+        "delta_mean": -0.2008262260127932,
+        "delta_se": 0.033442950669869895,
+        "t": -6.0050390886628815
+      },
+      {
+        "k": 4,
+        "n_paired": 134,
+        "panel_pass_at_k": 0.7770788912579958,
+        "thinking_pass_at_k": 0.9552238805970149,
+        "delta_mean": -0.17814498933901918,
+        "delta_se": 0.033694235117241275,
+        "t": -5.287105901622403
+      }
+    ],
+    "crossover_k": null
+  }
+]

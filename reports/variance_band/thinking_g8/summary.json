@@ -1,0 +1,38 @@
+{
+  "tag": "thinking_g8",
+  "arm": "thinking",
+  "base_model": "Qwen/Qwen3-30B-A3B",
+  "checkpoint": null,
+  "n_problems": 877,
+  "n_samples_per_problem": 8,
+  "temperature": 1.0,
+  "max_tokens": 8192,
+  "bands": {
+    "all_one": 406,
+    "variance_band": 209,
+    "all_zero": 262
+  },
+  "bands_by_source": {
+    "hmmt": {
+      "all_one": 6,
+      "variance_band": 16,
+      "all_zero": 38
+    },
+    "aime": {
+      "all_one": 15,
+      "variance_band": 21,
+      "all_zero": 24
+    },
+    "olympiadbench": {
+      "variance_band": 147,
+      "all_zero": 189,
+      "all_one": 338
+    },
+    "amc": {
+      "all_one": 47,
+      "variance_band": 25,
+      "all_zero": 11
+    }
+  },
+  "elapsed_sec": 21056.747874975204
+}

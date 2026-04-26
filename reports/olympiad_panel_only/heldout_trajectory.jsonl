@@ -1,0 +1,10 @@
+{"batch": 0, "heldout_mean": 0.14, "by_source": {"aime": 0.04, "amc": 0.32, "hmmt": 0.0, "olympiadbench": 0.2}}
+{"batch": 10, "heldout_mean": 0.12, "by_source": {"aime": 0.04, "amc": 0.32, "hmmt": 0.0, "olympiadbench": 0.12}}
+{"batch": 20, "heldout_mean": 0.14, "by_source": {"aime": 0.08, "amc": 0.28, "hmmt": 0.0, "olympiadbench": 0.2}}
+{"batch": 30, "heldout_mean": 0.16, "by_source": {"aime": 0.04, "amc": 0.4, "hmmt": 0.0, "olympiadbench": 0.2}}
+{"batch": 40, "heldout_mean": 0.19, "by_source": {"aime": 0.12, "amc": 0.36, "hmmt": 0.0, "olympiadbench": 0.28}}
+{"batch": 50, "heldout_mean": 0.21, "by_source": {"aime": 0.12, "amc": 0.32, "hmmt": 0.0, "olympiadbench": 0.4}}
+{"batch": 60, "heldout_mean": 0.19, "by_source": {"aime": 0.04, "amc": 0.44, "hmmt": 0.0, "olympiadbench": 0.28}}
+{"batch": 70, "heldout_mean": 0.29, "by_source": {"aime": 0.12, "amc": 0.6, "hmmt": 0.0, "olympiadbench": 0.44}}
+{"batch": 80, "heldout_mean": 0.27, "by_source": {"aime": 0.2, "amc": 0.48, "hmmt": 0.0, "olympiadbench": 0.4}}
+{"batch": 90, "heldout_mean": 0.29, "by_source": {"aime": 0.16, "amc": 0.52, "hmmt": 0.04, "olympiadbench": 0.44}}

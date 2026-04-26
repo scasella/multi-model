@@ -1,0 +1,202 @@
+{
+  "tag": "final_no_panel",
+  "variant": "no_panel",
+  "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+  "model_name": "Qwen/Qwen3-30B-A3B-Base",
+  "n_problems": 20,
+  "n_samples_per_problem": 8,
+  "total_samples": 160,
+  "n_correct_samples": 14,
+  "avg_hit_rate": 0.0875,
+  "wilson_ci95": [
+    0.052836307068052514,
+    0.14150749816822447
+  ],
+  "pass_at_n_count": 6,
+  "pass_at_n_rate": 0.3,
+  "temperature": 1.0,
+  "max_tokens": 8192,
+  "per_problem": [
+    {
+      "year": 2024,
+      "problem_idx": 0,
+      "gold": "204",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 1,
+      "gold": "113",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 2,
+      "gold": "371",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 3,
+      "gold": "385",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 4,
+      "gold": "110",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 5,
+      "gold": "104",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 6,
+      "gold": "721",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 7,
+      "gold": "025",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "year": 2024,
+      "problem_idx": 8,
+      "gold": "809",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2024,
+      "problem_idx": 9,
+      "gold": "116",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 0,
+      "gold": "70",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 1,
+      "gold": "588",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 2,
+      "gold": "16",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 3,
+      "gold": "117",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 4,
+      "gold": "279",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 5,
+      "gold": "504",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 6,
+      "gold": "821",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 7,
+      "gold": "77",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "year": 2025,
+      "problem_idx": 8,
+      "gold": "62",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "year": 2025,
+      "problem_idx": 9,
+      "gold": "81",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    }
+  ],
+  "elapsed_sec": 384.3963348865509
+}

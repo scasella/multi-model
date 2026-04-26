@@ -1,0 +1,36 @@
+{
+  "tag": "panel_g8",
+  "arm": "panel",
+  "base_model": "Qwen/Qwen3-30B-A3B-Base",
+  "checkpoint": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+  "n_problems": 877,
+  "n_samples_per_problem": 8,
+  "temperature": 1.0,
+  "max_tokens": 8192,
+  "bands": {
+    "variance_band": 382,
+    "all_zero": 477,
+    "all_one": 18
+  },
+  "bands_by_source": {
+    "hmmt": {
+      "variance_band": 4,
+      "all_zero": 56
+    },
+    "aime": {
+      "all_zero": 53,
+      "variance_band": 7
+    },
+    "olympiadbench": {
+      "variance_band": 321,
+      "all_zero": 338,
+      "all_one": 15
+    },
+    "amc": {
+      "variance_band": 50,
+      "all_zero": 30,
+      "all_one": 3
+    }
+  },
+  "elapsed_sec": 5439.100303888321
+}

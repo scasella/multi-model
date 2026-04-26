@@ -1,0 +1,24 @@
+{
+  "tag": "step000080",
+  "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000080",
+  "model_name": "Qwen/Qwen3-30B-A3B-Base",
+  "n_test_requested": 500,
+  "n_evaluated": 348,
+  "batch_size": 16,
+  "temperature": 1.0,
+  "max_tokens": 4096,
+  "tag_coef": 0.2,
+  "seed": 20260423,
+  "metrics": {
+    "correct": 0.7155172413793104,
+    "tag_valid": 0.7586206896551724,
+    "reward_total": 0.6672413793103457
+  },
+  "counts": {
+    "n_correct": 249,
+    "n_tag_valid": 264,
+    "n_total": 348
+  },
+  "status": "partial_user_halt",
+  "note": "User stopped the eval sweep after step 70 finished and step 80 reached 352/500 progress (348 rollouts flushed to disk). Metrics computed from preserved rollouts.jsonl."
+}

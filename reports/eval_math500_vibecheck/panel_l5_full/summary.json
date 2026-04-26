@@ -1,0 +1,1372 @@
+{
+  "tag": "panel_l5_full",
+  "variant": "panel",
+  "sampler_path": "tinker://44722365-baf6-517f-a69f-ec01d13f6395:train:0/sampler_weights/final",
+  "model_name": "Qwen/Qwen3-30B-A3B-Base",
+  "n_problems": 134,
+  "n_samples_per_problem": 8,
+  "total_samples": 1072,
+  "n_correct_samples": 626,
+  "avg_hit_rate": 0.5839552238805971,
+  "wilson_ci95": [
+    0.5542000862605206,
+    0.6131107892438289
+  ],
+  "pass_at_n_count": 111,
+  "pass_at_n_rate": 0.8283582089552238,
+  "per_level": {
+    "5": {
+      "n_probs": 134,
+      "n_samples": 1072,
+      "n_correct": 626,
+      "pass_n": 111,
+      "avg": 0.5839552238805971,
+      "pass_rate": 0.8283582089552238
+    }
+  },
+  "per_problem": [
+    {
+      "unique_id": "test/intermediate_algebra/1994.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "p - q",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1139.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "4",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1197.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{3}{56}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/number_theory/737.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "284",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/990.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "6 - 5i",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/1837.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "5",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2193.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "x=5",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2427.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "10",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1388.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "1,-2",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/525.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "144",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1454.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "70 \\sqrt{2}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/prealgebra/1558.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "1.25",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/305.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "5",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/1055.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "203",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/951.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "12",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/956.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "(6,31,-1)",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/675.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "4",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/279.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "10",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1849.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "501",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2700.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\frac{3}{2}",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/892.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "2",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1646.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "80",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/662.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "1 \\pm \\sqrt{19}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/geometry/183.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "145^\\circ",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/intermediate_algebra/582.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "850",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/558.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "(3,4]",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/44.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "120^\\circ",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/232.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "81",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/1140.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "\\frac{3840}{289}",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1297.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "9",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/2022.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "64",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/159.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "28800",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1408.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "-2",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/intermediate_algebra/966.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "16",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/964.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "1",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/986.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "144",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/172.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "8",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/geometry/880.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "2\\sqrt{113}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/prealgebra/1655.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "\\dfrac{17}{50}",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2517.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "-\\frac{35}{9}",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1003.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "\\frac{270}7\\text{ degrees}",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/181.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "19",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/algebra/297.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "1736",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/686.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "4",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/183.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "(2,\\infty)",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/algebra/733.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "6",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/702.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "160",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/counting_and_probability/51.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "\\frac{13}{18}",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/2196.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{1}{4}",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/838.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "6",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/291.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\frac{2}{3}",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1510.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "0",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/765.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "110",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1961.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "\\frac{16}{27}",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1354.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{1997}{2}",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/975.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "-4",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/229.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "16",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/algebra/1143.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "17",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2626.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\$32,\\!348",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1251.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "8",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/894.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "540",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2064.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "81",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/1009.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "28",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/826.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "1\\frac{4}{5}",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/686.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "18+2\\pi",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/1282.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "11",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1512.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "7\\pi",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/768.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "3 \\pm 2 \\sqrt{2}",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/960.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{17}{21}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/number_theory/631.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "36",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/1172.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "7",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2486.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\left(\\frac{3}{5},\\frac{8}{3}\\right]",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1044.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "5.4 \\text{ cents}",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/965.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "28",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1544.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "6",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/geometry/711.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "1+2\\sqrt{3}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/prealgebra/1423.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "12\\pi",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/2152.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "0",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/947.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "-\\frac{24}{25}",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/954.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "10",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/870.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "\\frac{1}{3}",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/117.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "15",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2176.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "3",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/216.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "1940",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/509.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\frac{13}{6}",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1166.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "100",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/1078.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "(-\\sqrt{3}, \\sqrt{3})",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1353.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "4",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/820.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "8",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/955.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "17",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2264.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "1+2i",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/427.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "25",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/188.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "\\frac{1}{2}",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1111.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{20000}{\\pi}",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/2066.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "22",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/1031.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\frac{11}{2}",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/853.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "12",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2277.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "0",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/902.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "\\sqrt{66}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1791.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "-\\frac{3}{8}",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/geometry/817.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "\\frac{14}{3}",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1806.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{13}{4}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/precalculus/398.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "\\begin{pmatrix} 1/5 \\\\ -18/5 \\end{pmatrix}",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/769.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "9",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/776.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "-2",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/1796.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "2\\sqrt{5}",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/1202.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "27",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/2015.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\{1\\pm\\sqrt{5},-2\\}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/number_theory/1002.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "1440",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/1339.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "600",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/1133.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "3R^2",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1462.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "331",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/prealgebra/1640.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "32",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2043.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "(-\\infty, 2) \\cup (3, \\infty)",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/731.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "\\frac{1}{2}",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/1000.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "44",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/13.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "64",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/323.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "y = 2x + 3",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2780.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "\\$18.90",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/precalculus/703.json",
+      "level": "5",
+      "subject": "Precalculus",
+      "gold": "8 \\pi",
+      "n_samples": 8,
+      "n_correct": 4,
+      "avg": 0.5,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/158.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "27648",
+      "n_samples": 8,
+      "n_correct": 6,
+      "avg": 0.75,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1930.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "7",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/counting_and_probability/1003.json",
+      "level": "5",
+      "subject": "Counting & Probability",
+      "gold": "29",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1279.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{2}{1005}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/number_theory/1128.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "2",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1467.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "8n^2 + 4n + 1",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/number_theory/1090.json",
+      "level": "5",
+      "subject": "Number Theory",
+      "gold": "202",
+      "n_samples": 8,
+      "n_correct": 5,
+      "avg": 0.625,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1203.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "\\$36",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1350.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "14",
+      "n_samples": 8,
+      "n_correct": 2,
+      "avg": 0.25,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/prealgebra/1128.json",
+      "level": "5",
+      "subject": "Prealgebra",
+      "gold": "64",
+      "n_samples": 8,
+      "n_correct": 7,
+      "avg": 0.875,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/algebra/2779.json",
+      "level": "5",
+      "subject": "Algebra",
+      "gold": "20",
+      "n_samples": 8,
+      "n_correct": 8,
+      "avg": 1.0,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1930.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "\\frac{1}{4}",
+      "n_samples": 8,
+      "n_correct": 0,
+      "avg": 0.0,
+      "pass_at_n": false
+    },
+    {
+      "unique_id": "test/geometry/561.json",
+      "level": "5",
+      "subject": "Geometry",
+      "gold": "\\frac{7}{2}",
+      "n_samples": 8,
+      "n_correct": 1,
+      "avg": 0.125,
+      "pass_at_n": true
+    },
+    {
+      "unique_id": "test/intermediate_algebra/1508.json",
+      "level": "5",
+      "subject": "Intermediate Algebra",
+      "gold": "-1",
+      "n_samples": 8,
+      "n_correct": 3,
+      "avg": 0.375,
+      "pass_at_n": true
+    }
+  ],
+  "temperature": 1.0,
+  "max_tokens": 4096,
+  "elapsed_sec": 1482.5187442302704
+}

@@ -1,0 +1,23 @@
+{
+  "tag": "thinking_smoke",
+  "arm": "thinking",
+  "base_model": "Qwen/Qwen3-30B-A3B",
+  "checkpoint": null,
+  "n_problems": 8,
+  "n_samples_per_problem": 4,
+  "temperature": 1.0,
+  "max_tokens": 8192,
+  "bands": {
+    "all_one": 2,
+    "variance_band": 3,
+    "all_zero": 3
+  },
+  "bands_by_source": {
+    "hmmt": {
+      "all_one": 2,
+      "variance_band": 3,
+      "all_zero": 3
+    }
+  },
+  "elapsed_sec": 305.3791470527649
+}

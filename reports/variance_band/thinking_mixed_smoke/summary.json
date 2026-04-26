@@ -1,0 +1,37 @@
+{
+  "tag": "thinking_mixed_smoke",
+  "arm": "thinking",
+  "base_model": "Qwen/Qwen3-30B-A3B",
+  "checkpoint": null,
+  "n_problems": 32,
+  "n_samples_per_problem": 8,
+  "temperature": 1.0,
+  "max_tokens": 8192,
+  "bands": {
+    "variance_band": 8,
+    "all_zero": 12,
+    "all_one": 12
+  },
+  "bands_by_source": {
+    "hmmt": {
+      "variance_band": 4,
+      "all_zero": 4
+    },
+    "aime": {
+      "all_zero": 5,
+      "variance_band": 2,
+      "all_one": 1
+    },
+    "olympiadbench": {
+      "all_one": 6,
+      "all_zero": 1,
+      "variance_band": 1
+    },
+    "amc": {
+      "all_one": 5,
+      "variance_band": 1,
+      "all_zero": 2
+    }
+  },
+  "elapsed_sec": 763.0626211166382
+}

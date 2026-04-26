@@ -1,0 +1,56 @@
+{
+  "panel_file": "reports/variance_band/panel_g8/per_problem.jsonl",
+  "thinking_file": "reports/variance_band/thinking_g8/per_problem.jsonl",
+  "pool_file": "data/olympiad_pool/all.jsonl",
+  "seed": 20260424,
+  "n_shared": 877,
+  "joint_bands": {
+    "all_zero__all_one": 108,
+    "all_zero__variance_band": 137,
+    "variance_band__variance_band": 72,
+    "all_zero__all_zero": 232,
+    "variance_band__all_one": 280,
+    "variance_band__all_zero": 30,
+    "all_one__all_one": 18
+  },
+  "panel_vb_size": 382,
+  "thinking_vb_size": 209,
+  "vb_intersection_size": 72,
+  "vb_union_size": 519,
+  "panel_train": {
+    "n": 354,
+    "by_source": {
+      "aime": 6,
+      "amc": 35,
+      "hmmt": 2,
+      "olympiadbench": 311
+    }
+  },
+  "thinking_train": {
+    "n": 180,
+    "by_source": {
+      "aime": 14,
+      "amc": 16,
+      "hmmt": 10,
+      "olympiadbench": 140
+    }
+  },
+  "heldout_eval": {
+    "n": 100,
+    "by_source": {
+      "aime": 25,
+      "amc": 25,
+      "hmmt": 25,
+      "olympiadbench": 25
+    }
+  },
+  "heldout_aux": {
+    "n": 310,
+    "by_source": {
+      "aime": 18,
+      "amc": 15,
+      "hmmt": 24,
+      "olympiadbench": 253
+    }
+  }
+}

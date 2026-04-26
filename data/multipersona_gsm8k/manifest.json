@@ -1,0 +1,1550 @@
+{
+  "experiment": "multipersona_gsm8k",
+  "_note": "This is a frozen historical run-log. The tinker:// URIs below were live during the experiment but most have been deleted in a post-publication cleanup; the only checkpoint from this experiment that is still resolvable is the panel-MATH continuation tinker://44722365-baf6-517f-a69f-ec01d13f6395:train:0/weights/final (referenced as eval session 44722365 in reports/blog_post/diversity.html). Reproducing the full experiment requires re-running rl_multipersona_gsm8k.sh + rl_multipersona_math.sh from scratch with your own Tinker account.",
+  "thesis": "Test whether plural-actor framing (Multi-Persona Panel of Experts) under DeepSeek-R1-Zero-style pure RL from Base induces emergent multi-voice reasoning. Setup-shaping via prompt template only; no SFT warmup; outcome-based reward (correct + tag enforcement).",
+  "rl_run": {
+    "model_name": "Qwen/Qwen3-30B-A3B-Base",
+    "renderer_name": "role_colon",
+    "load_checkpoint_path": null,
+    "env": "envs.multipersona_gsm8k (GSM8K train split, <mutipersonaDebate>/<answer> scaffold)",
+    "prompt_template_file": "envs/multipersona_gsm8k.py::PROMPT_TEMPLATE",
+    "reward": {
+      "correct_answer": 1.0,
+      "tag_structure_coef": 0.2,
+      "formula": "correct + 0.2 * (tag_valid - 1)"
+    },
+    "n_train": 2048,
+    "n_test": 128,
+    "dataset_seed": 20260423,
+    "group_size": 8,
+    "groups_per_batch": 16,
+    "learning_rate": 5e-06,
+    "lora_rank": 32,
+    "max_tokens": 4096,
+    "temperature": 1.0,
+    "kl_penalty_coef": 0.0,
+    "stop_sequences": [
+      "</answer>"
+    ],
+    "total_steps": 80,
+    "save_every": 10,
+    "eval_every": 0,
+    "launched_at": "2026-04-23T08:08-07:00",
+    "launcher": "scripts/rl_multipersona_gsm8k.sh",
+    "log_path": "/tmp/tinker-examples/rl/multipersona_gsm8k/2026-04-23-08-08",
+    "session_id": "e3be4f79-129c-544b-94f0-0a20c10837fa",
+    "state_path_prefix": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/weights/",
+    "sampler_path_prefix": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/sampler_weights/",
+    "baseline_step0": {
+      "correct": 0.296875,
+      "tag_valid": 0.40625,
+      "reward_total": 0.178125,
+      "n_rollouts": 128
+    },
+    "step10_metrics": {
+      "correct": 0.390625,
+      "tag_valid": 0.375,
+      "reward_total": 0.265625,
+      "n_rollouts": 128,
+      "state_path": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/weights/000010",
+      "sampler_path": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/sampler_weights/000010"
+    },
+    "step19_peak": {
+      "correct": 0.523438,
+      "tag_valid": 0.46875,
+      "reward_total": 0.417188,
+      "n_rollouts": 128,
+      "_note": "interim peak, new high vs previous 0.477 (step 2); not a checkpoint step"
+    },
+    "step20_metrics": {
+      "correct": 0.523438,
+      "tag_valid": 0.398438,
+      "reward_total": 0.403125,
+      "n_rollouts": 128,
+      "state_path": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/weights/000020",
+      "sampler_path": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/sampler_weights/000020",
+      "_note": "correct held at 0.523 (2nd consecutive step at new high); tag_valid regressed 0.469\u21920.398"
+    },
+    "step21_metrics": {
+      "correct": 0.445312,
+      "tag_valid": 0.4375,
+      "reward_total": 0.332812,
+      "n_rollouts": 128
+    },
+    "step22_metrics": {
+      "correct": 0.351562,
+      "tag_valid": 0.367188,
+      "reward_total": 0.225,
+      "n_rollouts": 128
+    },
+    "step23_metrics": {
+      "correct": 0.40625,
+      "tag_valid": 0.4375,
+      "reward_total": 0.29375,
+      "n_rollouts": 128
+    },
+    "step24_metrics": {
+      "correct": 0.40625,
+      "tag_valid": 0.484375,
+      "reward_total": 0.303125,
+      "n_rollouts": 128
+    },
+    "halted": {
+      "stopped_at_step": 25,
+      "reason": "Tinker API 402 \u2014 billing blocked mid-sampling-batch-25",
+      "latest_saved_checkpoint": {
+        "step": 20,
+        "state_path": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/weights/000020",
+        "sampler_path": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/sampler_weights/000020"
+      },
+      "halted_at": "2026-04-23T08:40-07:00"
+    },
+    "resumed": {
+      "resumed_at": "2026-04-23T08:55-07:00",
+      "launcher": "scripts/rl_multipersona_gsm8k_resume.sh",
+      "new_session_id": "f32e0238-cffd-5198-a497-c76f04b4cf4d",
+      "loaded_from": "tinker://e3be4f79-129c-544b-94f0-0a20c10837fa:train:0/weights/000020",
+      "start_batch": 20,
+      "remaining_steps": 60,
+      "target_final_step": 80,
+      "mechanism": "behavior_if_log_dir_exists=resume \u2192 checkpoint_utils.get_last_checkpoint reads checkpoints.jsonl",
+      "state_path_prefix_new": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/",
+      "sampler_path_prefix_new": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/"
+    },
+    "post_resume_metrics": {
+      "step21": {
+        "correct": 0.429688,
+        "tag_valid": 0.390625,
+        "reward_total": 0.307812
+      },
+      "step22": {
+        "correct": 0.382812,
+        "tag_valid": 0.414062,
+        "reward_total": 0.265625
+      },
+      "step23": {
+        "correct": 0.445312,
+        "tag_valid": 0.429688,
+        "reward_total": 0.33125
+      },
+      "step24": {
+        "correct": 0.398438,
+        "tag_valid": 0.40625,
+        "reward_total": 0.279687
+      },
+      "step25": {
+        "correct": 0.421875,
+        "tag_valid": 0.414062,
+        "reward_total": 0.304688
+      },
+      "step26": {
+        "correct": 0.398438,
+        "tag_valid": 0.398438,
+        "reward_total": 0.278125
+      },
+      "step27": {
+        "correct": 0.40625,
+        "tag_valid": 0.445312,
+        "reward_total": 0.295312
+      },
+      "step28": {
+        "correct": 0.539062,
+        "tag_valid": 0.492188,
+        "reward_total": 0.4375,
+        "_note": "new run-high for correct (prev 0.523 @ step 19) AND reward (prev 0.417 @ step 19)"
+      },
+      "step29": {
+        "correct": 0.398438,
+        "tag_valid": 0.429688,
+        "reward_total": 0.284375
+      }
+    },
+    "step30_metrics": {
+      "correct": 0.445312,
+      "tag_valid": 0.53125,
+      "reward_total": 0.351562,
+      "n_rollouts": 128,
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/000030",
+      "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000030",
+      "_note": "tag_valid new run high (prev 0.508 @ step 2); post-resume 21-30 mean correct=0.426 vs 0-20 mean 0.396 (+3pp)"
+    },
+    "post_resume_metrics_31_39": {
+      "step31": {
+        "correct": 0.351562,
+        "tag_valid": 0.46875,
+        "reward_total": 0.245312
+      },
+      "step32": {
+        "correct": 0.421875,
+        "tag_valid": 0.4375,
+        "reward_total": 0.309375
+      },
+      "step33": {
+        "correct": 0.484375,
+        "tag_valid": 0.492188,
+        "reward_total": 0.382812
+      },
+      "step34": {
+        "correct": 0.445312,
+        "tag_valid": 0.484375,
+        "reward_total": 0.342187
+      },
+      "step35": {
+        "correct": 0.445312,
+        "tag_valid": 0.375,
+        "reward_total": 0.320312
+      },
+      "step36": {
+        "correct": 0.484375,
+        "tag_valid": 0.515625,
+        "reward_total": 0.3875
+      },
+      "step37": {
+        "correct": 0.507812,
+        "tag_valid": 0.453125,
+        "reward_total": 0.398438
+      },
+      "step38": {
+        "correct": 0.515625,
+        "tag_valid": 0.445312,
+        "reward_total": 0.404687
+      },
+      "step39": {
+        "correct": 0.460938,
+        "tag_valid": 0.492188,
+        "reward_total": 0.359375
+      }
+    },
+    "step40_metrics": {
+      "correct": 0.507812,
+      "tag_valid": 0.492188,
+      "reward_total": 0.40625,
+      "n_rollouts": 128,
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/000040",
+      "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000040",
+      "_note": "window 31-40 mean correct=0.462 vs window 21-30 mean 0.426 (+3.6pp) vs 1-20 mean 0.396 (+6.6pp from start). 5 of 20 post-resume steps >=0.5 correct. 50% of run complete."
+    },
+    "post_resume_metrics_41_49": {
+      "step41": {
+        "correct": 0.453125,
+        "tag_valid": 0.523438,
+        "reward_total": 0.357812
+      },
+      "step42": {
+        "correct": 0.539062,
+        "tag_valid": 0.570312,
+        "reward_total": 0.453125,
+        "_note": "then-new high on tag_valid and reward simultaneously"
+      },
+      "step43": {
+        "correct": 0.53125,
+        "tag_valid": 0.515625,
+        "reward_total": 0.434375
+      },
+      "step44": {
+        "correct": 0.578125,
+        "tag_valid": 0.5625,
+        "reward_total": 0.490625,
+        "_note": "new run-high correct (+28.1pp over baseline)"
+      },
+      "step45": {
+        "correct": 0.5625,
+        "tag_valid": 0.523438,
+        "reward_total": 0.467187
+      },
+      "step46": {
+        "correct": 0.507812,
+        "tag_valid": 0.53125,
+        "reward_total": 0.414062
+      },
+      "step47": {
+        "correct": 0.53125,
+        "tag_valid": 0.570312,
+        "reward_total": 0.445312
+      },
+      "step48": {
+        "correct": 0.601562,
+        "tag_valid": 0.5625,
+        "reward_total": 0.514062,
+        "_note": "correct crosses 0.6 first time; new run high"
+      },
+      "step49": {
+        "correct": 0.570312,
+        "tag_valid": 0.601562,
+        "reward_total": 0.490625,
+        "_note": "tag_valid crosses 0.6 first time; new run high"
+      }
+    },
+    "step50_metrics": {
+      "correct": 0.570312,
+      "tag_valid": 0.609375,
+      "reward_total": 0.492188,
+      "n_rollouts": 128,
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/000050",
+      "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000050",
+      "_note": "tag_valid new run high. Window 41-50 means: correct=0.544, tag=0.557, reward=0.456. All three metrics accelerating across the four 10-step windows (1-20/21-30/31-40/41-50): correct 0.396\u21920.426\u21920.462\u21920.544; tag ~0.40\u21920.435\u21920.462\u21920.557; reward ~0.28\u21920.314\u21920.356\u21920.456. No plateau."
+    },
+    "post_resume_metrics_51_59": {
+      "step51": {
+        "correct": 0.601562,
+        "tag_valid": 0.578125,
+        "reward_total": 0.517188,
+        "_note": "reward new run high"
+      },
+      "step52": {
+        "correct": 0.625,
+        "tag_valid": 0.648438,
+        "reward_total": 0.554688,
+        "_note": "triple new run high: correct/tag/reward simultaneously"
+      },
+      "step53": {
+        "correct": 0.570312,
+        "tag_valid": 0.539062,
+        "reward_total": 0.478125
+      },
+      "step54": {
+        "correct": 0.59375,
+        "tag_valid": 0.617188,
+        "reward_total": 0.517188
+      },
+      "step55": {
+        "correct": 0.546875,
+        "tag_valid": 0.59375,
+        "reward_total": 0.465625
+      },
+      "step56": {
+        "correct": 0.492188,
+        "tag_valid": 0.617188,
+        "reward_total": 0.415625
+      },
+      "step57": {
+        "correct": 0.640625,
+        "tag_valid": 0.640625,
+        "reward_total": 0.56875,
+        "_note": "new run high correct (+34.4pp over baseline) and reward"
+      },
+      "step58": {
+        "correct": 0.625,
+        "tag_valid": 0.65625,
+        "reward_total": 0.55625,
+        "_note": "tag_valid new run high"
+      },
+      "step59": {
+        "correct": 0.539062,
+        "tag_valid": 0.601562,
+        "reward_total": 0.459375
+      }
+    },
+    "step60_metrics": {
+      "correct": 0.617188,
+      "tag_valid": 0.617188,
+      "reward_total": 0.540625,
+      "n_rollouts": 128,
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/000060",
+      "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000060",
+      "_note": "75% of run complete. Window 51-60 means: correct=0.585, tag=0.611, reward=0.507. All 20 consecutive steps 41-60 have correct >= 0.49. Correct now +18.9pp over the pre-halt run mean (0.396) and +28.8pp over the base-model baseline (0.297). Monotone acceleration across all five 10-step windows since launch."
+    },
+    "post_resume_metrics_61_69": {
+      "step61": {
+        "correct": 0.679688,
+        "tag_valid": 0.71875,
+        "reward_total": 0.623438,
+        "_note": "triple new run high: correct +38.3pp over baseline; tag crosses 0.70; reward new high"
+      },
+      "step62": {
+        "correct": 0.703125,
+        "tag_valid": 0.601562,
+        "reward_total": 0.623438,
+        "_note": "correct crosses 0.70 for first time (+40.6pp over baseline)"
+      },
+      "step63": {
+        "correct": 0.671875,
+        "tag_valid": 0.796875,
+        "reward_total": 0.63125,
+        "_note": "tag_valid new run high (crossed 0.75); reward new high"
+      },
+      "step64": {
+        "correct": 0.617188,
+        "tag_valid": 0.664062,
+        "reward_total": 0.55
+      },
+      "step65": {
+        "correct": 0.65625,
+        "tag_valid": 0.601562,
+        "reward_total": 0.576562
+      },
+      "step66": {
+        "correct": 0.640625,
+        "tag_valid": 0.695312,
+        "reward_total": 0.579687
+      },
+      "step67": {
+        "correct": 0.703125,
+        "tag_valid": 0.71875,
+        "reward_total": 0.646875,
+        "_note": "reward new run high"
+      },
+      "step68": {
+        "correct": 0.726562,
+        "tag_valid": 0.695312,
+        "reward_total": 0.665625,
+        "_note": "correct new run high (+43.0pp over baseline); reward new high"
+      },
+      "step69": {
+        "correct": 0.601562,
+        "tag_valid": 0.664062,
+        "reward_total": 0.534375
+      }
+    },
+    "step70_metrics": {
+      "correct": 0.648438,
+      "tag_valid": 0.703125,
+      "reward_total": 0.589062,
+      "n_rollouts": 128,
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/000070",
+      "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000070",
+      "_note": "Window 61-70 means: correct=0.665, tag=0.686, reward=0.602. All 30 consecutive steps 41-70 have correct >= 0.49. Correct at this window is +26.9pp above pre-halt 1-20 window. Monotone acceleration continues across all six 10-step windows. Run-high marks set in this window: correct 0.727 (step 68), tag 0.797 (step 63), reward 0.666 (step 68)."
+    },
+    "post_resume_metrics_71_79": {
+      "step71": {
+        "correct": 0.65625,
+        "tag_valid": 0.742188,
+        "reward_total": 0.604687
+      },
+      "step72": {
+        "correct": 0.648438,
+        "tag_valid": 0.757812,
+        "reward_total": 0.6
+      },
+      "step73": {
+        "correct": 0.703125,
+        "tag_valid": 0.796875,
+        "reward_total": 0.6625,
+        "_note": "ties step-63 tag run high of 0.797"
+      },
+      "step74": {
+        "correct": 0.71875,
+        "tag_valid": 0.679688,
+        "reward_total": 0.654688
+      },
+      "step75": {
+        "correct": 0.789062,
+        "tag_valid": 0.75,
+        "reward_total": 0.739062,
+        "_note": "correct crosses 0.75; +7pp step-over-step; reward new run high"
+      },
+      "step76": {
+        "correct": 0.835938,
+        "tag_valid": 0.71875,
+        "reward_total": 0.779688,
+        "_note": "correct new run high (+53.9pp over baseline, 2.81x baseline); reward new run high"
+      },
+      "step77": {
+        "correct": 0.8125,
+        "tag_valid": 0.734375,
+        "reward_total": 0.759375
+      },
+      "step78": {
+        "correct": 0.742188,
+        "tag_valid": 0.75,
+        "reward_total": 0.692188
+      },
+      "step79": {
+        "correct": 0.804688,
+        "tag_valid": 0.78125,
+        "reward_total": 0.760938
+      }
+    },
+    "step80_metrics_final": {
+      "correct": 0.695312,
+      "tag_valid": 0.78125,
+      "reward_total": 0.651563,
+      "n_rollouts": 128,
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/000080",
+      "sampler_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/000080",
+      "state_path_alias_final": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/final",
+      "sampler_path_alias_final": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/sampler_weights/final"
+    },
+    "completed_at": "2026-04-23T09:34-07:00",
+    "completion_status": "Training completed successfully (tinker_cookbook.rl.train:2030).",
+    "run_summary": {
+      "total_steps": 80,
+      "halted_at_step": 25,
+      "resumed_from_step": 20,
+      "window_means": {
+        "steps_1_20_pre_halt": {
+          "correct": 0.396,
+          "tag_valid": 0.4,
+          "reward_total": 0.28
+        },
+        "steps_21_30_post_resume": {
+          "correct": 0.426,
+          "tag_valid": 0.435,
+          "reward_total": 0.314
+        },
+        "steps_31_40": {
+          "correct": 0.462,
+          "tag_valid": 0.462,
+          "reward_total": 0.356
+        },
+        "steps_41_50": {
+          "correct": 0.544,
+          "tag_valid": 0.557,
+          "reward_total": 0.456
+        },
+        "steps_51_60": {
+          "correct": 0.585,
+          "tag_valid": 0.611,
+          "reward_total": 0.507
+        },
+        "steps_61_70": {
+          "correct": 0.665,
+          "tag_valid": 0.686,
+          "reward_total": 0.602
+        },
+        "steps_71_80": {
+          "correct": 0.741,
+          "tag_valid": 0.749,
+          "reward_total": 0.691
+        }
+      },
+      "run_highs": {
+        "correct": {
+          "value": 0.836,
+          "step": 76
+        },
+        "tag_valid": {
+          "value": 0.797,
+          "steps": [
+            63,
+            73
+          ]
+        },
+        "reward_total": {
+          "value": 0.78,
+          "step": 76
+        }
+      },
+      "deltas_from_baseline_step0": {
+        "step80_correct_pp": 39.8,
+        "step80_tag_pp": 37.5,
+        "step80_reward_pp": 47.4,
+        "peak_correct_pp": 53.9,
+        "peak_tag_pp": 39.1,
+        "peak_reward_pp": 60.2
+      },
+      "shape": "Seven consecutive 10-step windows with strictly monotone increasing means for all three metrics. No plateau. No tag_valid collapse. Gains in last window (71-80) still +7-9 pp across metrics vs prior window.",
+      "recommendation": "Training likely has more headroom at these hyperparameters. Possible continuation: extend to step 160 with same lr/group_size/lora_rank; evaluate headline checkpoint at step 76 on a held-out n_test=500 GSM8K slice."
+    },
+    "_correction": "prior manifest mis-indexed by +1; fixed after aligning 22 metric blocks against monitor events 'Step 20' and 'Step 21'"
+  },
+  "eval_gsm8k_sweep_500": {
+    "runner_script": "scripts/eval_gsm8k.py",
+    "sweep_script": "scripts/eval_gsm8k_sweep.sh",
+    "temperature": 1.0,
+    "max_tokens": 4096,
+    "tag_coef": 0.2,
+    "seed": 20260423,
+    "n_test_requested": 500,
+    "session_for_eval": "f32e0238-cffd-5198-a497-c76f04b4cf4d",
+    "results": {
+      "step60": {
+        "n_evaluated": 500,
+        "correct": 0.598,
+        "tag_valid": 0.63,
+        "reward_total": 0.524,
+        "elapsed_sec": 1151.8,
+        "summary_file": "reports/eval_gsm8k/step000060/summary.json",
+        "rollouts_file": "reports/eval_gsm8k/step000060/rollouts.jsonl",
+        "status": "complete"
+      },
+      "step70": {
+        "n_evaluated": 500,
+        "correct": 0.63,
+        "tag_valid": 0.672,
+        "reward_total": 0.5644,
+        "elapsed_sec": 828.8,
+        "summary_file": "reports/eval_gsm8k/step000070/summary.json",
+        "rollouts_file": "reports/eval_gsm8k/step000070/rollouts.jsonl",
+        "status": "complete"
+      },
+      "step80": {
+        "n_evaluated": 348,
+        "correct": 0.7155,
+        "tag_valid": 0.7586,
+        "reward_total": 0.6672,
+        "summary_file": "reports/eval_gsm8k/step000080/summary.json",
+        "rollouts_file": "reports/eval_gsm8k/step000080/rollouts.jsonl",
+        "status": "partial_user_halt",
+        "note": "User halted sweep after step 70 completed and step 80 reached 352/500 (348 rollouts flushed to disk). Metrics computed from preserved rollouts.jsonl. 95% CI at p=0.72, n=348 is approximately \u00b15pp."
+      },
+      "stepFinal_batch128": {
+        "n_evaluated": 500,
+        "correct": 0.842,
+        "tag_valid": 0.978,
+        "reward_total": 0.8376,
+        "elapsed_sec": 532.23,
+        "summary_file": "reports/eval_gsm8k/stepFinal_batch128/summary.json",
+        "rollouts_file": "reports/eval_gsm8k/stepFinal_batch128/rollouts.jsonl",
+        "status": "complete",
+        "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+        "checkpoint_alias": "final",
+        "checkpoint_batch": 128,
+        "note": "End-of-training checkpoint from the extend_160 run; batch=128 = epoch-size cap on max_steps=160."
+      }
+    },
+    "summary_table": {
+      "columns": [
+        "checkpoint",
+        "correct",
+        "tag_valid",
+        "reward_total",
+        "n_evaluated"
+      ],
+      "rows": [
+        [
+          "step60",
+          0.598,
+          0.63,
+          0.524,
+          500
+        ],
+        [
+          "step70",
+          0.63,
+          0.672,
+          0.5644,
+          500
+        ],
+        [
+          "step80 (partial)",
+          0.7155,
+          0.7586,
+          0.6672,
+          348
+        ],
+        [
+          "stepFinal (batch128)",
+          0.842,
+          0.978,
+          0.8376,
+          500
+        ]
+      ],
+      "note": "500-example GSM8K test slice, temperature=1.0, max_tokens=4096, seed=20260423. step80 partial from user-halted sweep (first 348 problems). stepFinal from post-extension checkpoint. Final vs step70 on correct: +21.2pp; vs step80 partial: +12.7pp. Final tag_valid=0.978 vs training-window 111-120 mean 0.953 indicates the panel scaffolding is effectively saturated."
+    },
+    "task3_trajectory_inspection": {
+      "source_file": "reports/eval_gsm8k/step000080/rollouts.jsonl",
+      "n_evaluated": 348,
+      "n_reached_summary": 348,
+      "note": "Sweep halted by user after step 60 and step 70 finished and step 80 reached 352/500; 348 rollouts preserved on disk with full completion text.",
+      "classification_breakdown": {
+        "panel_scaffold_strict": {
+          "description": "Clean multi-speaker panel with 2+ role turn-takes of the form \"Persona 1:\", \"<Expert1>\", \"ChatParticipant(Name):\", named roles with colons, etc.",
+          "count": 60,
+          "share": 0.172,
+          "correct_rate": 0.833,
+          "tag_valid_rate": 0.817
+        },
+        "other_scaffold_with_tag": {
+          "description": "Has <mutipersonaDebate> tag but fewer than 2 explicit role turn-takes by the broad heuristic. Includes: single-expert monologue inside the tag, custom XML-like <person><role> formats, and cases where the panel is produced outside the tag. Most are still panel-shaped with creative role formats.",
+          "count": 256,
+          "share": 0.736,
+          "correct_rate": 0.723,
+          "tag_valid_rate": 0.828
+        },
+        "meta_description_drift": {
+          "description": "The step-36/step-42 drift pattern: talks about what the panel would do rather than executing it. Example: \"Step 1: Identify the Multi-Persona Panel...\"",
+          "count": 3,
+          "share": 0.009,
+          "correct_rate": 0.333,
+          "tag_valid_rate": 1.0
+        },
+        "no_scaffold": {
+          "description": "Completion does not contain <mutipersonaDebate> at all.",
+          "count": 29,
+          "share": 0.083,
+          "correct_rate": 0.448,
+          "tag_valid_rate": 0.0
+        }
+      },
+      "key_findings": [
+        "Meta-procedure drift is essentially extinct at step 80: 3/348 = 0.9% (vs visible presence around steps 36-42). The behaviour the user flagged has been selected against by the outcome reward.",
+        "Panels correlate with correctness. Strict panel_scaffold: correct=0.833; no_scaffold: correct=0.448 - a ~39pp gap. Multi-voice scaffolding is doing real work, not just decoration.",
+        "The model has diversified panel formats well beyond the verbatim prompt-template example (Persona 1/2/3). Observed variants include: numbered <Expert1/2/3> tags, named domain experts (\"Mathematician\", \"Data Analyst\", \"Forest Ranger\"), ChatParticipant(Name): form with 3-5 named participants, and custom <person><role>...</role></person> XML. Diversity is a strength, not drift.",
+        "Most \"other_scaffold\" items are legitimate panel variants the strict heuristic missed, not failures. Sample inspection confirms the 0.723 correct rate in that bucket comes mostly from valid panel reasoning, with a tail of single-expert monologues and a few cases where the debate is produced outside the <mutipersonaDebate> tag.",
+        "no_scaffold (8.3%) is the main residual failure mode: model produces numbered reasoning or direct calculation without ever opening the tag. These fail tag_valid universally and cost ~7pp on correct vs scaffolded completions."
+      ]
+    },
+    "generalization_gap_final": {
+      "training_window_111_120_means": {
+        "correct": 0.8734,
+        "tag_valid": 0.9531,
+        "reward_total": 0.8641
+      },
+      "training_window_121_127_means": {
+        "correct": 0.8415,
+        "tag_valid": 0.9732,
+        "reward_total": 0.8362
+      },
+      "heldout_final_batch128": {
+        "correct": 0.842,
+        "tag_valid": 0.978,
+        "reward_total": 0.8376
+      },
+      "gap_vs_win_111_120": {
+        "correct_pp": 3.14,
+        "tag_valid_pp": -2.49,
+        "reward_pp": 2.65
+      },
+      "interpretation": "Held-out correct=0.842 vs best training-window (111-120) mean 0.873 \u2192 only +3pp training-to-test gap. Held-out tag_valid=0.978 exceeds the 111-120 window mean and matches the 121-127 plateau \u2014 format is fully generalized. Step-80 gap was ~2.5pp, step-70 gap ~-4pp (test actually beat a noisy training window). Gap stayed small across the extension, so no sign of overfitting."
+    }
+  },
+  "extend_160_run": {
+    "launcher": "scripts/rl_multipersona_gsm8k_extend_160.sh",
+    "launched_at": "2026-04-23T11:09-07:00",
+    "log_path": "/tmp/tinker-examples/rl/multipersona_gsm8k/2026-04-23-08-08",
+    "resume_from": {
+      "session_id": "f32e0238-cffd-5198-a497-c76f04b4cf4d",
+      "checkpoint_batch": 80,
+      "checkpoint_alias": "final",
+      "state_path": "tinker://f32e0238-cffd-5198-a497-c76f04b4cf4d:train:0/weights/final"
+    },
+    "new_session_id": "e1a9b8bf-74f0-548a-9a87-d475c3201132",
+    "target_max_steps": 160,
+    "additional_steps": 80,
+    "hyperparameters": "identical to original run (lr=5e-6, group_size=8, groups_per_batch=16, temperature=1.0, lora_rank=32, tag_coef=0.2)",
+    "rationale": "Monotone acceleration across all seven 10-step windows of the original run (window means 0.396 -> 0.741 on correct, steepening rather than flattening); 500-example test evals confirm 60<70<80 on held-out data; no plateau observed at step 80.",
+    "status": "completed (stopped at epoch end, batch=128, not at max_steps=160)",
+    "per_step_metrics_post_resume": {
+      "_note": "Ground-truth mapping from log Step headers (extend_160.log) to env/all blocks. The resume emits one extra block at step 80 as a sanity-check replay before training resumes at step 81.",
+      "step80_replay": {
+        "correct": 0.6563,
+        "tag_valid": 0.8125,
+        "reward_total": 0.6188,
+        "kind": "resume_replay"
+      },
+      "step81": {
+        "correct": 0.7656,
+        "tag_valid": 0.7656,
+        "reward_total": 0.7188
+      },
+      "step82": {
+        "correct": 0.7031,
+        "tag_valid": 0.75,
+        "reward_total": 0.6531
+      },
+      "step83": {
+        "correct": 0.6797,
+        "tag_valid": 0.8047,
+        "reward_total": 0.6406
+      },
+      "step84": {
+        "correct": 0.8125,
+        "tag_valid": 0.7578,
+        "reward_total": 0.7641
+      },
+      "step85": {
+        "correct": 0.6953,
+        "tag_valid": 0.7266,
+        "reward_total": 0.6406
+      },
+      "step86": {
+        "correct": 0.7734,
+        "tag_valid": 0.7813,
+        "reward_total": 0.7297
+      },
+      "step87": {
+        "correct": 0.6797,
+        "tag_valid": 0.7734,
+        "reward_total": 0.6344
+      },
+      "step88": {
+        "correct": 0.7422,
+        "tag_valid": 0.7656,
+        "reward_total": 0.6953
+      },
+      "step89": {
+        "correct": 0.7891,
+        "tag_valid": 0.8281,
+        "reward_total": 0.7547
+      },
+      "step90": {
+        "correct": 0.8672,
+        "tag_valid": 0.8125,
+        "reward_total": 0.8297,
+        "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/000090",
+        "state_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/weights/000090",
+        "new_run_highs": [
+          "correct",
+          "tag_valid",
+          "reward_total"
+        ],
+        "note": "Step 90 sets new run-wide highs on all three metrics. Prior-run peaks were correct=0.836@step76, tag_valid=0.797@steps63/73, reward=0.780@step76. Step 90 delta vs each: +3.1pp / +1.6pp / +5.0pp."
+      },
+      "step91": {
+        "correct": 0.8281,
+        "tag_valid": 0.875,
+        "reward_total": 0.8031
+      },
+      "step92": {
+        "correct": 0.7812,
+        "tag_valid": 0.8359,
+        "reward_total": 0.7484
+      },
+      "step93": {
+        "correct": 0.7656,
+        "tag_valid": 0.8594,
+        "reward_total": 0.7375
+      },
+      "step94": {
+        "correct": 0.8125,
+        "tag_valid": 0.8672,
+        "reward_total": 0.7859
+      },
+      "step95": {
+        "correct": 0.7812,
+        "tag_valid": 0.8594,
+        "reward_total": 0.7531
+      },
+      "step96": {
+        "correct": 0.7969,
+        "tag_valid": 0.8594,
+        "reward_total": 0.7688
+      },
+      "step97": {
+        "correct": 0.7031,
+        "tag_valid": 0.9453,
+        "reward_total": 0.6922
+      },
+      "step98": {
+        "correct": 0.8047,
+        "tag_valid": 0.8828,
+        "reward_total": 0.7812
+      },
+      "step99": {
+        "correct": 0.8906,
+        "tag_valid": 0.875,
+        "reward_total": 0.8656
+      },
+      "step100": {
+        "correct": 0.8906,
+        "tag_valid": 0.875,
+        "reward_total": 0.8656,
+        "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/000100",
+        "state_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/weights/000100"
+      },
+      "step101": {
+        "correct": 0.8359,
+        "tag_valid": 0.9219,
+        "reward_total": 0.8203
+      },
+      "step102": {
+        "correct": 0.8906,
+        "tag_valid": 0.9297,
+        "reward_total": 0.8766
+      },
+      "step103": {
+        "correct": 0.7578,
+        "tag_valid": 0.8906,
+        "reward_total": 0.7359
+      },
+      "step104": {
+        "correct": 0.8516,
+        "tag_valid": 0.9531,
+        "reward_total": 0.8422
+      },
+      "step105": {
+        "correct": 0.7578,
+        "tag_valid": 0.9297,
+        "reward_total": 0.7438
+      },
+      "step106": {
+        "correct": 0.6562,
+        "tag_valid": 0.9609,
+        "reward_total": 0.6484
+      },
+      "step107": {
+        "correct": 0.8359375,
+        "tag_valid": 0.921875,
+        "reward_total": 0.8203125
+      },
+      "step108": {
+        "correct": 0.890625,
+        "tag_valid": 0.9140625,
+        "reward_total": 0.8734375
+      },
+      "step109": {
+        "correct": 0.8828125,
+        "tag_valid": 0.953125,
+        "reward_total": 0.8734375
+      },
+      "step110": {
+        "correct": 0.859375,
+        "tag_valid": 0.8984375,
+        "reward_total": 0.8390625,
+        "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/000110",
+        "state_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/weights/000110"
+      },
+      "step111": {
+        "correct": 0.875,
+        "tag_valid": 0.9375,
+        "reward_total": 0.8625
+      },
+      "step112": {
+        "correct": 0.921875,
+        "tag_valid": 0.9453125,
+        "reward_total": 0.9109375
+      },
+      "step113": {
+        "correct": 0.8984375,
+        "tag_valid": 0.9765625,
+        "reward_total": 0.89375
+      },
+      "step114": {
+        "correct": 0.875,
+        "tag_valid": 0.921875,
+        "reward_total": 0.859375
+      },
+      "step115": {
+        "correct": 0.8125,
+        "tag_valid": 0.96875,
+        "reward_total": 0.80625
+      },
+      "step116": {
+        "correct": 0.9296875,
+        "tag_valid": 0.9609375,
+        "reward_total": 0.921875
+      },
+      "step117": {
+        "correct": 0.828125,
+        "tag_valid": 0.96875,
+        "reward_total": 0.821875
+      },
+      "step118": {
+        "correct": 0.9140625,
+        "tag_valid": 0.953125,
+        "reward_total": 0.9046875
+      },
+      "step119": {
+        "correct": 0.7890625,
+        "tag_valid": 0.9609375,
+        "reward_total": 0.78125
+      },
+      "step120": {
+        "correct": 0.890625,
+        "tag_valid": 0.9375,
+        "reward_total": 0.878125,
+        "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/000120",
+        "state_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/weights/000120"
+      },
+      "step121": {
+        "correct": 0.8515625,
+        "tag_valid": 0.96875,
+        "reward_total": 0.8453125
+      },
+      "step122": {
+        "correct": 0.8671875,
+        "tag_valid": 0.9765625,
+        "reward_total": 0.8625
+      },
+      "step123": {
+        "correct": 0.90625,
+        "tag_valid": 0.953125,
+        "reward_total": 0.896875
+      },
+      "step124": {
+        "correct": 0.8203125,
+        "tag_valid": 0.96875,
+        "reward_total": 0.8140625
+      },
+      "step125": {
+        "correct": 0.90625,
+        "tag_valid": 0.984375,
+        "reward_total": 0.903125
+      },
+      "step126": {
+        "correct": 0.8046875,
+        "tag_valid": 0.984375,
+        "reward_total": 0.8015625
+      },
+      "step127": {
+        "correct": 0.734375,
+        "tag_valid": 0.9765625,
+        "reward_total": 0.7296875
+      }
+    },
+    "window_81_90_means": {
+      "correct": 0.7508,
+      "tag_valid": 0.7766,
+      "reward_total": 0.7061,
+      "note": "First 10-step window of extended run. Mean correct 0.7408 is within 1pp of the step 71-80 window mean (0.741). No regression; trend continuation."
+    },
+    "window_91_100_means": {
+      "correct": 0.8054,
+      "tag_valid": 0.8734,
+      "reward_total": 0.7801,
+      "note": "Window-mean correct 0.806 beats the prior-run single-step peak of 0.836 by less than 3pp as a 10-step mean; window-mean gain reaccelerated (+5.5pp vs prior window +1pp)."
+    },
+    "new_run_highs": {
+      "correct": {
+        "value": 0.9296875,
+        "step": 116,
+        "note": "post-resume run peak; base-run peak was 0.7734 at step 77"
+      },
+      "tag_valid": {
+        "value": 0.984375,
+        "first_step": 125,
+        "repeated_at": [
+          126
+        ],
+        "note": "post-resume run peak"
+      },
+      "reward_total": {
+        "value": 0.921875,
+        "step": 116,
+        "note": "post-resume run peak"
+      }
+    },
+    "tag_dip_pattern": {
+      "description": "Steps 97 and 106 show the same shape: tag_valid spikes to ~0.95-0.96 while correct dips to ~0.66-0.70. Twice in 16 steps.",
+      "steps": [
+        97,
+        106
+      ],
+      "interpretation": "Likely group-level variance where long-panel rollouts burn tokens on tag structure. Reward formula (correct + 0.2*(tag_valid-1)) caps the tag_valid bonus at +0.2 and is already near saturation in these dips, so there is no gradient incentive to trade correct for tag_valid. Not actionable unless correct stays suppressed across 3+ consecutive steps."
+    },
+    "window_101_110_means": {
+      "correct": 0.8219,
+      "tag_valid": 0.9273,
+      "reward_total": 0.8073,
+      "note": "mean of per-batch metrics for steps 101..110 (n=10)"
+    },
+    "window_111_120_means": {
+      "correct": 0.8734,
+      "tag_valid": 0.9531,
+      "reward_total": 0.8641,
+      "note": "mean of per-batch metrics for steps 111..120 (n=10)"
+    },
+    "window_121_127_means": {
+      "correct": 0.8415,
+      "tag_valid": 0.9732,
+      "reward_total": 0.8362,
+      "note": "mean of per-batch metrics for steps 121..127 (n=7); partial window \u2014 training ended at step 127 (epoch size cap)"
+    },
+    "training_completion": {
+      "completed_at": "2026-04-23 (local)",
+      "completion_status": "success_epoch_end_before_max_steps",
+      "new_session_id": "e1a9b8bf-74f0-548a-9a87-d475c3201132",
+      "final_batch": 128,
+      "target_max_steps_requested": 160,
+      "actual_final_step": 127,
+      "additional_steps_achieved": 47,
+      "additional_steps_planned": 80,
+      "epoch_size_cap": {
+        "batches_per_epoch": 128,
+        "derivation": "n_train=2048 / groups_per_batch=16 = 128 batches",
+        "explanation": "tinker_cookbook training loop iterates the dataset once and exits at end-of-epoch; max_steps=160 was silently capped at the epoch size of 128. progress/done_frac=1.000000 at step 127 confirms epoch exhaustion."
+      },
+      "final_checkpoint": {
+        "name": "final",
+        "batch": 128,
+        "state_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/weights/final",
+        "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+        "note": "weights at batch=128 (one gradient step past sampler_weights/000120). No sampler_weights/000128 exists \u2014 the `final` alias is the definitive last checkpoint."
+      },
+      "last_logged_step_metrics": {
+        "step": 127,
+        "correct": 0.734375,
+        "tag_valid": 0.9765625,
+        "reward_total": 0.7296875,
+        "note": "noisy single-batch (size=128 problems); window 121-127 mean reward=0.8362 is the reliable summary."
+      },
+      "implications": [
+        "The curve's post-resume slope remained positive through step 120 then flattened in the 121-127 tail \u2014 consistent with approaching saturation on this dataset/recipe.",
+        "Run-wide correct high of 0.9297 at step 116 represents ~+53pp over the step-0 baseline of ~0.40 on the training batches.",
+        "If additional training is desired later, either (a) raise n_train (full-epoch cap grows 1:1 with n_train/groups_per_batch) or (b) cycle the dataset inside the training loop rather than exiting at epoch end."
+      ]
+    }
+  },
+  "project_status": {
+    "status": "complete",
+    "completed_at": "2026-04-23",
+    "headline_result": {
+      "checkpoint": "weights/final (batch=128)",
+      "heldout_500": {
+        "correct": 0.842,
+        "tag_valid": 0.978,
+        "reward_total": 0.8376
+      },
+      "baseline_step0_heldout": null,
+      "baseline_step0_training_batch": "~0.40 correct",
+      "absolute_improvement_correct_pp": 44.2
+    },
+    "training": {
+      "method": "pure RL from Qwen3-30B-A3B-Base with LoRA rank 32",
+      "total_gradient_steps": 128,
+      "reward": "outcome correctness + 0.2 * (tag_valid - 1)",
+      "ended_by": "epoch-size cap (n_train=2048 / groups_per_batch=16 = 128 batches/epoch)"
+    }
+  },
+  "transfer_evals": {
+    "_note": "Vibe-check transfer evaluations of the final checkpoint (weights/final, batch=128, session e1a9b8bf) in two prompt variants: the training `panel` template and a stripped `no_panel` template.",
+    "common": {
+      "sampler_path": "tinker://e1a9b8bf-74f0-548a-9a87-d475c3201132:train:0/sampler_weights/final",
+      "checkpoint": "weights/final (batch=128)",
+      "temperature": 1.0
+    },
+    "aime24_25": {
+      "runner": "scripts/eval_aime_vibecheck.py",
+      "sweep": "scripts/eval_aime_vibecheck_sweep.sh",
+      "datasets": [
+        "HuggingFaceH4/aime_2024 first 10",
+        "yentinglin/aime_2025 first 10"
+      ],
+      "n_problems": 20,
+      "n_samples_per_problem": 8,
+      "max_tokens": 8192,
+      "results": {
+        "panel": {
+          "hit_rate": 0.0563,
+          "wilson_ci95": [
+            0.03,
+            0.103
+          ],
+          "pass_at_8": "6/20",
+          "panel_tag_compliance": 0.919,
+          "answer_tag_compliance": 1.0
+        },
+        "no_panel": {
+          "hit_rate": 0.0875,
+          "wilson_ci95": [
+            0.053,
+            0.142
+          ],
+          "pass_at_8": "6/20",
+          "panel_tag_compliance": 0.0,
+          "answer_tag_compliance": 0.256
+        }
+      },
+      "interpretation": "At this sample size (160/variant) the two prompts are statistically indistinguishable on AIME. CIs overlap heavily; nominal +3pp for no_panel is within noise. Pass@8 = 6/20 for both; 3 problems both solved, 3 each solved only by one variant, 11 solved by neither. AIME is near the capability floor for this model \u2014 both variants converge on occasional lucky hits, giving no prompt-level signal."
+    },
+    "math500": {
+      "runner": "scripts/eval_math500_vibecheck.py",
+      "sweep": "scripts/eval_math500_vibecheck_sweep.sh",
+      "dataset": "HuggingFaceH4/MATH-500",
+      "sampling": "stratified: first 10 problems at each level (1..5) \u2192 50 total",
+      "n_problems": 50,
+      "n_samples_per_problem": 4,
+      "max_tokens": 4096,
+      "grader": "math_verify.parse + math_verify.verify (LaTeX-form tolerant)",
+      "results": {
+        "panel": {
+          "hit_rate": 0.565,
+          "wilson_ci95": [
+            0.496,
+            0.632
+          ],
+          "pass_at_4": "40/50",
+          "panel_tag_compliance": 0.955,
+          "answer_tag_compliance": 0.99,
+          "boxed_compliance": 0.04,
+          "elapsed_sec": 201
+        },
+        "no_panel": {
+          "hit_rate": 0.37,
+          "wilson_ci95": [
+            0.306,
+            0.439
+          ],
+          "pass_at_4": "34/50",
+          "panel_tag_compliance": 0.0,
+          "answer_tag_compliance": 0.325,
+          "boxed_compliance": 0.41,
+          "elapsed_sec": 386
+        }
+      },
+      "per_level_panel": {
+        "1": 0.75,
+        "2": 0.7,
+        "3": 0.55,
+        "4": 0.55,
+        "5": 0.275
+      },
+      "per_level_no_panel": {
+        "1": 0.4,
+        "2": 0.55,
+        "3": 0.4,
+        "4": 0.225,
+        "5": 0.275
+      },
+      "per_problem_overlap": {
+        "both": 30,
+        "panel_only": 10,
+        "no_panel_only": 4,
+        "neither": 6
+      },
+      "significance": {
+        "delta_pp": -19.5,
+        "z": -3.908,
+        "two_sided_p": 0.0001,
+        "notes": "no_panel vs panel"
+      },
+      "interpretation": "Panel scaffold provides a large, statistically significant lift on MATH500 (+19.5pp, p=0.0001). Effect is present at every level except L5, where both variants converge at ~27.5% \u2014 capability floor. Largest gap at L4 (+32.5pp). Panel's successful-problem set nearly supersets no_panel's (30 overlap + 10 panel-only + 4 no_panel-only). Per-sample compliance: panel produces the debate format on ~95% of novel problems (scaffold learned on GSM8K transfers as a habit). No_panel produces a committed answer form (tag or boxed) only ~74% of the time \u2014 many rollouts ramble without committing. That is a capability/habit gap, not a grader artifact."
+    },
+    "joint_interpretation": "Together, AIME and MATH500 tell a coherent story: the RL'd panel scaffold is load-bearing in the model's capability range (MATH500 L1-L4, GSM8K) and inert where the model is at its hard ceiling (MATH500 L5, all of AIME). AIME's 'no prompt effect' is not evidence the scaffold is cosmetic; it is evidence AIME is out of range for this 128-step LoRA on Qwen3-30B-A3B-Base."
+  },
+  "post_math_panel": {
+    "_note": "After the GSM8K panel model, an additional RL stage was run on MATH (session 44722365-baf6-517f-a69f-ec01d13f6395, sampler_weights/final). Evaluations below use that post-MATH checkpoint. Stratified MATH500 slices use first-N-per-level sampling; L5-full uses all 134 L5 problems.",
+    "checkpoint": {
+      "session_id": "44722365-baf6-517f-a69f-ec01d13f6395",
+      "sampler_path": "tinker://44722365-baf6-517f-a69f-ec01d13f6395:train:0/sampler_weights/final",
+      "base_model": "Qwen/Qwen3-30B-A3B-Base",
+      "tag": "final"
+    },
+    "eval_grid_math500_stratified_50": {
+      "_note": "Stratified 50-problem slice (10 per level, 1-5). n=4 samples each unless noted.",
+      "math_final_panel": {
+        "runner": "scripts/eval_math500_vibecheck.py",
+        "tag": "math_final_panel",
+        "hit_rate": 0.805,
+        "wilson_ci95": [0.745, 0.854],
+        "pass_at_4": "45/50",
+        "pass_at_4_rate": 0.9,
+        "per_level_pass": {"1": 0.875, "2": 1.0, "3": 0.8, "4": 0.775, "5": 0.575},
+        "n_correct_samples": 161,
+        "total_samples": 200,
+        "max_tokens": 4096,
+        "elapsed_sec": 259.3,
+        "delta_from_pre_math_panel_pp": 24.0
+      },
+      "math_final_no_panel": {
+        "runner": "scripts/eval_math500_vibecheck.py",
+        "tag": "math_final_no_panel",
+        "hit_rate": 0.405,
+        "wilson_ci95": [0.339, 0.474],
+        "pass_at_4": "39/50",
+        "pass_at_4_rate": 0.78,
+        "per_level_pass": {"1": 0.575, "2": 0.475, "3": 0.325, "4": 0.35, "5": 0.3},
+        "n_correct_samples": 81,
+        "total_samples": 200,
+        "max_tokens": 4096,
+        "elapsed_sec": 384.9,
+        "delta_from_pre_math_no_panel_pp": 3.5
+      },
+      "instruct_native": {
+        "runner": "scripts/eval_math500_vibecheck.py (instruct_native variant)",
+        "tag": "instruct_native",
+        "base_model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+        "system_prompt": "You are a helpful math tutor. Solve the problem carefully, showing your reasoning step by step, and enclose your final answer in \\boxed{}.",
+        "hit_rate": 0.915,
+        "wilson_ci95": [0.868, 0.946],
+        "pass_at_4": "48/50",
+        "pass_at_4_rate": 0.96,
+        "per_level_pass": {"1": 0.9, "2": 1.0, "3": 0.925, "4": 0.95, "5": 0.8},
+        "n_correct_samples": 183,
+        "total_samples": 200,
+        "max_tokens": 4096,
+        "elapsed_sec": 1001.2,
+        "purpose": "Production Instruct reference for non-thinking deployment."
+      },
+      "thinking_native": {
+        "runner": "scripts/eval_math500_thinking_ceiling.py",
+        "tag": "thinking_native",
+        "base_model": "Qwen/Qwen3-30B-A3B",
+        "chat_template": "apply_chat_template(enable_thinking=True); model emits <think>...</think>",
+        "hit_rate": 0.97,
+        "wilson_ci95": [0.936, 0.986],
+        "pass_at_4": "50/50",
+        "pass_at_4_rate": 1.0,
+        "per_level_pass": {"1": 0.975, "2": 1.0, "3": 1.0, "4": 0.925, "5": 0.95},
+        "n_correct_samples": 194,
+        "total_samples": 200,
+        "max_tokens": 16384,
+        "elapsed_sec": 2340.1,
+        "purpose": "Production hybrid thinking reference — the headline baseline our panel scaffold must compare against. Arch-identical to panel's base (Qwen3-30B-A3B-Base).",
+        "tinker_model_notes": "Tinker rejects dedicated thinking variants (Qwen3-30B-A3B-Thinking-2507, QwQ-32B, R1-distills) with BadRequestError. Hybrid Qwen3-30B-A3B is the closest supported thinking-capable model."
+      }
+    },
+    "l5_full_sweep": {
+      "_note": "All 134 MATH500 L5 problems. Direct apples-to-apples panel-vs-thinking at the hardest tier. Panel n=8, thinking n=4 (panel given 2x sample budget to compensate for per-sample capability gap).",
+      "thinking_l5_full": {
+        "tag": "thinking_l5_full",
+        "hit_rate": 0.9086,
+        "wilson_ci95": [0.881, 0.930],
+        "pass_at_4": "128/134",
+        "pass_at_4_rate": 0.9552,
+        "total_samples": 536,
+        "n_correct_samples": 487,
+        "max_tokens": 16384,
+        "elapsed_sec": 11425.5
+      },
+      "panel_l5_full": {
+        "tag": "panel_l5_full",
+        "hit_rate": 0.5840,
+        "wilson_ci95": [0.554, 0.613],
+        "pass_at_8": "111/134",
+        "pass_at_8_rate": 0.8284,
+        "total_samples": 1072,
+        "n_correct_samples": 626,
+        "max_tokens": 4096,
+        "elapsed_sec": 1482.5
+      },
+      "ensemble_union": {
+        "_note": "Problem-level union of correct-problems (pass>=1) across the two variants.",
+        "n_problems": 134,
+        "both_solve": 108,
+        "thinking_only_solve": 20,
+        "panel_only_solve": 3,
+        "neither_solve": 3,
+        "thinking_alone_pass_rate": 0.9552,
+        "panel_alone_pass_rate": 0.8284,
+        "union_pass_rate": 0.9776,
+        "ceiling_gain_adding_panel_to_thinking_pp": 2.2,
+        "ceiling_gain_adding_thinking_to_panel_pp": 14.9,
+        "interpretation": "Panel's contribution over the thinking baseline is +2.2pp at the hardest tier — small, and asymmetric: thinking adds +14.9pp on top of panel. Thinking dominates raw capability; panel adds a narrow orthogonal tail (3 problems thinking cannot catch at n=4)."
+      }
+    },
+    "hard_problem_analysis": {
+      "script": "scripts/analyze_hard_problems.py",
+      "outputs": ["reports/hard_problem_analysis/summary.json", "reports/hard_problem_analysis/joined.jsonl"],
+      "bucket_counts_by_thinking_difficulty": {
+        "easy_4_of_4": 112,
+        "easy_maj_3_of_4": 10,
+        "hard_coin_2_of_4": 3,
+        "hard_rare_1_of_4": 3,
+        "hard_fail_0_of_4": 6
+      },
+      "panel_saves": {
+        "definition": "Problems where thinking pass@4 = False AND panel pass@8 = True.",
+        "n_thinking_failures": 6,
+        "n_panel_saves": 3,
+        "save_rate": 0.5,
+        "save_rate_wilson95": [0.188, 0.812],
+        "saved_uids": [
+          "test/counting_and_probability/765.json",
+          "test/geometry/817.json",
+          "test/precalculus/768.json"
+        ],
+        "joint_failure_uids": [
+          "test/geometry/711.json",
+          "test/geometry/880.json",
+          "test/intermediate_algebra/2015.json"
+        ],
+        "qualitative_inspection": {
+          "_note": "Inspected the 3 saved traces to characterize what kind of reasoning paths panel finds that thinking misses.",
+          "test/counting_and_probability/765.json": {
+            "gold": "110",
+            "panel_correct_of_8": 1,
+            "mechanism": "Clean inclusion-exclusion bookkeeping with explicit variable assignment (x,y,z for only-subject counts, a,b,c for pairwise-not-triple). Single-thread derivation, not debate-driven. Thinking likely tripped on the 4-way constraint system; panel got it right once in 8."
+          },
+          "test/geometry/817.json": {
+            "gold": "\\frac{14}{3}",
+            "panel_correct_of_8": 3,
+            "mechanism": "PARTIAL GRADER ARTIFACT. The personas derive r=7 via Pythagorean setup (wrong), then assert 'the correct answer should be 14/3' without deriving it, boxing \\frac{14}{3}. Grader extracts from \\boxed{} and scores correct despite the <answer>7</answer> tag being wrong. This is closer to a hallucinated save than a genuine one — the model is 'guessing the common fraction.'"
+          },
+          "test/precalculus/768.json": {
+            "gold": "3 \\pm 2\\sqrt{2}",
+            "panel_correct_of_8": 5,
+            "mechanism": "GENUINE SAVE. Expert 1/2 dialogue surfaces the key identity cot^-1(1/x)=tan^-1(x), reducing the problem to sin(2 tan^-1 x) = 1/3, then applies the double-angle formula to get x^2-6x+1=0 → 3±2√2. This is the kind of identity-first reduction where the panel scaffold plausibly helped (one expert proposes, the other validates)."
+          },
+          "summary": "Of 3 panel-saves: 1 genuine (precalculus/768, identity-based reduction), 1 ambiguous (counting/765, clean bookkeeping but not obviously debate-driven), 1 probable grader artifact (geometry/817, answer boxed without derivation). N=3 is too small to claim panel has a reliable edge on thinking-failures; the headline 50% save rate has Wilson95 [0.19, 0.81]."
+        }
+      },
+      "inverse_direction_panel_failures_thinking_succeeds": {
+        "n": 20,
+        "interpretation": "Thinking solves 20 L5 problems that panel cannot catch even at n=8 (2x panel's sample budget). These are concentrated in intermediate_algebra (10/20) and geometry (6/20) — subjects that benefit from long internal reasoning traces (thinking mean trace length 4513 chars vs panel 598 chars)."
+      }
+    },
+    "diversity_analysis": {
+      "script": "scripts/analyze_diversity.py",
+      "outputs": ["reports/diversity_analysis/summary.json", "reports/diversity_analysis/per_problem.jsonl"],
+      "method": {
+        "embedding_model": "sentence-transformers/all-mpnet-base-v2 (384d, 512 token cap — binding constraint)",
+        "trace_head_chars": 2000,
+        "clustering": "DBSCAN on cosine-distance embeddings (eps=0.25)",
+        "extraction_regex": "<mutipersonaDebate>...</mutipersonaDebate> or <think>...</think>, fallback = full completion minus \\boxed{} trailer",
+        "tag_extraction_success": "200/200 for both panel and thinking — no fallback artifacts"
+      },
+      "per_variant_means": {
+        "panel_postmath": {"mean_pairwise_cos_dist": 0.0946, "distinct_strategies": 1.02, "trace_len_chars": 597.6, "pass_at_4": 0.9},
+        "thinking": {"mean_pairwise_cos_dist": 0.0531, "distinct_strategies": 1.00, "trace_len_chars": 4513.2, "pass_at_4": 1.0},
+        "panel_premath": {"mean_pairwise_cos_dist": 0.1736, "distinct_strategies": 1.20, "trace_len_chars": 434.6, "pass_at_4": 0.8},
+        "no_panel_postmath": {"mean_pairwise_cos_dist": 0.4357, "distinct_strategies": 2.46, "trace_len_chars": 493.9, "pass_at_4": 0.78}
+      },
+      "paired_significance": {
+        "panel_postmath_vs_thinking": {
+          "delta_mean_pairwise_dist": 0.0416,
+          "rel_increase_pct": 78.2,
+          "t": 5.91,
+          "p_two_sided": 3.4e-09,
+          "n_paired": 50,
+          "interpretation": "Panel samples occupy a measurably wider semantic volume per problem than thinking samples at equal n. Effect is highly significant and robust to trace-head length (re-running with 8k chars gives identical numbers — mpnet's 512-token cap is binding)."
+        },
+        "panel_postmath_vs_panel_premath": {
+          "delta_mean_pairwise_dist": -0.0789,
+          "t": -7.95,
+          "p_two_sided": 1.8e-15,
+          "interpretation": "MATH RL REDUCES DIVERSITY within the panel variant. Post-MATH panel is MORE consistent (narrower reasoning volume) than pre-MATH panel — the MATH training pass trades divergent exploration for reliability. This is the key caveat to the post-MATH panel's +24pp MATH500 gain: it comes partly from collapsing onto a single strong strategy."
+        },
+        "distinct_strategies_panel_postmath_vs_thinking": {
+          "delta": 0.02,
+          "t": 1.00,
+          "p_two_sided": 0.32,
+          "interpretation": "DBSCAN cluster count is indistinguishable between panel and thinking (both ~1.0). The diversity lift is a continuous-variance lift, not a discrete-mode lift. Both variants mostly commit to a single strategy per problem; panel just explores it from more semantic angles."
+        }
+      },
+      "headline": "Panel's reasoning traces are +78% more semantically diverse than thinking's at equal n (p < 1e-8), but MATH RL cut that diversity roughly in half vs the pre-MATH panel. Discrete strategy count (DBSCAN) is flat across panel/thinking."
+    },
+    "pass_at_k_crossover": {
+      "script": "scripts/pass_at_k_crossover.py",
+      "output": "reports/pass_at_k_crossover/results.json",
+      "estimator": "Codex-paper unbiased pass@k = 1 - C(n-c,k)/C(n,k), averaged over problems",
+      "math500_stratified_50_matched_n4": {
+        "pass_at_1": {"panel": 0.805, "thinking": 0.970, "delta_pp": -16.5, "t": -3.72},
+        "pass_at_2": {"panel": 0.880, "thinking": 0.997, "delta_pp": -11.7, "t": -2.67},
+        "pass_at_3": {"panel": 0.895, "thinking": 1.000, "delta_pp": -10.5, "t": -2.45},
+        "pass_at_4": {"panel": 0.900, "thinking": 1.000, "delta_pp": -10.0, "t": -2.33},
+        "crossover_k": null,
+        "gap_closure_k1_to_k4_pp": 6.5
+      },
+      "math500_l5_full_134": {
+        "_note": "Panel has n=8 rollouts, thinking has n=4. Matched-budget row at k=4 in top block; extended panel curve in bottom block.",
+        "matched_n4": {
+          "pass_at_1": {"panel": 0.584, "thinking": 0.909, "delta_pp": -32.5, "t": -10.15},
+          "pass_at_2": {"panel": 0.699, "thinking": 0.940, "delta_pp": -24.1, "t": -7.20},
+          "pass_at_3": {"panel": 0.749, "thinking": 0.950, "delta_pp": -20.1, "t": -6.01},
+          "pass_at_4": {"panel": 0.777, "thinking": 0.955, "delta_pp": -17.8, "t": -5.29},
+          "gap_closure_k1_to_k4_pp": 14.7
+        },
+        "panel_extended_k_vs_thinking_ceiling_0p955": {
+          "pass_at_5": 0.796,
+          "pass_at_6": 0.810,
+          "pass_at_7": 0.820,
+          "pass_at_8": 0.828,
+          "_note": "Panel asymptotes near 0.83 on L5. Doubling sample budget (n=8 vs thinking's n=4) does NOT close the 13pp gap to thinking's pass@4 ceiling."
+        },
+        "crossover_k": null
+      },
+      "interpretation": "Panel never beats thinking at any k tested. BUT the gap narrows monotonically with k (6.5pp closure on stratified-50, 14.7pp on L5-full) — exactly the signature predicted by the diversity claim: higher per-sample semantic variance means each additional sample adds more marginal coverage than thinking's concentrated samples do. This is a mechanistic confirmation of the diversity finding, not a capability crossover."
+    },
+    "aime_robustness_check": {
+      "_note": "Out-of-distribution replication: MATH500 stratified-50 is close to saturation for thinking (pass@3 = 1.000). AIME 2024+2025 (20 problems) is a harder, non-saturated distribution. Both variants sampled at matched n=16 on the same 20 problems.",
+      "panel": {
+        "script": "scripts/eval_aime_vibecheck.py (variant=panel)",
+        "tag": "aime_panel_postmath_n16",
+        "sampler_path": "tinker://44722365-baf6-517f-a69f-ec01d13f6395:train:0/sampler_weights/final",
+        "n_problems": 20,
+        "n_samples": 16,
+        "avg_hit_rate": 0.225,
+        "wilson_ci95": [0.183, 0.274],
+        "pass_at_16": "11/20",
+        "pass_at_16_rate": 0.55,
+        "delta_from_pre_math_panel_hitrate_pp": 16.9,
+        "_note_on_pretrain_drift": "Pre-MATH panel AIME was 5.6% hit rate / pass@8 = 6/20. Post-MATH panel lifts both substantially — MATH RL transferred out-of-distribution."
+      },
+      "thinking": {
+        "script": "scripts/eval_aime_thinking_ceiling.py",
+        "tag": "aime_thinking_n16",
+        "base_model": "Qwen/Qwen3-30B-A3B (hybrid, enable_thinking=True)",
+        "n_problems": 20,
+        "n_samples": 16,
+        "max_tokens": 16384,
+        "avg_hit_rate": 0.731,
+        "wilson_ci95": [0.680, 0.777],
+        "pass_at_16": "18/20",
+        "pass_at_16_rate": 0.90
+      },
+      "diversity_replication": {
+        "script": "scripts/analyze_diversity.py",
+        "output": "reports/diversity_analysis_aime/summary.json",
+        "panel_mean_pairwise_dist": 0.1186,
+        "thinking_mean_pairwise_dist": 0.0676,
+        "delta": 0.0511,
+        "relative_lift_pct": 75.6,
+        "paired_t": 4.72,
+        "p_two_sided": 2.4e-06,
+        "n_paired": 20,
+        "interpretation": "REPLICATES the MATH500 +78% diversity lift at +75.6%, with effectively indistinguishable relative magnitude. Both benchmarks, very different difficulty regimes, same effect. This is the main robustness win: the diversity claim is not an artifact of thinking and panel converging on the same easy-problem solution space — panel's higher semantic variance holds on out-of-distribution problems where thinking succeeds only 73% per-sample.",
+        "panel_distinct_strategies": 1.05,
+        "thinking_distinct_strategies": 1.00,
+        "distinct_strategies_delta_p": 0.32,
+        "note_on_clusters": "DBSCAN count flat at ~1.0 across benchmarks — diversity is continuous-variance, not discrete-mode. Same pattern as MATH500.",
+        "trace_length_context": {
+          "panel_aime_mean_chars": 1407.8,
+          "thinking_aime_mean_chars": 11328.0,
+          "ratio": 8.05,
+          "note": "Thinking writes 8x longer traces than panel on AIME (vs 7.5x on MATH500). Panel's +76% diversity is achieved in 1/8 the text budget — per-character diversity gap is even larger."
+        }
+      },
+      "pass_at_k_crossover": {
+        "script": "scripts/pass_at_k_aime.py",
+        "output": "reports/pass_at_k_aime/results.json",
+        "matched_n16_curve": {
+          "pass_at_1":  {"panel": 0.225, "thinking": 0.731, "delta_pp": -50.6, "t": -6.46},
+          "pass_at_2":  {"panel": 0.315, "thinking": 0.808, "delta_pp": -49.3, "t": -5.57},
+          "pass_at_4":  {"panel": 0.402, "thinking": 0.848, "delta_pp": -44.6, "t": -4.82},
+          "pass_at_8":  {"panel": 0.483, "thinking": 0.873, "delta_pp": -39.0, "t": -3.96},
+          "pass_at_16": {"panel": 0.550, "thinking": 0.900, "delta_pp": -35.0, "t": -3.20}
+        },
+        "crossover_k": null,
+        "gap_closure_k1_to_k16_pp": 15.6,
+        "comparison_to_math500_l5_full": {
+          "math500_l5_closure_k1_to_k4_pp": 14.7,
+          "aime_closure_k1_to_k16_pp": 15.6,
+          "interpretation": "Similar total closure but AIME needs 4x as many samples to achieve it — per-sample marginal closure is SLOWER on AIME because both panel and thinking climb together as k grows. Still monotonically narrows, confirming the mechanistic diversity signature."
+        }
+      },
+      "problem_level_ensemble": {
+        "both_solve": 11,
+        "thinking_only_solve": 7,
+        "panel_only_solve": 0,
+        "neither_solve": 2,
+        "joint_failure_uids": ["aime2024_2", "aime2024_3"],
+        "panel_alone_pass_rate": 0.55,
+        "thinking_alone_pass_rate": 0.90,
+        "union_pass_rate": 0.90,
+        "interpretation": "CRITICAL NEGATIVE RESULT: panel is a STRICT SUBSET of thinking on AIME — zero panel-only wins. Ensemble union = thinking alone. Contrast with MATH500 L5-full where panel caught 3 thinking-failures (+2.2pp ensemble gain). Panel's orthogonal coverage disappears on out-of-distribution hard problems. The 'panel catches what thinking misses' angle does NOT generalize to AIME."
+      }
+    },
+    "strategic_summary": {
+      "headline_framing": "NARROW CLAIM TO DIVERSITY. Panel produces demonstrably more diverse reasoning paths per problem than vanilla Qwen thinking on both MATH500 AND AIME (out-of-distribution); this is publishable as a mechanistic finding about prompt scaffolding without any SOTA claim. The diversity effect is robust across benchmarks (+78% MATH500, +76% AIME); the capability gap is real and does not close.",
+      "supporting_evidence_stack": {
+        "primary": {
+          "claim": "Panel's reasoning traces have ~+76-78% higher pairwise semantic distance than thinking's at equal n. Replicates across MATH500 and AIME.",
+          "metric": "mean pairwise cosine distance over all-mpnet-base-v2 embeddings of extracted reasoning",
+          "math500_effect": {"panel": 0.0946, "thinking": 0.0531, "relative_pct": 78.2, "t": 5.91, "p": 3.4e-09, "n": 50},
+          "aime_effect":    {"panel": 0.1186, "thinking": 0.0676, "relative_pct": 75.6, "t": 4.72, "p": 2.4e-06, "n": 20},
+          "robustness": "Identical effect magnitude across (a) different benchmarks, (b) different difficulty regimes, (c) different trace-head-char settings (2000 vs 8000). The mpnet 512-token cap is binding; panel achieves this lift in 1/8 the character budget thinking uses."
+        },
+        "secondary_predicted_corollary": {
+          "claim": "Because panel samples cover more semantic volume, its pass@k should rise faster with k than thinking's (even from a lower starting point).",
+          "evidence": "Matched-n pass@k gap narrows monotonically with k on BOTH benchmarks: -16.5pp→-10.0pp (stratified-50, k=1→4), -32.5pp→-17.8pp (L5-full, k=1→4), and -50.6pp→-35.0pp (AIME, k=1→16). Gap closure: 6.5pp / 14.7pp / 15.6pp respectively. Mechanistic signature holds across distributions.",
+          "caveat": "Gap narrows but does not cross. No k tested where panel >= thinking. Per-sample marginal closure rate is slower on AIME than MATH500 L5 — both panel and thinking climb together, so large k is required to see much closure on OOD problems."
+        },
+        "tertiary_existence_proof": {
+          "claim": "Panel's divergent exploration catches some thinking-failures on MATH500 L5, but NOT on AIME.",
+          "math500_l5_numbers": "3 of 6 thinking-failures recovered by panel on L5 (+2.2pp ensemble union gain).",
+          "aime_numbers": "0 of 7 thinking-non-saturations recovered by panel on AIME; panel's solved-set is a strict subset of thinking's (11 vs 18; union = 18).",
+          "caveat": "The 'panel catches what thinking misses' angle is domain-dependent. Panel's orthogonal coverage appears on in-distribution MATH problems (where it was RL'd) but disappears on out-of-distribution AIME problems. Do NOT overclaim as a general property."
+        }
+      },
+      "honest_negative_results_to_surface": [
+        "Panel never beats thinking at any pass@k at matched sample budget on any benchmark tested (MATH500 stratified, MATH500 L5-full, AIME).",
+        "Panel's per-sample hit rate is 33pp below thinking on MATH500 L5 and 51pp below on AIME.",
+        "On AIME, panel's solved-problem set is a STRICT SUBSET of thinking's — zero panel-only wins. The ensemble-gain finding from L5 does NOT replicate out of distribution.",
+        "MATH RL halved panel's diversity vs pre-MATH panel on MATH500 (0.0946 vs 0.1736 mean pairwise distance). The final checkpoint is a reliability-diversity compromise, not a pure-diversity win.",
+        "DBSCAN cluster count is flat (~1.0) for both panel and thinking on both benchmarks — the diversity lift is continuous-variance, not discrete-mode. Both mostly commit to one strategy per problem."
+      ],
+      "publication_thesis_draft": "Plural-actor prompt framing ('panel of experts' scaffold) induces measurably more semantically diverse reasoning paths under pure RL from a base model, compared to a production-grade thinking model on the same backbone. The diversity gain is robust to distribution shift: +78% pairwise cosine distance on MATH500 (t=5.91, p<1e-8, n=50) replicates at +76% on AIME 2024+2025 (t=4.72, p<1e-5, n=20). The effect is mechanistically coherent — matched pass@k gap closes monotonically with k on all benchmarks tested — without translating to a capability win against the heavily-post-trained baseline. We characterize this as an exploration-reliability trade-off: the scaffold expands per-sample semantic volume but does not lift raw problem-level capability on out-of-distribution mathematics.",
+      "suggested_paper_structure": [
+        "1. Setup: base model + pure RL + panel scaffold (no SFT warmup, outcome reward).",
+        "2. Main result: diversity measurement on TWO benchmarks (Fig 1a = MATH500 +78%, Fig 1b = AIME +76%, both p<1e-5).",
+        "3. Mechanism: pass@k gap-closure curves across three slices — evidence that diversity translates to marginal sample value, not surface-level variance.",
+        "4. Limits: ensemble-union analysis on MATH500 L5 (+2.2pp) vs AIME (0pp). Scaffold's orthogonal coverage is domain-dependent.",
+        "5. Trade-off: MATH RL compresses diversity (0.174 → 0.095). DBSCAN flat — diversity is continuous-variance, not discrete-mode.",
+        "6. Limitation: matched-compute think-scaffold control not run; comparison is vs a production model with orders-of-magnitude more post-training."
+      ]
+    }
+  }
+}

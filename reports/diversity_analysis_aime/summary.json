@@ -1,0 +1,68 @@
+{
+  "config": {
+    "inputs": {
+      "panel_aime": "reports/eval_aime_vibecheck/aime_panel_postmath_n16/rollouts.jsonl",
+      "thinking_aime": "reports/eval_aime_vibecheck/aime_thinking_n16/rollouts.jsonl"
+    },
+    "embed_model": "sentence-transformers/all-mpnet-base-v2",
+    "trace_head_chars": 2000,
+    "dbscan_eps": 0.25
+  },
+  "by_variant": {
+    "panel_aime": {
+      "n_problems": 20,
+      "total_samples": 320,
+      "mean_pairwise_dist_mean": 0.11864262111485005,
+      "mean_pairwise_dist_std": 0.042449276202285786,
+      "distinct_strategies_mean": 1.05,
+      "distinct_strategies_std": 0.21794494717703372,
+      "len_mean_mean": 1407.84375,
+      "len_cv_mean": 0.5261714593108187,
+      "emb_variance_trace_mean": 0.11122750211507082,
+      "pass_at_n_rate": 0.55
+    },
+    "thinking_aime": {
+      "n_problems": 20,
+      "total_samples": 320,
+      "mean_pairwise_dist_mean": 0.06758441645652055,
+      "mean_pairwise_dist_std": 0.023461046113950865,
+      "distinct_strategies_mean": 1.0,
+      "distinct_strategies_std": 0.0,
+      "len_mean_mean": 11328.025,
+      "len_cv_mean": 0.1339749211491663,
+      "emb_variance_trace_mean": 0.06336044445633889,
+      "pass_at_n_rate": 0.9
+    }
+  },
+  "by_level": {
+    "panel_aime": {
+      "?": {
+        "n_problems": 20,
+        "mean_pairwise_dist": 0.11864262111485005,
+        "distinct_strategies": 1.05,
+        "pass_at_n": 0.55
+      }
+    },
+    "thinking_aime": {
+      "?": {
+        "n_problems": 20,
+        "mean_pairwise_dist": 0.06758441645652055,
+        "distinct_strategies": 1.0,
+        "pass_at_n": 0.9
+      }
+    }
+  },
+  "paired": {
+    "panel_aime_minus_thinking_aime": {
+      "n_paired": 20,
+      "mean_pairwise_dist_delta_mean": 0.051058204658329484,
+      "mean_pairwise_dist_delta_std": 0.04715142321634666,
+      "mean_pairwise_dist_t": 4.720060162831282,
+      "mean_pairwise_dist_p_approx": 2.3577489822734776e-06,
+      "distinct_strategies_delta_mean": 0.05,
+      "distinct_strategies_t": 1.0000000000000002,
+      "distinct_strategies_p_approx": 0.3173105078629139
+    }
+  },
+  "n_shared_problems": 20
+}
