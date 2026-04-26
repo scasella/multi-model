@@ -1,12 +1,8 @@
 # Panel-of-experts scaffold vs `<think>` on Qwen3-30B-A3B
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/)
 [![Backbone: Qwen3-30B-A3B](https://img.shields.io/badge/backbone-Qwen3--30B--A3B-ff6b6b.svg)](https://huggingface.co/Qwen/Qwen3-30B-A3B-Base)
-[![Adapter: LoRA r32](https://img.shields.io/badge/adapter-LoRA%20r32-9cdcfe.svg)](#)
 [![RL: Tinker](https://img.shields.io/badge/RL-Tinker-blueviolet.svg)](https://tinker-console.thinkingmachines.ai/)
-[![Diversity Δ: +78% MATH / +76% AIME](https://img.shields.io/badge/diversity%20%CE%94-%2B78%25%20MATH%20%2F%20%2B76%25%20AIME-3dd68c.svg)](reports/blog_post/diversity.html)
-[![Olympiad RL: 14%→29%](https://img.shields.io/badge/olympiad%20RL-14%25%E2%86%9229%25-3dd68c.svg)](reports/blog_post/diversity.html)
 
 A LoRA rank-32 fine-tune of `Qwen/Qwen3-30B-A3B-Base` that replaces the usual
 `<think>…</think>` monologue with a three-persona debate
