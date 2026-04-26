@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The diversity effect — interactive case study</title>
+  <meta name="description" content="An interactive companion to the multi-model lab writeup. Drag the controls to develop intuition for the four load-bearing claims: hill-climbing trajectory, disjoint variance-band frontiers, pass@k gap closure, and the compute-cost asymmetry between panel and thinking RL." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:           #F9F9F6;
+      --accent:       #090909;
+      --fg:           #3B3B39;
+      --fg-mute:      #595856;
+      --fg-faint:     #969592;
+      --on-dark:      #DFDEDA;
+      --surface-muted:#EFEFEB;
+      --grid:         #E4E3DE;
+      --axis:         #C8C7C2;
+      --teal:         #5C8A95;
+      --mauve:        #8B6F8C;
+      --warn:         #C18549;
+      --font-serif:   'Libre Baskerville', Georgia, serif;
+      --font-sans:    'Inter', 'Helvetica Neue', Arial, sans-serif;
+    }
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+    html { background: var(--bg); -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-serif); color: var(--accent); background: var(--bg); min-height: 100vh; }
+
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 2rem 2.5rem; max-width: 1280px; margin: 0 auto;
+    }
+    .logo { font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.25em; color: var(--fg); text-decoration: none; }
+    .logo .accent { color: var(--accent); }
+    .nav-link { font-family: var(--font-sans); font-size: 13px; color: var(--fg); text-decoration: none; letter-spacing: 0.04em; padding: 0.5rem 0.8rem; border-radius: 999px; transition: background 200ms; }
+    .nav-link:hover { background: var(--surface-muted); }
+
+    .hero { max-width: 720px; margin: 6rem auto 4rem; padding: 0 2rem; }
+    .hero h1 { font-size: 48px; font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; color: var(--fg); }
+    .hero .subtitle { font-size: 18px; font-weight: 300; line-height: 1.55; color: var(--fg); margin-top: 12px; }
+    .hero .date { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-faint); margin-top: 1.5em; }
+
+    main { max-width: 1080px; margin: 0 auto; padding: 0 2rem 6rem; }
+    .panel {
+      background: #fff;
+      border: 1px solid var(--grid);
+      border-radius: 16px;
+      padding: 2.25rem 2rem 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .panel-tag { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-faint); display: block; margin-bottom: 8px; }
+    .panel h2 { font-size: 26px; font-weight: 400; color: var(--fg); letter-spacing: -0.005em; line-height: 1.2; margin-bottom: 0.6rem; }
+    .panel p.lead { font-size: 16px; font-weight: 400; line-height: 1.55; color: var(--fg); margin-bottom: 1.5rem; }
+    .panel .control-row { display: flex; align-items: center; gap: 1rem; margin: 1rem 0 1.25rem; flex-wrap: wrap; }
+    .panel .control-label { font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-mute); min-width: 60px; }
+    .panel .control-value { font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: var(--accent); min-width: 80px; }
+    .panel input[type=range] {
+      flex: 1; min-width: 200px; -webkit-appearance: none; appearance: none;
+      height: 4px; background: var(--grid); border-radius: 2px; outline: none;
+    }
+    .panel input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; width: 18px; height: 18px;
+      background: var(--teal); border-radius: 50%; cursor: pointer;
+      transition: transform 100ms;
+    }
+    .panel input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    .panel input[type=range]::-moz-range-thumb {
+      width: 18px; height: 18px; background: var(--teal); border-radius: 50%; cursor: pointer; border: 0;
+    }
+    .panel input[type=number] {
+      font-family: var(--font-serif); font-size: 18px; padding: 0.4rem 0.7rem;
+      width: 90px; border: 1px solid var(--grid); border-radius: 6px; background: var(--bg);
+    }
+    .panel .caption {
+      font-family: var(--font-sans); font-size: 13px; line-height: 1.55;
+      color: var(--fg-mute); margin-top: 1.25rem; padding: 0.85rem 1rem;
+      background: var(--surface-muted); border-radius: 8px;
+    }
+    .panel .caption strong { color: var(--fg); font-weight: 500; }
+    .panel svg { display: block; width: 100%; height: auto; }
+
+    /* Contingency grid */
+    .contingency-wrap { display: grid; grid-template-columns: 80px repeat(3, 1fr) 70px; gap: 4px; font-family: var(--font-sans); font-size: 13px; }
+    .contingency-wrap .head { padding: 8px 6px; color: var(--fg-mute); text-align: center; font-weight: 500; }
+    .contingency-wrap .row-label { padding: 12px 6px; color: var(--fg-mute); display: flex; align-items: center; }
+    .contingency-cell {
+      padding: 18px 12px; text-align: center; border-radius: 6px;
+      background: var(--surface-muted); cursor: pointer; transition: background 150ms, transform 100ms;
+    }
+    .contingency-cell:hover { background: #e5d9d8; transform: scale(1.02); }
+    .contingency-cell.active { background: var(--teal); color: #fff; }
+    .contingency-cell .num { font-family: var(--font-serif); font-size: 20px; font-weight: 700; display: block; }
+    .contingency-cell .pct { font-size: 10px; color: var(--fg-faint); margin-top: 2px; }
+    .contingency-cell.active .pct { color: rgba(255,255,255,0.7); }
+    .contingency-total { padding: 12px 6px; text-align: center; font-weight: 500; color: var(--fg-mute); }
+
+    /* Source-toggle chips */
+    .source-toggles { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1.25rem; }
+    .source-toggle {
+      font-family: var(--font-sans); font-size: 12px; padding: 0.4rem 0.85rem;
+      background: var(--bg); border: 1px solid var(--grid); border-radius: 999px;
+      cursor: pointer; transition: background 150ms; color: var(--fg);
+    }
+    .source-toggle.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+
+    /* Two-up layout for compute calc */
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 1.25rem 0; }
+    .calc-card { padding: 1.25rem; border-radius: 10px; background: var(--surface-muted); }
+    .calc-card .arm-label { font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-mute); }
+    .calc-card .big { font-family: var(--font-serif); font-size: 36px; font-weight: 700; color: var(--accent); line-height: 1; margin: 0.5rem 0; }
+    .calc-card .unit { font-family: var(--font-sans); font-size: 13px; color: var(--fg-mute); }
+    .calc-card .sub { font-family: var(--font-sans); font-size: 12px; color: var(--fg-faint); margin-top: 8px; }
+    @media (max-width: 600px) {
+      .calc-grid { grid-template-columns: 1fr; }
+      .contingency-wrap { font-size: 11px; grid-template-columns: 60px repeat(3, 1fr) 50px; }
+      .contingency-cell { padding: 10px 6px; }
+      .contingency-cell .num { font-size: 16px; }
+      .hero h1 { font-size: 36px; }
+      .header { padding: 1.5rem; }
+      main { padding: 0 1rem 4rem; }
+      .panel { padding: 1.5rem 1.25rem; }
+    }
+
+    .footer {
+      max-width: 1080px; margin: 0 auto; padding: 3rem 2rem 4rem; border-top: 1px solid var(--grid);
+      font-family: var(--font-sans); font-size: 12px; color: var(--fg-faint); line-height: 1.6;
+    }
+    .footer a { color: var(--fg); text-decoration: none; border-bottom: 1px dotted var(--fg-faint); }
+    .footer a:hover { border-bottom-color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <a href="../../" class="logo">MULTI<span class="accent">·</span>MODEL</a>
+    <nav style="display:flex; gap:0.5rem;">
+      <a class="nav-link" href="../blog_post/diversity.html">Read the writeup</a>
+      <a class="nav-link" href="https://github.com/scasella/multi-model" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>The diversity effect, interactively</h1>
+    <p class="subtitle">A companion to the writeup. Four panels, each lets you scrub one of the load-bearing claims so you can develop intuition for it instead of taking the number on faith.</p>
+    <p class="date">Stephen Casella · April 2026</p>
+  </section>
+
+  <main>
+
+    <!-- ============================================================ -->
+    <!-- PANEL 1: Hill-climbing trajectory scrubber                 -->
+    <!-- ============================================================ -->
+    <section class="panel" id="p1">
+      <span class="panel-tag">Panel 01 · Hill-climb scrubber</span>
+      <h2>Watch panel's olympiad held-out climb across 100 RL steps</h2>
+      <p class="lead">100 RL steps on the panel-arm variance band carry the held-out pass rate from 14% to 29%. Drag to any step to see the per-source breakdown at that checkpoint.</p>
+
+      <div class="control-row">
+        <span class="control-label">RL step</span>
+        <input type="range" id="step-slider" min="0" max="9" step="1" value="0" />
+        <span class="control-value"><span id="step-val">0</span></span>
+      </div>
+
+      <svg viewBox="0 0 800 360" id="p1-chart" role="img" aria-label="Held-out pass@1 trajectory with current-step indicator and per-source breakdown bars">
+        <!-- gridlines + line drawn dynamically -->
+      </svg>
+
+      <p class="caption">
+        At step <strong><span id="p1-step">0</span></strong>: held-out aggregate = <strong><span id="p1-mean">14%</span></strong>
+        (Δ from start: <strong><span id="p1-delta">+0pp</span></strong>).
+        Per source — AIME <span id="p1-aime">4%</span> · AMC <span id="p1-amc">32%</span> ·
+        HMMT <span id="p1-hmmt">0%</span> · OlympBench <span id="p1-ob">20%</span>.
+      </p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PANEL 2: Contingency explorer                              -->
+    <!-- ============================================================ -->
+    <section class="panel" id="p2">
+      <span class="panel-tag">Panel 02 · Disjoint frontiers</span>
+      <h2>Click a cell to see what each region of problem-space contains</h2>
+      <p class="lead">Each of the 877 olympiad problems falls in one of nine cells based on whether panel and thinking each got 0/8, 1–7/8, or 8/8 right. The cells reveal that the two scaffolds are working in different parts of problem-space.</p>
+
+      <div class="contingency-wrap" id="contingency">
+        <div></div>
+        <div class="head">thinking · all_zero</div>
+        <div class="head">thinking · variance_band</div>
+        <div class="head">thinking · all_one</div>
+        <div class="head">total</div>
+
+        <div class="row-label">panel · all_zero</div>
+        <div class="contingency-cell" data-row="all_zero" data-col="all_zero" data-n="232">
+          <span class="num">232</span><span class="pct">26.5% of pool</span>
+        </div>
+        <div class="contingency-cell" data-row="all_zero" data-col="variance_band" data-n="137">
+          <span class="num">137</span><span class="pct">15.6% of pool</span>
+        </div>
+        <div class="contingency-cell" data-row="all_zero" data-col="all_one" data-n="108">
+          <span class="num">108</span><span class="pct">12.3% of pool</span>
+        </div>
+        <div class="contingency-total">477</div>
+
+        <div class="row-label">panel · variance_band</div>
+        <div class="contingency-cell" data-row="variance_band" data-col="all_zero" data-n="30">
+          <span class="num">30</span><span class="pct">3.4% of pool</span>
+        </div>
+        <div class="contingency-cell" data-row="variance_band" data-col="variance_band" data-n="72">
+          <span class="num">72</span><span class="pct">8.2% of pool</span>
+        </div>
+        <div class="contingency-cell" data-row="variance_band" data-col="all_one" data-n="280">
+          <span class="num">280</span><span class="pct">31.9% of pool</span>
+        </div>
+        <div class="contingency-total">382</div>
+
+        <div class="row-label">panel · all_one</div>
+        <div class="contingency-cell" data-row="all_one" data-col="all_zero" data-n="0">
+          <span class="num">0</span><span class="pct">0%</span>
+        </div>
+        <div class="contingency-cell" data-row="all_one" data-col="variance_band" data-n="0">
+          <span class="num">0</span><span class="pct">0%</span>
+        </div>
+        <div class="contingency-cell" data-row="all_one" data-col="all_one" data-n="18">
+          <span class="num">18</span><span class="pct">2.1% of pool</span>
+        </div>
+        <div class="contingency-total">18</div>
+
+        <div class="contingency-total">total</div>
+        <div class="contingency-total">262</div>
+        <div class="contingency-total">209</div>
+        <div class="contingency-total">406</div>
+        <div class="contingency-total">877</div>
+      </div>
+
+      <p class="caption" id="p2-caption">
+        <strong>Click a cell.</strong> Panel's row-total of 382 is its variance band — 1.83× larger than thinking's 209.
+        The biggest single cell is the 280 problems where panel still has gradient signal but thinking is saturated;
+        a "joint training set" design would have been limited to the 72 cells in the centre.
+      </p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PANEL 3: Pass@k slider                                      -->
+    <!-- ============================================================ -->
+    <section class="panel" id="p3">
+      <span class="panel-tag">Panel 03 · Pass@k convergence</span>
+      <h2>Drag k to watch the gap to thinking close on AIME</h2>
+      <p class="lead">Both models sampled n=16 per problem on the same 20 AIME 24+25 problems. Panel trails at every k in the measured range — but the gap narrows monotonically with k. Drag the slider; the gap value updates live.</p>
+
+      <div class="control-row">
+        <span class="control-label">k =</span>
+        <input type="range" id="k-slider" min="1" max="16" step="1" value="1" />
+        <span class="control-value"><span id="k-val">1</span></span>
+      </div>
+
+      <svg viewBox="0 0 800 320" id="p3-chart" role="img" aria-label="Two horizontal bars showing panel and thinking pass@k at the selected k value, with a gap indicator">
+      </svg>
+
+      <p class="caption">
+        At k=<strong><span id="p3-k">1</span></strong>:
+        panel pass@k = <strong><span id="p3-panel">22.5%</span></strong>,
+        thinking pass@k = <strong><span id="p3-think">73.1%</span></strong>,
+        gap = <strong><span id="p3-gap">−50.6pp</span></strong>.
+        Closure from k=1 to here: <strong><span id="p3-closure">0pp</span></strong>.
+      </p>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- PANEL 4: Compute calculator                                  -->
+    <!-- ============================================================ -->
+    <section class="panel" id="p4">
+      <span class="panel-tag">Panel 04 · Compute asymmetry</span>
+      <h2>How many RL steps fits inside your compute budget?</h2>
+      <p class="lead">Panel rollouts terminate compactly inside the debate (~640 ac_tokens). Thinking rollouts run near max_tokens (~11,000 ac_tokens). The difference compounds: you can do roughly <strong>12× more panel-arm RL steps</strong> than thinking-arm RL steps for the same wall-time on Tinker.</p>
+
+      <div class="control-row">
+        <span class="control-label">Hours of Tinker compute:</span>
+        <input type="number" id="hours-input" value="3" min="0.5" max="200" step="0.5" />
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-card">
+          <span class="arm-label">Panel arm</span>
+          <div class="big"><span id="panel-steps">100</span></div>
+          <div class="unit">RL steps possible</div>
+          <div class="sub" id="panel-sub">≈ same as the 100-step run that produced the 14% → 29% hill-climb</div>
+        </div>
+        <div class="calc-card">
+          <span class="arm-label">Thinking arm (matched hyperparameters)</span>
+          <div class="big"><span id="thinking-steps">8</span></div>
+          <div class="unit">RL steps possible</div>
+          <div class="sub" id="thinking-sub">— at this budget, not enough steps to clear the early weight-shock dip on either arm</div>
+        </div>
+      </div>
+
+      <p class="caption">
+        Throughputs measured during the actual runs: panel ≈ <strong>33 batches/h</strong>, thinking ≈ <strong>2.7 batches/h</strong>.
+        The 12.2× ratio is why only the panel arm reached step 100 in the original session; the matched thinking-arm run is still the largest open follow-up in the recipe.
+      </p>
+    </section>
+
+    <!-- Closing note -->
+    <section class="panel" style="background: var(--surface-muted); border: 0; padding: 2rem;">
+      <p style="font-size: 16px; line-height: 1.6; color: var(--fg);">
+        Each panel above corresponds to one section in
+        <a href="../blog_post/diversity.html" style="color: var(--accent); border-bottom: 1px dotted var(--fg-faint); text-decoration: none;">the writeup</a> — the goal here is to let you poke at the numbers directly. The data is loaded inline from the same JSON files committed to the repo, so what you see is what produced the published figures.
+      </p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    Stephen Casella · multi-model lab · interactive companion to <a href="../blog_post/diversity.html">the writeup</a>.<br />
+    Code, data, and recipe: <a href="https://github.com/scasella/multi-model" target="_blank" rel="noopener">github.com/scasella/multi-model</a>.
+  </footer>
+
+  <script>
+  // ============================================================
+  // Data (inlined from reports/olympiad_panel_only/, data/olympiad_pool/, reports/pass_at_k_aime/)
+  // ============================================================
+
+  const TRAJ = [
+    {batch: 0,  mean: 0.14, by: {aime: 0.04, amc: 0.32, hmmt: 0.00, olympiadbench: 0.20}},
+    {batch: 10, mean: 0.12, by: {aime: 0.04, amc: 0.32, hmmt: 0.00, olympiadbench: 0.12}},
+    {batch: 20, mean: 0.14, by: {aime: 0.08, amc: 0.28, hmmt: 0.00, olympiadbench: 0.20}},
+    {batch: 30, mean: 0.16, by: {aime: 0.04, amc: 0.40, hmmt: 0.00, olympiadbench: 0.20}},
+    {batch: 40, mean: 0.19, by: {aime: 0.12, amc: 0.36, hmmt: 0.00, olympiadbench: 0.28}},
+    {batch: 50, mean: 0.21, by: {aime: 0.12, amc: 0.32, hmmt: 0.00, olympiadbench: 0.40}},
+    {batch: 60, mean: 0.19, by: {aime: 0.04, amc: 0.44, hmmt: 0.00, olympiadbench: 0.28}},
+    {batch: 70, mean: 0.29, by: {aime: 0.12, amc: 0.60, hmmt: 0.00, olympiadbench: 0.44}},
+    {batch: 80, mean: 0.27, by: {aime: 0.20, amc: 0.48, hmmt: 0.00, olympiadbench: 0.40}},
+    {batch: 90, mean: 0.29, by: {aime: 0.16, amc: 0.52, hmmt: 0.04, olympiadbench: 0.44}},
+  ];
+
+  const PASSK_AIME = {
+    k:     [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+    panel: [0.225, 0.3146, 0.3659, 0.402, 0.4296, 0.4514, 0.4689, 0.4832, 0.4951, 0.5053, 0.5143, 0.5224, 0.53, 0.5371, 0.5437, 0.55],
+    think: [0.7312, 0.8079, 0.8345, 0.8476, 0.8563, 0.8629, 0.8684, 0.8731, 0.8772, 0.8808, 0.8842, 0.8875, 0.8906, 0.8938, 0.8969, 0.9],
+  };
+
+  const SOURCE_COLOR = {
+    aime: '#8B6F8C',           // dusty mauve
+    amc: '#5C8A95',            // sage-teal
+    hmmt: '#C18549',           // warm terracotta
+    olympiadbench: '#3B3B39',  // body dark
+  };
+
+  const CONTINGENCY_DESC = {
+    'all_zero|all_zero':       { name: 'Both fail', txt: '232 problems where neither arm gets a single rollout right at G=8. Below the noise floor for both — currently un-trainable for either side.' },
+    'all_zero|variance_band':  { name: 'Thinking-only signal', txt: '137 problems where panel is below the noise floor but thinking has gradient. These are in thinking\'s training pool, not panel\'s.' },
+    'all_zero|all_one':        { name: 'Thinking saturated, panel blank', txt: '108 problems where thinking solves all 8 rollouts but panel solves none. Thinking is too good to gain from RL here; panel is too far below.' },
+    'variance_band|all_zero':  { name: 'Panel-only signal', txt: '30 problems where panel has gradient but thinking can\'t solve any. Direct evidence the two scaffolds find different problems tractable.' },
+    'variance_band|variance_band': { name: 'Joint variance band', txt: 'Only 72 problems are in both bands — 19% of panel\'s, 34% of thinking\'s. A joint-design training pool would have been limited to these.' },
+    'variance_band|all_one':   { name: 'Panel signal, thinking saturated', txt: 'The biggest off-diagonal cell: 280 problems where panel still has RL gradient but thinking already solves them on every attempt.' },
+    'all_one|all_zero':        { name: 'Empty', txt: '0 problems where panel solves all 8 but thinking solves none.' },
+    'all_one|variance_band':   { name: 'Empty', txt: '0 problems where panel solves all 8 but thinking is in band.' },
+    'all_one|all_one':         { name: 'Both saturated', txt: '18 problems both arms solve every time. Above the band for both — no RL signal for either side.' },
+  };
+
+  // ============================================================
+  // Panel 1: hill-climb scrubber
+  // ============================================================
+  function renderTrajectoryChart(highlightIdx) {
+    const svg = document.getElementById('p1-chart');
+    const W = 800, H = 360;
+    const PAD_L = 60, PAD_R = 30, PAD_T = 30, PAD_B = 50;
+    const plotW = W - PAD_L - PAD_R;
+    const plotH = H - PAD_T - PAD_B;
+    const x = i => PAD_L + (i / (TRAJ.length - 1)) * plotW;
+    const y = v => PAD_T + plotH - (v / 0.65) * plotH;
+
+    let svgContent = '';
+    // Y-axis grid + labels (0%, 20%, 40%, 60%)
+    [0, 0.2, 0.4, 0.6].forEach(v => {
+      svgContent += `<line x1="${PAD_L}" y1="${y(v)}" x2="${W-PAD_R}" y2="${y(v)}" stroke="${v===0?'#C8C7C2':'#E4E3DE'}" />`;
+      svgContent += `<text x="${PAD_L-10}" y="${y(v)+4}" text-anchor="end" font-family="Inter, sans-serif" font-size="11" fill="#969592">${(v*100).toFixed(0)}%</text>`;
+    });
+    // Reference line: vanilla thinking ≈ 60%
+    svgContent += `<line x1="${PAD_L}" y1="${y(0.60)}" x2="${W-PAD_R}" y2="${y(0.60)}" stroke="#969592" stroke-dasharray="4 4" opacity="0.6" />`;
+    svgContent += `<text x="${W-PAD_R-4}" y="${y(0.60)-6}" text-anchor="end" font-family="Inter, sans-serif" font-size="10" fill="#969592">vanilla Qwen3-thinking baseline ≈ 60%</text>`;
+
+    // Aggregate line
+    const linePts = TRAJ.map((d,i) => `${x(i)},${y(d.mean)}`).join(' ');
+    svgContent += `<polyline points="${linePts}" fill="none" stroke="#5C8A95" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />`;
+    // Faint area
+    const areaPts = `${x(0)},${y(0)} ${linePts} ${x(TRAJ.length-1)},${y(0)}`;
+    svgContent += `<polygon points="${areaPts}" fill="#5C8A95" opacity="0.06" />`;
+    // Points
+    TRAJ.forEach((d, i) => {
+      const isHighlight = i === highlightIdx;
+      svgContent += `<circle cx="${x(i)}" cy="${y(d.mean)}" r="${isHighlight ? 7 : 4}" fill="${isHighlight ? '#3B3B39' : '#5C8A95'}" />`;
+    });
+    // Highlighted vertical guide
+    if (highlightIdx >= 0) {
+      const cx = x(highlightIdx);
+      svgContent += `<line x1="${cx}" y1="${PAD_T}" x2="${cx}" y2="${y(0)}" stroke="#3B3B39" stroke-width="1" stroke-dasharray="3 3" opacity="0.4" />`;
+    }
+    // X-axis tick labels
+    TRAJ.forEach((d, i) => {
+      svgContent += `<text x="${x(i)}" y="${H - PAD_B + 18}" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="${i === highlightIdx ? '#3B3B39' : '#969592'}" font-weight="${i === highlightIdx ? '500' : '400'}">${d.batch}</text>`;
+    });
+    svgContent += `<text x="${PAD_L + plotW/2}" y="${H - 8}" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#595856">RL step</text>`;
+    svgContent += `<text x="${PAD_L - 50}" y="${PAD_T + plotH/2}" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#969592" transform="rotate(-90 ${PAD_L - 50} ${PAD_T + plotH/2})">held-out pass@1</text>`;
+
+    svg.innerHTML = svgContent;
+  }
+
+  function updatePanel1(idx) {
+    const d = TRAJ[idx];
+    document.getElementById('step-val').textContent = d.batch;
+    document.getElementById('p1-step').textContent = d.batch;
+    document.getElementById('p1-mean').textContent = (d.mean * 100).toFixed(0) + '%';
+    const delta = (d.mean - TRAJ[0].mean) * 100;
+    document.getElementById('p1-delta').textContent = (delta >= 0 ? '+' : '') + delta.toFixed(0) + 'pp';
+    document.getElementById('p1-aime').textContent = (d.by.aime * 100).toFixed(0) + '%';
+    document.getElementById('p1-amc').textContent = (d.by.amc * 100).toFixed(0) + '%';
+    document.getElementById('p1-hmmt').textContent = (d.by.hmmt * 100).toFixed(0) + '%';
+    document.getElementById('p1-ob').textContent = (d.by.olympiadbench * 100).toFixed(0) + '%';
+    renderTrajectoryChart(idx);
+  }
+
+  document.getElementById('step-slider').addEventListener('input', e => updatePanel1(+e.target.value));
+  updatePanel1(0);
+
+  // ============================================================
+  // Panel 2: contingency cell click handler
+  // ============================================================
+  document.querySelectorAll('.contingency-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      document.querySelectorAll('.contingency-cell').forEach(c => c.classList.remove('active'));
+      cell.classList.add('active');
+      const key = cell.dataset.row + '|' + cell.dataset.col;
+      const desc = CONTINGENCY_DESC[key];
+      const cap = document.getElementById('p2-caption');
+      cap.innerHTML = `<strong>${desc.name}.</strong> ${desc.txt}`;
+    });
+  });
+
+  // ============================================================
+  // Panel 3: pass@k slider
+  // ============================================================
+  function renderPassKChart(k) {
+    const svg = document.getElementById('p3-chart');
+    const idx = k - 1;
+    const W = 800, H = 320;
+    const PAD_L = 100, PAD_R = 80, PAD_T = 60, PAD_B = 40;
+    const plotW = W - PAD_L - PAD_R;
+    const barH = 50, barGap = 30;
+    const x = v => PAD_L + v * plotW;
+
+    const panel = PASSK_AIME.panel[idx];
+    const think = PASSK_AIME.think[idx];
+
+    let svg_ = '';
+    // Title row
+    svg_ += `<text x="${W/2}" y="28" text-anchor="middle" font-family="Libre Baskerville, serif" font-size="16" fill="#3B3B39" font-weight="700">pass@${k} · panel vs thinking on AIME 24+25 (n=16, 20 problems)</text>`;
+    // Axis ticks at 0, 25, 50, 75, 100
+    [0, 0.25, 0.5, 0.75, 1.0].forEach(v => {
+      svg_ += `<line x1="${x(v)}" y1="${PAD_T}" x2="${x(v)}" y2="${H - PAD_B}" stroke="#E4E3DE" />`;
+      svg_ += `<text x="${x(v)}" y="${H - PAD_B + 16}" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#969592">${(v*100).toFixed(0)}%</text>`;
+    });
+    // Panel bar (top)
+    const panY = PAD_T + 30;
+    svg_ += `<text x="${PAD_L - 12}" y="${panY + barH/2 + 4}" text-anchor="end" font-family="Inter, sans-serif" font-size="13" fill="#3B3B39" font-weight="500">panel</text>`;
+    svg_ += `<rect x="${PAD_L}" y="${panY}" width="${plotW * panel}" height="${barH}" fill="#5C8A95" />`;
+    svg_ += `<text x="${x(panel) + 8}" y="${panY + barH/2 + 5}" font-family="Libre Baskerville, serif" font-size="18" fill="#3B3B39" font-weight="700">${(panel*100).toFixed(1)}%</text>`;
+    // Thinking bar (bottom)
+    const thinkY = panY + barH + barGap;
+    svg_ += `<text x="${PAD_L - 12}" y="${thinkY + barH/2 + 4}" text-anchor="end" font-family="Inter, sans-serif" font-size="13" fill="#3B3B39" font-weight="500">thinking</text>`;
+    svg_ += `<rect x="${PAD_L}" y="${thinkY}" width="${plotW * think}" height="${barH}" fill="#969592" />`;
+    svg_ += `<text x="${x(think) + 8}" y="${thinkY + barH/2 + 5}" font-family="Libre Baskerville, serif" font-size="18" fill="#3B3B39" font-weight="700">${(think*100).toFixed(1)}%</text>`;
+    // Gap annotation
+    const gap = (panel - think) * 100;
+    const gapY = (panY + barH + thinkY) / 2;
+    svg_ += `<line x1="${x(panel)}" y1="${panY + barH}" x2="${x(panel)}" y2="${thinkY}" stroke="#5C8A95" stroke-width="1.5" stroke-dasharray="2 3" />`;
+    svg_ += `<line x1="${x(think)}" y1="${panY + barH}" x2="${x(think)}" y2="${thinkY}" stroke="#969592" stroke-width="1.5" stroke-dasharray="2 3" />`;
+    svg_ += `<text x="${(x(panel) + x(think))/2}" y="${gapY + 4}" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#3B3B39" font-weight="500">gap = ${gap.toFixed(1)}pp</text>`;
+
+    svg.innerHTML = svg_;
+  }
+
+  function updatePanel3(k) {
+    document.getElementById('k-val').textContent = k;
+    document.getElementById('p3-k').textContent = k;
+    const idx = k - 1;
+    const panel = PASSK_AIME.panel[idx];
+    const think = PASSK_AIME.think[idx];
+    document.getElementById('p3-panel').textContent = (panel*100).toFixed(1) + '%';
+    document.getElementById('p3-think').textContent = (think*100).toFixed(1) + '%';
+    const gap = (panel - think) * 100;
+    document.getElementById('p3-gap').textContent = (gap >= 0 ? '+' : '−') + Math.abs(gap).toFixed(1) + 'pp';
+    const k1Gap = (PASSK_AIME.panel[0] - PASSK_AIME.think[0]) * 100;
+    const closure = gap - k1Gap;
+    document.getElementById('p3-closure').textContent = (closure >= 0 ? '+' : '−') + Math.abs(closure).toFixed(1) + 'pp';
+    renderPassKChart(k);
+  }
+
+  document.getElementById('k-slider').addEventListener('input', e => updatePanel3(+e.target.value));
+  updatePanel3(1);
+
+  // ============================================================
+  // Panel 4: compute calculator
+  // ============================================================
+  // Measured throughputs from the actual session:
+  //   panel-arm RL: 100 batches in ~3 h Tinker wall ≈ 33.3 batches/h
+  //   thinking-arm RL: ~22 min/batch ≈ 2.7 batches/h  (would have been 100 batches in ~37 h)
+  const PANEL_RATE = 33.3;     // batches per hour
+  const THINKING_RATE = 2.7;
+
+  function updatePanel4() {
+    const hours = parseFloat(document.getElementById('hours-input').value) || 0;
+    const ps = Math.round(hours * PANEL_RATE);
+    const ts = Math.round(hours * THINKING_RATE);
+    document.getElementById('panel-steps').textContent = ps;
+    document.getElementById('thinking-steps').textContent = ts;
+
+    // Panel sub-message
+    let pSub;
+    if (ps < 10) pSub = '— under 10 RL steps; not past the early weight-shock dip';
+    else if (ps < 30) pSub = '— in the early-rise regime, before the batch-50 inflection';
+    else if (ps < 70) pSub = '— enough to enter the monotone-climb phase (held-out reaches ~21% by step 50)';
+    else if (ps <= 110) pSub = '≈ same as the 100-step run that produced the 14% → 29% hill-climb';
+    else pSub = '— well past the published 100-step run; territory beyond what we measured';
+    document.getElementById('panel-sub').textContent = pSub;
+
+    // Thinking sub-message
+    let tSub;
+    if (ts < 5) tSub = '— at this budget, the thinking arm wouldn\'t finish a single eval round (eval_every=10)';
+    else if (ts < 20) tSub = '— enough for one or two eval points; not enough resolution for a hill-climbing curve';
+    else if (ts < 50) tSub = '— a partial trajectory; would clear the early dip but not reach the published 100-step horizon';
+    else if (ts < 100) tSub = '— close to a full matched run, but still short of the 100-step comparison budget';
+    else tSub = '≈ enough budget for the matched 100-step thinking arm — the open follow-up in the recipe';
+    document.getElementById('thinking-sub').textContent = tSub;
+  }
+
+  document.getElementById('hours-input').addEventListener('input', updatePanel4);
+  updatePanel4();
+  </script>
+</body>
+</html>
