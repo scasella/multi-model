@@ -28,9 +28,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-for cand in ("/Users/scasella/Downloads/tinker-cookbook-main",):
-    if Path(cand).is_dir():
-        sys.path.insert(0, cand)
+# Optional: if tinker_cookbook is checked out as a sibling directory rather
+# than pip-installed, point TINKER_COOKBOOK_PATH at it so the import below
+# resolves. Silently no-ops when the env var is unset or the path is missing.
+_cookbook = os.environ.get("TINKER_COOKBOOK_PATH")
+if _cookbook and Path(_cookbook).is_dir():
+    sys.path.insert(0, _cookbook)
 
 import tinker  # noqa: E402
 from tinker_cookbook.completers import TinkerTokenCompleter  # noqa: E402

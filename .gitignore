@@ -17,7 +17,6 @@ venv/
 
 # ---- local logs ----
 logs/
-/tmp/tinker-examples/
 
 # ---- pre-pivot history kept locally, not shipped ----
 archive/
@@ -36,9 +35,6 @@ data/sft/*.jsonl
 
 # ---- eval raw rollouts: ship summary.json + aggregated tables, not per-sample ----
 reports/**/rollouts.jsonl
-eval/results/raw/
-!eval/results/aggregated.md
-!eval/results/examples.md
 
 # ---- exceptions we do want tracked ----
 !reports/spend.md

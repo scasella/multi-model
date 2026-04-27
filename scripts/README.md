@@ -87,8 +87,20 @@ All evals emit `rollouts.jsonl` (per-sample) + `summary.json` (aggregated) under
 |---|---|
 | `analyze_diversity.py` | Mean pairwise cosine distance across n samples per problem — our primary diversity metric. |
 | `analyze_hard_problems.py` | Per-problem breakdown: which problems does panel solve that thinking doesn't, and vice versa. |
+| `analyze_token_efficiency.py` | **Headline finding #2.** Joins panel + thinking rollouts on (problem, sample-index), reports per-bucket token-cost stats + Wilcoxon signed-rank on the both-correct subset. Output: `reports/token_efficiency/summary.json`. |
 | `pass_at_k_crossover.py` | Unbiased pass@k curves for panel vs thinking on MATH-500 L5. |
 | `pass_at_k_aime.py` | Same for AIME — tests whether the diversity benefit transfers off-saturated benchmarks. |
+
+## Case-study gallery (`*_case_study_*`, `resample_*`)
+
+The 20-problem side-by-side panel vs Qwen3-thinking gallery published at
+[`reports/case_study/gallery.html`](../reports/case_study/gallery.html).
+
+| Script | What it does |
+|---|---|
+| `build_case_study_transcripts.py` | Samples one panel rollout per problem against the published panel-MATH checkpoint and one thinking rollout against `Qwen/Qwen3-30B-A3B-Thinking-2507`. Reads the 20-problem stress-case set inline. Writes `reports/case_study/transcripts.json`. |
+| `resample_truncated_thinking.py` | Re-samples thinking traces that hit the original `max_tokens` cap before emitting `</think>`. Defaults to a 16,384-token budget. |
+| `render_case_study_gallery.py` | Renders `transcripts.json` to a static side-by-side HTML gallery with per-problem reasoning, answer pills, hand-curated correctness map, and the "Headline finding · cost lens" banner over the population-scale token-efficiency numbers. |
 
 ## Pool assembly + variance-band filtering (olympiad exp)
 

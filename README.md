@@ -143,8 +143,11 @@ count, thinking does), no matched thinking-arm RL run.
 
 The first five rows fit comfortably in a single afternoon of Tinker spend.
 Row six is the highest-cost open item; we hit a billing wall before it
-finished and never restarted. Stage URIs are passed through `.env` (see
-`.env.example`); no script in the repo embeds account-specific session IDs.
+finished and never restarted. Stage URIs are read from `.env` (see
+`.env.example`). The only Tinker session URI hard-coded as a default in
+the scripts is the publicly-cited `44722365-…` panel-MATH checkpoint
+(`build_case_study_transcripts.py`, `chat_panel.py`); both are
+overridable via `PANEL_MATH_CHECKPOINT_SAMPLER`.
 
 ## Try the model
 
