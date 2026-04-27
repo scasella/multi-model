@@ -38,8 +38,7 @@ The full pipeline is a LoRA rank-32 adapter on the frozen base. The
 post-training compute is roughly four to five orders of magnitude under
 Qwen's investment in the thinking baseline.
 
-👉 **Full writeup:** [`reports/blog_post/diversity.html`](reports/blog_post/diversity.html)
-🤗 **Adapter on Hugging Face:** [`scasella91/qwen3-30b-a3b-multipersona-debate-lora`](https://huggingface.co/scasella91/qwen3-30b-a3b-multipersona-debate-lora)
+**Adapter on Hugging Face:** [`scasella91/qwen3-30b-a3b-multipersona-debate-lora`](https://huggingface.co/scasella91/qwen3-30b-a3b-multipersona-debate-lora)
 
 ---
 
