@@ -207,12 +207,40 @@
       word-break: break-word;
       overflow-wrap: anywhere;
     }
+    .reasoning-body {
+      /* Bound the visual height; scroll within for very long traces (the
+         thinking arm sometimes runs >40 KB on a single problem). */
+      max-height: 360px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--fg-faint) transparent;
+      position: relative;
+    }
+    .reasoning-body::-webkit-scrollbar { width: 6px; }
+    .reasoning-body::-webkit-scrollbar-thumb { background: var(--fg-faint); border-radius: 3px; }
+    .reasoning-body::-webkit-scrollbar-track { background: transparent; }
     .answer-body {
       background: var(--bg);
       border: 1px solid var(--grid);
       font-size: 16px;
     }
     .answer-body.empty { color: var(--fg-faint); font-style: italic; }
+    /* Section-label ratio annotation (e.g. "29× the multi-persona side").
+       Only emitted when the thinking trace is materially longer than the
+       multi-persona trace on the same problem, so the per-rollout token
+       cost asymmetry from the writeup is legible at a glance. */
+    .section-label .ratio {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--mauve);
+      text-transform: none;
+      margin-left: 6px;
+      padding: 1px 6px;
+      background: rgba(139,111,140,0.12);
+      border-radius: 4px;
+      font-size: 11.5px;
+    }
     /* Markdown rendering inside the reasoning + answer blocks. */
     .markdown-body p { margin: 0 0 0.7em; line-height: 1.55; }
     .markdown-body p:last-child { margin-bottom: 0; }
@@ -409,7 +437,7 @@ All points satisfy the equation, so the radius is indeed correct.</div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,907 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,907 chars</span> <span class="ratio">2.5× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to find the radius of a circle that passes through the points (0,0), (8,0), and (0,6). Hmm, let me think. I remember that the general equation of a circle is (x - h)^2 + (y - k)^2 = r^2, where (h,k) is the center and r is the radius. Since the circle passes through these three points, I can plug each of them into the equation and solve for h, k, and r. But that might involve solving a system of equations. Let me try that.
 
 First, plugging in (0,0):
@@ -510,7 +538,7 @@ Expert 1: The fraction 37 / 216 cannot be simplified further, so the probability
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 10,199 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 10,199 chars</span> <span class="ratio">6.2× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to figure out the probability that when I roll three fair six-sided dice, the maximum value showing is exactly 4. Hmm, let me think. 
 
 First, probability problems can sometimes be tricky, but I remember that often it&#x27;s helpful to think about the total number of possible outcomes and then the number of favorable outcomes. So, for three dice, each die has 6 sides, so the total number of possible outcomes is 6 * 6 * 6, which is 216. That part seems straightforward.
@@ -578,7 +606,7 @@ The probability that the maximum value showing is exactly 4 is \boxed{\dfrac{37}
           <div class="problem-text">On a 5x5 grid of squares, in how many ways can you place 3 non-attacking rooks (rooks attack along rows and columns)?</div>
           <div class="problem-meta">
             <strong>Tests:</strong> Direct counting (choose 3 rows × choose 3 cols × permute) vs. inclusion-exclusion.<br />
-            <strong>A reasonable answer:</strong> 1000.
+            <strong>A reasonable answer:</strong> 600. (C(5,3) × C(5,3) × 3! = 10 × 10 × 6.)
           </div>
           <div class="answer-grid">
             <div class="answer-card panel">
@@ -610,7 +638,7 @@ Expert 1: Therefore, the final answer is 600.</div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 13,885 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 13,885 chars</span> <span class="ratio">8.7× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to figure out how many ways I can place 3 non-attacking rooks on a 5x5 grid. Hmm, let me think about this. 
 
 First, I remember that rooks attack along rows and columns, so if two rooks are in the same row or column, they attack each other. Therefore, for them to be non-attacking, each rook must be in a unique row and a unique column. 
@@ -837,7 +865,7 @@ But let me verify again. 3 books at $8 each: 3*8=24. 50-24=26. Then +10 is 36. Y
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 15,988 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 15,988 chars</span> <span class="ratio">12.2× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, let&#x27;s see. The problem says that three workers can paint three rooms in three hours. And the question is, how long would 100 workers take to paint 100 rooms? Hmm, interesting. I need to figure out the relationship between the number of workers, the number of rooms, and the time it takes. 
 
 First, let me try to understand the original scenario. Three workers can paint three rooms in three hours. So, maybe I should figure out how much work one worker can do in a certain amount of time. Like, maybe find the rate at which each worker paints rooms. 
@@ -1029,7 +1057,7 @@ Expert 1: Everything checks out. The bird is indeed in the air for 30 minutes.</
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 14,989 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 14,989 chars</span> <span class="ratio">5.8× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so there&#x27;s this problem about a train and a bird. Let me try to figure it out step by step. First, the problem says:
 
 &quot;A train leaves at noon traveling east at 60 mph. At the same moment, a bird at the station 90 miles east starts flying west at 120 mph. The bird turns around the moment it meets the train. How long is the bird in the air?&quot;
@@ -1236,7 +1264,7 @@ So, I think the correct response is that the question doesn&#x27;t provide enoug
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 15,838 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 15,838 chars</span> <span class="ratio">9.6× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, let&#x27;s see. The question is &quot;What is half of two plus two?&quot; Hmm, I need to figure out the answer step by step. First, I should parse the sentence to understand what exactly is being asked. 
 
 The phrase is &quot;half of two plus two.&quot; So, there&#x27;s a possible ambiguity here. Depending on how you interpret the sentence, the answer might be different. Let me think about the structure. In math problems, the order of operations usually matters. So, maybe I should consider the different ways to interpret this.
@@ -1375,7 +1403,7 @@ However, I&#x27;m not sure. It&#x27;s really a matter of interpretation. Given t
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,445 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,445 chars</span> <span class="ratio">10.3× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to find an integer between 5 and 9. Let me think. First, integers are whole numbers, right? So they don&#x27;t include fractions or decimals. Now, the question says between 5 and 9. Wait, does that mean strictly between, like not including 5 and 9 themselves? Or does it include them? Hmm, sometimes &quot;between&quot; can be a bit ambiguous. Let me check.
 
 If it&#x27;s strictly between, then the integers would be 6, 7, 8. But if it includes 5 and 9, then it would be 5, 6, 7, 8, 9. But the question says &quot;between 5 and 9,&quot; so maybe they want the numbers that are greater than 5 and less than 9. So that would be 6, 7, 8. But the problem just says &quot;Find an integer between 5 and 9.&quot; It doesn&#x27;t specify which one, so maybe any of them would work. But the user might be expecting a single answer. Wait, maybe the question is from a specific context where there&#x27;s only one correct answer. But as given, there are multiple possible integers. However, maybe the original question has some constraints I&#x27;m missing. Let me re-read it.
@@ -1434,7 +1462,7 @@ But just to be thorough, maybe I should mention that there are multiple correct 
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 21,464 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 21,464 chars</span> <span class="ratio">14.8× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so there&#x27;s this problem where person A says, &quot;I am a liar.&quot; And we have to figure out whether A is a truth-teller or a liar. The problem states that A is either a perfectly honest truth-teller or a consistent liar. Hmm, interesting. Let me think through this step by step.
 
 First, let me recall what I know about these kinds of logic puzzles. They often involve knights and knaves, where knights always tell the truth and knaves always lie. So in this case, A could be either a knight (truth-teller) or a knave (liar). The statement in question is &quot;I am a liar.&quot; So if A is a knight, then the statement must be true. But if A is a knight, then he can&#x27;t be a liar, right? That would create a contradiction. On the other hand, if A is a knave, then his statement &quot;I am a liar&quot; would be a lie. So if he&#x27;s lying, then the actual truth would be that he&#x27;s not a liar, which would mean he&#x27;s a truth-teller. Wait, that&#x27;s also a contradiction. So both possibilities lead to contradictions? That can&#x27;t be right. Maybe I need to formalize this.
@@ -1593,7 +1621,7 @@ Expert 2: Yes, the word &quot;twenty&quot; has six letters, which matches the nu
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 12,870 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 12,870 chars</span> <span class="ratio">9.0× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, let&#x27;s try to figure out this problem. The question says, &quot;This problem has exactly N letters in the word for its answer. Find N.&quot; So, I need to find the value of N such that when you write out the answer (which is N) as a word, the number of letters in that word is exactly N. Hmm, that sounds a bit circular, but let me think step by step.
 
 First, let me rephrase the problem. Suppose the answer is a number N. When you write N in words (like &quot;five&quot; for 5), the number of letters in that word should be equal to N. So, for example, if N was 4, then &quot;four&quot; has 4 letters. Wait, &quot;four&quot; is F-O-U-R, which is 4 letters. So that would mean N is 4. But is that the answer here? Wait, but the problem says &quot;This problem has exactly N letters in the word for its answer.&quot; So the answer is N, and the number of letters in the word for N is N. So N must satisfy that the number of letters in the English word for N equals N itself.
@@ -1826,7 +1854,7 @@ Expert 3: Agreed. The final answer is 8 days.</div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 8,355 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 8,355 chars</span> <span class="ratio">6.0× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, let&#x27;s see. There&#x27;s this snail at the bottom of a 10-meter well. It climbs up 3 meters each day, but then slides back down 2 meters each night. The question is, how many days will it take for the snail to get out of the well?
 
 Hmm, so first, I need to figure out the net progress the snail makes each day. If it climbs 3 meters during the day and then slides back 2 meters at night, then the net gain per day is 3 - 2 = 1 meter per day. That seems straightforward. But wait, maybe there&#x27;s a catch here. Because if the snail reaches the top during the day, it might not slide back down, right? So maybe I need to consider that.
@@ -2002,7 +2030,7 @@ The snail reaches the top of the well in \boxed{8} days.</div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,445 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,445 chars</span> <span class="ratio">4.8× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, let&#x27;s try to figure out this 3-digit number problem. So, the number has three digits: hundreds, tens, and units. The problem gives us three conditions:
 
 1. The hundreds digit is twice the tens digit.
@@ -2158,7 +2186,7 @@ Expert 3: Therefore, the first player&#x27;s first move should be to take 3 ston
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 45,797 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 45,797 chars</span> <span class="ratio">16.0× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so there&#x27;s this game where two players take turns removing 1, 2, or 3 stones from a pile of 20. The person who takes the last stone wins. I need to figure out who will win if both play perfectly and what the first player&#x27;s first move should be. Hmm, let me think about this.
 
 I remember that this type of game is similar to the classic &quot;Nim&quot; game. But I&#x27;m not entirely sure about the exact strategy here. Maybe I should start by analyzing smaller numbers of stones and see if I can find a pattern or some rule that determines the winning and losing positions.
@@ -2680,7 +2708,7 @@ The first player cannot force a win. The second player wins. Therefore, no move 
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 10,879 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 10,879 chars</span> <span class="ratio">5.9× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to figure out which option has a higher expected value between getting $100 right now or flipping a fair coin where I get $250 on heads and $0 on tails. Then, I also have to decide which one I would actually take and justify that choice. Let me start with the expected value part.
 
 First, expected value. I remember that expected value is calculated by multiplying each outcome by its probability and then adding them up. So for option (ii), there&#x27;s a 50% chance of getting $250 and a 50% chance of getting $0. The coin is fair, so the probability of heads or tails is each 0.5.
@@ -2782,7 +2810,7 @@ Expert 4: And just to clarify, the direction of the change is that the period wo
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,523 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 5,523 chars</span> <span class="ratio">4.4× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so the question is: If Earth&#x27;s gravity suddenly doubled, what would happen to the period of a grandfather clock? I need to figure out both the qualitative direction (whether the period increases or decreases) and the multiplicative factor. Let me think about this step by step.
 
 First, I remember that grandfather clocks are pendulum clocks. So their operation is based on the swing of a pendulum. The period of a pendulum is the time it takes to swing back and forth once. The formula for the period of a simple pendulum is T = 2π√(L/g), where T is the period, L is the length of the pendulum, and g is the acceleration due to gravity.
@@ -2838,7 +2866,7 @@ The period of the grandfather clock would decrease, and the multiplicative facto
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 19,061 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 19,061 chars</span> <span class="ratio">6.7× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I came across this probability problem: &quot;I have two children. At least one of them is a boy who was born on a Tuesday. Given only this information, what is the probability that both children are boys?&quot; Hmm, interesting. I remember similar problems before, like the classic &quot;two children, one is a boy, what&#x27;s the probability both are boys?&quot; but this adds the twist of the day of the week. I need to think through this step by step.
 
 First, let me recall the classic problem. If someone says, &quot;I have two children, and at least one is a boy,&quot; the probability that both are boys is 1/3. The reasoning is that there are four possible gender combinations for two children: BB, BG, GB, GG. Since we know at least one is a boy, GG is eliminated, leaving three possibilities, each equally likely. Out of these, only one is BB, so 1/3. But when the problem adds more information, like the day of the week, the probability changes. I think the day of the week adds more possible cases, which affects the probability. But how?
@@ -3104,7 +3132,7 @@ Expert 3: Given all these considerations and the conservative estimates used, I 
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 12,733 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 12,733 chars</span> <span class="ratio">6.3× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to figure out how many haircuts an average full-time hairstylist gives in a year. Let&#x27;s start by breaking this down into smaller parts. Maybe I can think about how many hours they work each week, how many haircuts they can do in an hour, and then multiply that by the number of weeks in a year. 
 
 First, how many hours per week does a full-time hairstylist work? I think most full-time jobs are around 40 hours a week, but maybe hairstylists might have a bit more or less. I&#x27;m not sure. Maybe they have some days off or flexible hours. Let me check my assumptions. If I say 40 hours a week, that&#x27;s a common starting point. But maybe I should consider that they might work 5 days a week, say 8 hours each day. But sometimes, maybe they work 6 days a week? But the question says &quot;full-time,&quot; so maybe 40 hours is okay. I&#x27;ll go with 40 hours per week for now.
@@ -3235,7 +3263,7 @@ Given the uncertainty, a plausible estimate is around 2000-3000. However, I thin
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 15,084 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 15,084 chars</span> <span class="ratio">8.7× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so I need to estimate the total mass of all the air inside a typical home. Hmm, let me think about how to approach this. First, I should figure out the volume of air in a home. Then, I need to know the density of air so I can multiply the two to get the mass. Let me start with the volume.
 
 What&#x27;s a typical home like? Maybe a single-family house. I think the average size might be around 2000 square feet. But wait, that&#x27;s the floor area. The volume would depend on the height of the ceilings. If it&#x27;s a two-story house, maybe the ceiling height is around 8 feet? Let me check that. Wait, I&#x27;m not sure. Some homes have 8-foot ceilings, others might have higher. But maybe I should go with 8 feet as an average. So, if the house is 2000 square feet, and the height is 8 feet, then the volume would be 2000 * 8. Let me calculate that. 2000 times 8 is 16,000 cubic feet. But wait, is that right? 2000 square feet times 8 feet gives 16,000 cubic feet. But I should consider that houses are not perfect rectangles, and there are rooms with different heights, like a basement or attic, but maybe for a rough estimate, it&#x27;s okay to just go with that.
@@ -3378,7 +3406,7 @@ Expert 3: It&#x27;s also worth noting that correlation does not imply causation.
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">Qwen3-30B-A3B thinking</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 11,855 chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 11,855 chars</span> <span class="ratio">4.0× the multi-persona side</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Okay, so the question is whether the new public park caused the drop in the cancer rate in this town. Let me think through this step by step. 
 
 First, the town had a steady population of 10,000 for a decade. Then they built a new public park, and the next year the population went up to 10,500. At the same time, the local rate of new cancer diagnoses fell by 8%. The question is whether the park is the cause of that drop.

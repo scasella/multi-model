@@ -268,12 +268,40 @@ HTML_TEMPLATE_HEAD = """\
       word-break: break-word;
       overflow-wrap: anywhere;
     }
+    .reasoning-body {
+      /* Bound the visual height; scroll within for very long traces (the
+         thinking arm sometimes runs >40 KB on a single problem). */
+      max-height: 360px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--fg-faint) transparent;
+      position: relative;
+    }
+    .reasoning-body::-webkit-scrollbar { width: 6px; }
+    .reasoning-body::-webkit-scrollbar-thumb { background: var(--fg-faint); border-radius: 3px; }
+    .reasoning-body::-webkit-scrollbar-track { background: transparent; }
     .answer-body {
       background: var(--bg);
       border: 1px solid var(--grid);
       font-size: 16px;
     }
     .answer-body.empty { color: var(--fg-faint); font-style: italic; }
+    /* Section-label ratio annotation (e.g. "29× the multi-persona side").
+       Only emitted when the thinking trace is materially longer than the
+       multi-persona trace on the same problem, so the per-rollout token
+       cost asymmetry from the writeup is legible at a glance. */
+    .section-label .ratio {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      letter-spacing: 0;
+      color: var(--mauve);
+      text-transform: none;
+      margin-left: 6px;
+      padding: 1px 6px;
+      background: rgba(139,111,140,0.12);
+      border-radius: 4px;
+      font-size: 11.5px;
+    }
     /* Markdown rendering inside the reasoning + answer blocks. */
     .markdown-body p { margin: 0 0 0.7em; line-height: 1.55; }
     .markdown-body p:last-child { margin-bottom: 0; }
@@ -456,6 +484,16 @@ def render(items: list[dict], meta: dict) -> str:
                 think_reasoning, "reasoning", "(no &lt;think&gt; body)"
             )
 
+            # When thinking's reasoning is materially longer than the
+            # multi-persona reasoning on the same problem, surface the ratio
+            # on the section label so the per-rollout token-cost asymmetry
+            # is visible without making the reader open a calculator.
+            ratio_pill = ""
+            if panel_chars > 0:
+                ratio = think_chars / panel_chars
+                if ratio >= 2.0:
+                    ratio_pill = f' <span class="ratio">{ratio:.1f}× the multi-persona side</span>'
+
             out.append(f"""
         <div class="problem" id="prob-{html.escape(it['id'])}">
           <div class="problem-id">Problem {html.escape(it['id'])}</div>
@@ -476,7 +514,7 @@ def render(items: list[dict], meta: dict) -> str:
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">{html.escape(thinking_label)}</div>
-              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· {think_chars:,} chars</span></div>
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· {think_chars:,} chars</span>{ratio_pill}</div>
               {think_reasoning_block}
               <div class="section-label">Answer</div>
               {think_answer_block}

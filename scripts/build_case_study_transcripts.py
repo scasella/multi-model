@@ -94,7 +94,7 @@ PROBLEMS = [
         "category_blurb": None,
         "problem": "On a 5x5 grid of squares, in how many ways can you place 3 non-attacking rooks (rooks attack along rows and columns)?",
         "tests": "Direct counting (choose 3 rows × choose 3 cols × permute) vs. inclusion-exclusion.",
-        "expected": "1000.",
+        "expected": "600. (C(5,3) × C(5,3) × 3! = 10 × 10 × 6.)",
     },
     # --- 2. Distractor / misleading-surface ------------------------------
     {
