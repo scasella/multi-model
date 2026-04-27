@@ -10,11 +10,22 @@ A LoRA rank-32 fine-tune of `Qwen/Qwen3-30B-A3B-Base` that replaces the usual
 (`<mutipersonaDebate>…</mutipersonaDebate>`) before answering, scored against
 Qwen's native thinking model on the same backbone.
 
-**Headline finding: wider search per sample.** Panel reasoning traces sit
-+78.2% further apart on MATH-500 and +75.6% further apart on AIME 24 + 25
-(mean pairwise cosine distance of the first 2 000 characters, all-mpnet-base-v2
-embeddings). On AIME the paired pass@k gap to Qwen3-thinking closes by
-+15.6pp from k = 1 to k = 16, monotone in k.
+**Headline finding #1 — wider search per sample.** Panel reasoning traces
+sit +78.2% further apart on MATH-500 and +75.6% further apart on AIME 24 + 25
+(mean pairwise cosine distance, all-mpnet-base-v2 embeddings). On AIME the
+paired pass@k gap to Qwen3-thinking closes by +15.6pp from k = 1 to k = 16,
+monotone in k.
+
+**Headline finding #2 — and the deployment-cost consequence.** On the **374
+paired draws** across MATH-500 L5 and AIME 24+25 where both arms produced a
+correct answer, thinking burns **5.9–6.9× more tokens (median)** than the
+panel — and is longer than the panel in **99.6–99.7%** of all paired draws,
+regardless of correctness. At the cost-per-correct-answer level — total
+tokens divided by correct samples — thinking is **2.5–5× more expensive**
+than the panel. Per-sample accuracy still favors thinking; per-token
+efficiency reverses the comparison once compute is in the denominator.
+(Wilcoxon signed-rank: *p* = 6×10⁻⁵² on MATH, *p* = 8×10⁻¹³ on AIME. Run
+`python scripts/analyze_token_efficiency.py` to reproduce.)
 
 **Follow-up — Apr 25.** The diversity shows up where it matters for RL. On a
 fresh 877-problem olympiad-math pool the panel has **1.83× more variance-band
@@ -90,9 +101,13 @@ For a per-script index, see [`scripts/README.md`](scripts/README.md).
 | AIME 24 + 25 pass@16 | 0.55 | 0.75 |
 | Mean pairwise cos dist (MATH) | 0.095 | 0.053 |
 | Mean pairwise cos dist (AIME) | 0.119 | 0.068 |
+| **MATH-500 L5 tokens / correct** | **1,652** | **8,376** *(5.07× more)* |
+| **AIME 24 + 25 tokens / correct** | **6,257** | **15,491** *(2.48× more)* |
+| Median token ratio, both-correct (MATH / AIME) | — | **6.91× / 5.89×** |
 
 The panel starts behind on pass@1 and **closes the gap sharply with more samples** —
-the pattern you'd expect from wider, less redundant search.
+the pattern you'd expect from wider, less redundant search. Per-sample
+accuracy favors thinking; per-token cost-per-correct reverses the comparison.
 
 ## Bounds on the claim
 
@@ -101,13 +116,19 @@ data actually supports:
 
 1. Per-sample semantic spread is wider on both benchmarks (paired t = 5.91 / 4.72).
 2. That spread tightens pass@k against thinking on three independent slices.
-3. On a 877-problem olympiad pool, that same spread yields 1.83× more
+3. **At fixed correctness, the panel uses 5.9–6.9× fewer tokens than thinking
+   (median, both-correct subset; n = 374 paired draws). At the cost-per-correct
+   level, thinking is 2.5–5× more expensive. This is the deployment-cost
+   reading of the same diversity mechanism.**
+4. On a 877-problem olympiad pool, that same spread yields 1.83× more
    variance-band problems than thinking — and 100 LoRA RL steps on those
    problems lift the panel's shared held-out from 14% to 29%.
-4. The compute behind all of this is ~10⁴–10⁵× under Qwen's post-training stack.
+5. The compute behind all of this is ~10⁴–10⁵× under Qwen's post-training stack.
 
 See the blog post for the full caveat set: embedding-based diversity metric,
-small AIME slice, no token-budget-matched baseline, no matched thinking-arm RL run.
+small AIME slice, no token-budget-matched baseline (the cost-per-correct
+finding partly addresses this — at fixed compute, panel wins; at fixed sample
+count, thinking does), no matched thinking-arm RL run.
 
 ## Reproducing this work
 

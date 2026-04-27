@@ -1,0 +1,196 @@
+{
+  "math": {
+    "bench": "MATH-500 L5",
+    "n_paired": 536,
+    "buckets": {
+      "both_correct": {
+        "name": "both correct",
+        "n": 306,
+        "panel_tokens_mean": 754.8169934640523,
+        "panel_tokens_median": 651.5,
+        "think_tokens_mean": 5587.549019607844,
+        "think_tokens_median": 4957.5,
+        "ratio_mean": 8.07251452165448,
+        "ratio_median": 6.914521894883574,
+        "ratio_geomean": 7.137002653769428,
+        "ratio_min": 2.275,
+        "ratio_max": 32.350912778904664,
+        "global_ratio": 7.402521495925948,
+        "thinking_longer_in": 306,
+        "thinking_longer_frac": 1.0
+      },
+      "panel_only": {
+        "name": "panel only",
+        "n": 12,
+        "panel_tokens_mean": 905.3333333333334,
+        "panel_tokens_median": 825.0,
+        "think_tokens_mean": 11437.5,
+        "think_tokens_median": 10013.0,
+        "ratio_mean": 14.604409032129363,
+        "ratio_median": 14.171805941001132,
+        "ratio_geomean": 12.453310359825696,
+        "ratio_min": 2.1122549019607844,
+        "ratio_max": 32.63745019920319,
+        "global_ratio": 12.633468335787924,
+        "thinking_longer_in": 12,
+        "thinking_longer_frac": 1.0
+      },
+      "thinking_only": {
+        "name": "thinking only",
+        "n": 181,
+        "panel_tokens_mean": 1283.5690607734807,
+        "panel_tokens_median": 984,
+        "think_tokens_mean": 9283.701657458563,
+        "think_tokens_median": 8875,
+        "ratio_mean": 9.527800646464247,
+        "ratio_median": 8.728395061728396,
+        "ratio_geomean": 8.020522563404231,
+        "ratio_min": 0.69921875,
+        "ratio_max": 25.3,
+        "global_ratio": 7.232724705801331,
+        "thinking_longer_in": 179,
+        "thinking_longer_frac": 0.988950276243094
+      },
+      "neither": {
+        "name": "neither correct",
+        "n": 37,
+        "panel_tokens_mean": 1384.3243243243244,
+        "panel_tokens_median": 950,
+        "think_tokens_mean": 14913.864864864865,
+        "think_tokens_median": 16384,
+        "ratio_mean": 15.640072583691557,
+        "ratio_median": 16.599797365754814,
+        "ratio_geomean": 12.86397766155675,
+        "ratio_min": 1.299560546875,
+        "ratio_max": 33.78144329896907,
+        "global_ratio": 10.773389301054277,
+        "thinking_longer_in": 37,
+        "thinking_longer_frac": 1.0
+      },
+      "all_paired": {
+        "name": "all paired",
+        "n": 536,
+        "panel_tokens_mean": 980.1940298507462,
+        "panel_tokens_median": 786.5,
+        "think_tokens_mean": 7610.453358208955,
+        "think_tokens_median": 6634.0,
+        "ratio_mean": 9.232568945183656,
+        "ratio_median": 7.648836903065806,
+        "ratio_geomean": 7.829008908801718,
+        "ratio_min": 0.69921875,
+        "ratio_max": 33.78144329896907,
+        "global_ratio": 7.764231495439526,
+        "thinking_longer_in": 534,
+        "thinking_longer_frac": 0.996268656716418
+      }
+    },
+    "cost_per_correct": {
+      "panel_tokens_per_correct": 1652.1509433962265,
+      "thinking_tokens_per_correct": 8376.186858316221
+    },
+    "wilcoxon_both_correct": {
+      "statistic": 0.0,
+      "pvalue": 6.349302183829515e-52,
+      "n_nonzero": 306
+    },
+    "panel_correct_count": 318,
+    "thinking_correct_count": 487
+  },
+  "aime": {
+    "bench": "AIME 24+25",
+    "n_paired": 320,
+    "buckets": {
+      "both_correct": {
+        "name": "both correct",
+        "n": 68,
+        "panel_tokens_mean": 1140.8088235294117,
+        "panel_tokens_median": 1033.5,
+        "think_tokens_mean": 6641.485294117647,
+        "think_tokens_median": 5509.5,
+        "ratio_mean": 6.708924965895498,
+        "ratio_median": 5.887196905640395,
+        "ratio_geomean": 5.968161745751186,
+        "ratio_min": 0.6552606762764381,
+        "ratio_max": 18.169039145907472,
+        "global_ratio": 5.821733805994199,
+        "thinking_longer_in": 67,
+        "thinking_longer_frac": 0.9852941176470589
+      },
+      "panel_only": {
+        "name": "panel only",
+        "n": 4,
+        "panel_tokens_mean": 1137.0,
+        "panel_tokens_median": 1115.5,
+        "think_tokens_mean": 16384.0,
+        "think_tokens_median": 16384.0,
+        "ratio_mean": 14.926585722257471,
+        "ratio_median": 14.945360044092705,
+        "ratio_geomean": 14.667247970591546,
+        "ratio_min": 11.52990851513019,
+        "ratio_max": 18.285714285714285,
+        "global_ratio": 14.409850483729112,
+        "thinking_longer_in": 4,
+        "thinking_longer_frac": 1.0
+      },
+      "thinking_only": {
+        "name": "thinking only",
+        "n": 166,
+        "panel_tokens_mean": 1588.9036144578313,
+        "panel_tokens_median": 1110.0,
+        "think_tokens_mean": 10753.114457831325,
+        "think_tokens_median": 11259.0,
+        "ratio_mean": 9.434086912135905,
+        "ratio_median": 8.747634408602151,
+        "ratio_geomean": 7.691530035348279,
+        "ratio_min": 1.08559901771619,
+        "ratio_max": 33.833836858006045,
+        "global_ratio": 6.767631692687995,
+        "thinking_longer_in": 166,
+        "thinking_longer_frac": 1.0
+      },
+      "neither": {
+        "name": "neither correct",
+        "n": 82,
+        "panel_tokens_mean": 1275.9634146341464,
+        "panel_tokens_median": 1073.0,
+        "think_tokens_mean": 16131.634146341463,
+        "think_tokens_median": 16384.0,
+        "ratio_mean": 15.983457414321578,
+        "ratio_median": 15.008055483832736,
+        "ratio_geomean": 14.669921650568527,
+        "ratio_min": 2.0,
+        "ratio_max": 34.933901918976545,
+        "global_ratio": 12.642709000372745,
+        "thinking_longer_in": 82,
+        "thinking_longer_frac": 1.0
+      },
+      "all_paired": {
+        "name": "all paired",
+        "n": 320,
+        "panel_tokens_mean": 1407.84375,
+        "panel_tokens_median": 1069.0,
+        "think_tokens_mean": 11328.025,
+        "think_tokens_median": 11977.0,
+        "ratio_mean": 10.601922424871416,
+        "ratio_median": 9.848929108446107,
+        "ratio_geomean": 8.668854495629484,
+        "ratio_min": 0.6552606762764381,
+        "ratio_max": 34.933901918976545,
+        "global_ratio": 8.046365230516527,
+        "thinking_longer_in": 319,
+        "thinking_longer_frac": 0.996875
+      }
+    },
+    "cost_per_correct": {
+      "panel_tokens_per_correct": 6257.083333333333,
+      "thinking_tokens_per_correct": 15491.31623931624
+    },
+    "wilcoxon_both_correct": {
+      "statistic": 1.0,
+      "pvalue": 7.989555020455465e-13,
+      "n_nonzero": 68
+    },
+    "panel_correct_count": 72,
+    "thinking_correct_count": 234
+  }
+}

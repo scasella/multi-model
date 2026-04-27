@@ -651,6 +651,9 @@
                 The same backbone, post-trained two ways. Trained as a panel of experts arguing inside a debate tag, it produces reasoning traces that sit <strong>+78.2%</strong> further apart in mpnet-space on MATH500 (paired t = 5.91, p &lt; 10⁻⁸) and <strong>+75.6%</strong> further apart on AIME (t = 4.72, p &lt; 10⁻⁵) than the same model post-trained to think privately. The pass@k gap to Qwen3-thinking narrows monotonically in k across three independent slices.
               </p>
               <p>
+                <strong>And the deployment-cost consequence.</strong> On the 374 paired draws across MATH500 L5 and AIME 24+25 where both arms produced a correct answer, thinking burns <strong>5.9–6.9× more tokens (median)</strong> than the panel — and is longer than the panel in <strong>99.6–99.7%</strong> of all paired draws regardless of correctness. At the cost-per-correct-answer level — total tokens divided by correct samples — thinking is <strong>2.5–5×</strong> more expensive than the panel. Per-sample accuracy still favors thinking; per-token efficiency reverses the comparison. (Wilcoxon signed-rank: <em>p</em> = 6×10⁻⁵² on MATH, <em>p</em> = 8×10⁻¹³ on AIME.)
+              </p>
+              <p>
                 <strong>Update — Apr 25.</strong> Wider per-sample search shows up where it matters for RL. On a fresh 877-problem olympiad pool the panel has 382 variance-band problems against thinking's 209: the only regime where group-relative RLVR generates non-zero gradient, and a <strong>1.83×</strong> ratio in panel's favor. 100 RL steps on that band carry panel from 14% to 29% on a shared held-out, with per-source gains scaling with training-pool representation. Training adapter: LoRA rank 32 on the frozen base, four to five orders of magnitude under the baseline's post-training compute.
               </p>
             </div>
@@ -964,13 +967,160 @@
               Three slices, three positive closures, all monotone in k. The pass@k mechanism agrees with the embedding measurement, and it does so without knowing anything about embeddings.
             </p>
 
+            <h2 id="cost">Token efficiency — the deployment lens</h2>
+
+            <p>
+              The pass@k story says: <em>at fixed sample count, panel closes the gap with k.</em> A reader who actually deploys a model cares about a different question: <em>at fixed correctness, who is cheaper?</em> Cosine distances and pass@k curves are mechanism-level results. Tokens-per-correct-answer is what shows up on a bill.
+            </p>
+            <p>
+              We re-joined the existing eval rollouts pairwise on (problem, sample-index) — same prompts, same temperature, same max-token budgets — and looked at the <code>completion_tokens</code> field that sampling already wrote out. No re-tokenization, no embeddings, no judgment calls. The comparison is paired by construction.
+            </p>
+
+            <div class="stat-row">
+              <div class="stat">
+                <span class="k">MATH500 L5 median ratio</span>
+                <div class="v">6.91×</div>
+                <div class="s">thinking ÷ panel · n = 306 paired both-correct</div>
+              </div>
+              <div class="stat">
+                <span class="k">AIME median ratio</span>
+                <div class="v">5.89×</div>
+                <div class="s">thinking ÷ panel · n = 68 paired both-correct</div>
+              </div>
+              <div class="stat">
+                <span class="k">MATH cost / correct</span>
+                <div class="v">5.07×</div>
+                <div class="s">thinking is more expensive per correct answer</div>
+              </div>
+              <div class="stat">
+                <span class="k">AIME cost / correct</span>
+                <div class="v">2.48×</div>
+                <div class="s">thinking is more expensive per correct answer</div>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <div class="table-label"><span class="id">Table 03</span>Token-cost asymmetry, paired on (problem, sample-index)</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Bucket</th>
+                    <th>n</th>
+                    <th>Panel tokens (median)</th>
+                    <th>Thinking tokens (median)</th>
+                    <th>Median ratio</th>
+                    <th>Thinking-longer in</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MATH500 L5 — both correct</td>
+                    <td class="num">306</td>
+                    <td class="num">652</td>
+                    <td class="num">4,958</td>
+                    <td class="num pos">+6.91×</td>
+                    <td class="num">306 / 306</td>
+                  </tr>
+                  <tr>
+                    <td>MATH500 L5 — panel-only correct</td>
+                    <td class="num">12</td>
+                    <td class="num">825</td>
+                    <td class="num">10,013</td>
+                    <td class="num pos">+14.17×</td>
+                    <td class="num">12 / 12</td>
+                  </tr>
+                  <tr>
+                    <td>MATH500 L5 — all paired</td>
+                    <td class="num">536</td>
+                    <td class="num">786</td>
+                    <td class="num">6,634</td>
+                    <td class="num pos">+7.65×</td>
+                    <td class="num">534 / 536</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td>AIME 24+25 — both correct</td>
+                    <td class="num">68</td>
+                    <td class="num">1,034</td>
+                    <td class="num">5,510</td>
+                    <td class="num pos">+5.89×</td>
+                    <td class="num">67 / 68</td>
+                  </tr>
+                  <tr>
+                    <td>AIME 24+25 — panel-only correct</td>
+                    <td class="num">4</td>
+                    <td class="num">1,116</td>
+                    <td class="num">16,384</td>
+                    <td class="num pos">+14.95×</td>
+                    <td class="num">4 / 4</td>
+                  </tr>
+                  <tr>
+                    <td>AIME 24+25 — all paired</td>
+                    <td class="num">320</td>
+                    <td class="num">1,069</td>
+                    <td class="num">11,977</td>
+                    <td class="num pos">+9.85×</td>
+                    <td class="num">319 / 320</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              Wilcoxon signed-rank on the both-correct subsets, pairing every (problem, sample-index) draw on the (think − panel) token-count diff: <em>p</em> = 6.4×10⁻⁵² on MATH500 (n=306), <em>p</em> = 8.0×10⁻¹³ on AIME (n=68). The directionality is so strong that the more useful summary is the count, not the p-value: <strong>thinking is longer in 99.6% of MATH paired draws and 99.7% of AIME paired draws</strong>, regardless of who's right.
+            </p>
+
+            <p>
+              Reframe by deployment cost. Total tokens spent in a benchmark run, divided by the number of correct answers it produced, gives a cost-per-correct figure that absorbs both the per-sample length and the hit rate into a single number:
+            </p>
+
+            <div class="table-wrap">
+              <div class="table-label"><span class="id">Table 04</span>Cost per correct answer (total tokens ÷ correct samples)</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Benchmark</th>
+                    <th>Panel</th>
+                    <th>Thinking</th>
+                    <th>Δ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>MATH500 L5 (n = 536 paired draws)</td>
+                    <td class="num">1,652 tok / correct</td>
+                    <td class="num">8,376 tok / correct</td>
+                    <td class="num pos">thinking 5.07× more expensive</td>
+                  </tr>
+                  <tr>
+                    <td>AIME 2024+2025 (n = 320 paired draws)</td>
+                    <td class="num">6,257 tok / correct</td>
+                    <td class="num">15,491 tok / correct</td>
+                    <td class="num pos">thinking 2.48× more expensive</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              The two findings sit in tension only if the metric is per-sample accuracy. Thinking has higher per-sample accuracy on both benchmarks (90.9% vs 59.3% on MATH500 L5; 73.1% vs 22.5% on AIME). It also pays 2.5–5× more compute for each correct answer it produces. Per-sample-accuracy and cost-per-correct disagree because thinking's correct samples are too long to amortize the gap. Once compute is in the denominator, the comparison reverses.
+            </p>
+
+            <div class="callout">
+              <span class="callout-label">Caveat — max-token cap</span>
+              <p>Thinking sampled at <code>max_tokens=16384</code>. Some thinking traces hit the cap mid-trace, which inflates the all-paired ratios. The both-correct subset is the conservative read: there, thinking ran to completion (AIME both-correct median = 5,510 tokens, MATH = 4,958 — both well below 16k), and the median ratios of 5.89× and 6.91× are not a truncation artifact. They sit downstream of the same diversity mechanism: 3 personas commit early on different paths and converge fast; one persona explores with backtracking.</p>
+            </div>
+
+            <p>
+              Reproduce: <code>python scripts/analyze_token_efficiency.py</code>. Full per-bucket breakdown including means, geometric means, and minima/maxima at <code>reports/token_efficiency/summary.json</code>.
+            </p>
+
             <h2 id="limits">Bounds on the claim</h2>
 
             <p>A few honest bounds, so the result is not over-claimed on the way out.</p>
 
             <div class="callout">
               <span class="callout-label">What the result is not</span>
-              <p>Per-sample accuracy on the panel is lower than on thinking: about 33 pp lower on MATH500 L5, about 51 pp lower on AIME. In the k range we tested the curves converge but never cross. On AIME, panel solves a strict subset of what thinking solves (11/20 vs 18/20, no panel-only wins). The MATH RL stage also compressed diversity from 0.174 to 0.095; the released checkpoint is an exploration–reliability compromise, not a pure-diversity win.</p>
+              <p>Per-sample accuracy on the panel is lower than on thinking: about 33 pp lower on MATH500 L5, about 51 pp lower on AIME. In the k range we tested the curves converge but never cross. On AIME, panel solves a strict subset of what thinking solves (11/20 vs 18/20, no panel-only wins). The MATH RL stage also compressed diversity from 0.174 to 0.095; the released checkpoint is an exploration–reliability compromise, not a pure-diversity win. The cost-per-correct comparison flips the per-sample-accuracy picture, but it doesn't make the per-sample-accuracy picture untrue: at fixed sample budget thinking still wins, and that's the right denominator for some applications.</p>
             </div>
 
             <p>
