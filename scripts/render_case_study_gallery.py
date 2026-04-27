@@ -31,6 +31,33 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
+def extract_last_boxed(text: str) -> str | None:
+    """Return the contents of the last `\\boxed{...}` in `text`, brace-balanced.
+
+    Inlined from envs.multipersona_math so the renderer has no Tinker
+    dependency — the env module pulls `chz` which the renderer doesn't need.
+    """
+    if not text:
+        return None
+    key = "\\boxed{"
+    idx = text.rfind(key)
+    if idx < 0:
+        return None
+    i = idx + len(key)
+    depth = 1
+    start = i
+    while i < len(text):
+        c = text[i]
+        if c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start:i].strip()
+        i += 1
+    return None
+
+
 HTML_TEMPLATE_HEAD = """\
 <!DOCTYPE html>
 <html lang="en">
@@ -387,7 +414,19 @@ def render(items: list[dict], meta: dict) -> str:
             panel_reasoning = panel.get("reasoning", "")
             panel_answer = panel.get("answer", "") or ""
             think_reasoning = think.get("reasoning", "")
-            think_answer = think.get("answer", "") or ""
+            # For the thinking arm, the reader-facing answer is whatever sits
+            # inside the last \boxed{...} in the model's full trace. The full
+            # narrative answer remains visible in the reasoning body above.
+            # Fall back to a placeholder when the model emits no boxed value
+            # (qualitative problems where there is no closed-form answer).
+            think_raw = think.get("raw", "") or ""
+            boxed = extract_last_boxed(think_raw)
+            if boxed is not None and boxed.strip():
+                # Wrap in display math so KaTeX typesets it the same way the
+                # model intended (numeric or LaTeX expressions both render).
+                think_answer = f"$$\\boxed{{{boxed.strip()}}}$$"
+            else:
+                think_answer = ""
 
             panel_chars = len(panel.get("raw", "") or "")
             think_chars = len(think.get("raw", "") or "")
@@ -408,7 +447,7 @@ def render(items: list[dict], meta: dict) -> str:
                 panel_answer, "answer", "(no &lt;answer&gt; tag emitted)"
             )
             think_answer_block = md_block(
-                think_answer, "answer", "(no post-think output)"
+                think_answer, "answer", "(no \\boxed{} in trace — see reasoning above)"
             )
             panel_reasoning_block = md_block(
                 panel_reasoning, "reasoning", "(no &lt;mutipersonaDebate&gt; body)"
