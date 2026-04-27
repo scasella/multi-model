@@ -2,7 +2,7 @@
 HTML page that compares the multi-persona debate checkpoint against
 vanilla Qwen3-30B-A3B-Thinking side-by-side.
 
-The output style follows reports/blog_post/diversity.html: warm cream
+The output style follows reports/blog_post/blog_multipersona.html: warm cream
 background, Libre Baskerville serif body, Inter sans labels, the same
 header link chips and design tokens. Each problem is rendered as a
 section with the prompt up top and two columns below — multi-persona
@@ -550,7 +550,7 @@ def render(items: list[dict], meta: dict) -> str:
 
     out.append("""
     <header class="perspectives-header">
-      <a href="../blog_post/diversity.html" class="header-link">Back to writeup</a>
+      <a href="../blog_post/blog_multipersona.html" class="header-link">Back to writeup</a>
       <a href="https://github.com/scasella/multi-model" class="header-link">GitHub</a>
     </header>
 
@@ -562,7 +562,7 @@ def render(items: list[dict], meta: dict) -> str:
         <p class="date">STEPHEN CASELLA · APRIL 2026</p>
 
         <div class="paper-links">
-          <a href="../blog_post/diversity.html" class="btn-pill">Read the writeup</a>
+          <a href="../blog_post/blog_multipersona.html" class="btn-pill">Read the writeup</a>
           <a href="https://github.com/scasella/multi-model" class="btn-pill">GitHub repo</a>
         </div>
 

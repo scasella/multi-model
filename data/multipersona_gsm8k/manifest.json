@@ -1,6 +1,6 @@
 {
   "experiment": "multipersona_gsm8k",
-  "_note": "This is a frozen historical run-log. The tinker:// URIs below were live during the experiment but most have been deleted in a post-publication cleanup; the only checkpoint from this experiment that is still resolvable is the panel-MATH continuation tinker://44722365-baf6-517f-a69f-ec01d13f6395:train:0/weights/final (referenced as eval session 44722365 in reports/blog_post/diversity.html). Reproducing the full experiment requires re-running rl_multipersona_gsm8k.sh + rl_multipersona_math.sh from scratch with your own Tinker account.",
+  "_note": "This is a frozen historical run-log. The tinker:// URIs below were live during the experiment but most have been deleted in a post-publication cleanup; the only checkpoint from this experiment that is still resolvable is the panel-MATH continuation tinker://44722365-baf6-517f-a69f-ec01d13f6395:train:0/weights/final (referenced as eval session 44722365 in reports/blog_post/blog_multipersona.html). Reproducing the full experiment requires re-running rl_multipersona_gsm8k.sh + rl_multipersona_math.sh from scratch with your own Tinker account.",
   "thesis": "Test whether plural-actor framing (Multi-Persona Panel of Experts) under DeepSeek-R1-Zero-style pure RL from Base induces emergent multi-voice reasoning. Setup-shaping via prompt template only; no SFT warmup; outcome-based reward (correct + tag enforcement).",
   "rl_run": {
     "model_name": "Qwen/Qwen3-30B-A3B-Base",

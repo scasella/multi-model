@@ -3,11 +3,82 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>The diversity effect — multi-model lab</title>
-  <meta name="description" content="A panel-of-experts scaffold produces wider per-sample search than a <think> monologue (+78% / +76% on MATH500 and AIME). Followup: the diversity translates to RL gradient signal — panel has 1.83× more variance-band problems than Qwen3 thinking on a fresh 877-problem olympiad pool, and 100 RL steps double panel's olympiad held-out pass rate (14% → 29%)." />
+  <title>The Diversity Effect in Multi-Persona Reasoning | Stephen Casella</title>
+  <meta name="description" content="A panel-of-experts scaffold produces wider per-sample search than a &lt;think&gt; monologue on Qwen3-30B-A3B, and the diversity creates RLVR gradient signal on olympiad math." />
+  <meta name="author" content="Stephen Casella" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F9F9F6" />
+  <link rel="canonical" href="https://casella.dev/blog_multipersona.html" />
+  <meta property="og:site_name" content="Stephen Casella" />
   <meta property="og:title" content="The diversity effect" />
   <meta property="og:description" content="Wider per-sample search converts to faster RLVR hill-climbing on olympiad math." />
   <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://casella.dev/blog_multipersona.html" />
+  <meta property="og:image" content="https://casella.dev/assets/project-diagrams/multi-model.png" />
+  <meta property="og:image:secure_url" content="https://casella.dev/assets/project-diagrams/multi-model.png" />
+  <meta property="og:image:width" content="900" />
+  <meta property="og:image:height" content="600" />
+  <meta property="og:image:alt" content="Diagram comparing native thinking to a multi-persona panel-of-experts reasoning scaffold" />
+  <meta property="article:author" content="Stephen Casella" />
+  <meta property="article:published_time" content="2026-04-24" />
+  <meta property="article:modified_time" content="2026-04-26" />
+  <meta property="article:tag" content="multi-persona reasoning" />
+  <meta property="article:tag" content="RLVR" />
+  <meta property="article:tag" content="Qwen3" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The diversity effect" />
+  <meta name="twitter:description" content="A panel-of-experts scaffold produces wider search and more RLVR signal than native thinking." />
+  <meta name="twitter:image" content="https://casella.dev/assets/project-diagrams/multi-model.png" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2RSWDWW67D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2RSWDWW67D');
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "The diversity effect",
+      "description": "A panel-of-experts scaffold produces wider per-sample search than a native thinking monologue on Qwen3-30B-A3B, creating more RLVR gradient signal on olympiad math.",
+      "url": "https://casella.dev/blog_multipersona.html",
+      "mainEntityOfPage": "https://casella.dev/blog_multipersona.html",
+      "image": "https://casella.dev/assets/project-diagrams/multi-model.png",
+      "datePublished": "2026-04-24",
+      "dateModified": "2026-04-26",
+      "author": {
+        "@type": "Person",
+        "name": "Stephen Casella",
+        "url": "https://casella.dev/",
+        "sameAs": [
+          "https://github.com/scasella",
+          "https://www.linkedin.com/in/stevecasella/"
+        ]
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Stephen Casella",
+        "url": "https://casella.dev/"
+      },
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Stephen Casella",
+        "url": "https://casella.dev/"
+      },
+      "keywords": [
+        "multi-persona reasoning",
+        "panel of experts",
+        "RLVR",
+        "Qwen3-30B-A3B",
+        "olympiad math",
+        "reasoning diversity"
+      ],
+      "codeRepository": "https://github.com/scasella/multi-model"
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -94,21 +165,11 @@
       padding: 2rem 2.5rem;
       width: 100%;
     }
-    .logo-centered {
-      font-family: var(--font-sans);
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.25em;
-      color: var(--fg-soft);
-      text-decoration: none;
-    }
-    .logo-centered .accent { color: var(--accent); }
-    .contact-link {
+    .header-link {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 0.5rem 0.75rem;
-      margin-right: -0.75rem;
       border-radius: 999px;
       color: var(--fg);
       transition: background 240ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -116,8 +177,11 @@
       font-family: var(--font-sans);
       font-size: 13px;
       letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
-    .contact-link:hover, .contact-link:focus-visible {
+    .header-link:first-child { margin-left: -0.75rem; }
+    .header-link:last-child { margin-right: -0.75rem; }
+    .header-link:hover, .header-link:focus-visible {
       background: var(--surface-muted);
     }
 
@@ -518,86 +582,6 @@
     }
 
     /* ==========================================================
-       Footer
-       ========================================================== */
-    .site-footer {
-      background: var(--accent);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      margin-top: auto;
-      padding: 0;
-    }
-    .site-footer .footer-inner {
-      max-width: 720px;
-      width: 100%;
-      margin: 2rem auto 0;
-      padding: 0 2rem 140px;
-    }
-    .footer-subscribe {
-      display: flex;
-      flex-direction: column;
-      gap: 1lh;
-      max-width: 480px;
-    }
-    .footer-subscribe-label {
-      font-size: 17px;
-      font-weight: 400;
-      line-height: 1.5;
-      color: var(--on-dark);
-      display: block;
-    }
-    .footer-subscribe-row {
-      display: flex;
-      align-items: stretch;
-      gap: 8px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
-      padding: 4px;
-      transition: border-color 150ms ease, background 150ms ease;
-    }
-    .footer-subscribe-row:focus-within {
-      border-color: rgba(255,255,255,0.45);
-      background: rgba(255,255,255,0.12);
-    }
-    .footer-subscribe-input {
-      flex: 1;
-      min-width: 0;
-      background: transparent;
-      border: 0;
-      outline: none;
-      padding: 0.6rem 1rem;
-      font-family: var(--font-serif);
-      font-size: 16px;
-      font-weight: 300;
-      color: #fff;
-    }
-    .footer-subscribe-input::placeholder { color: rgba(255,255,255,0.45); }
-    .footer-subscribe-button {
-      font-family: var(--font-sans);
-      font-size: 15px;
-      line-height: 1;
-      color: var(--accent);
-      background: #fff;
-      border: 0;
-      border-radius: 999px;
-      padding: 0 1.1rem;
-      cursor: pointer;
-      transition: background 150ms ease;
-    }
-    .footer-subscribe-button:hover { background: var(--surface-muted); }
-    .footer-meta {
-      font-family: var(--font-sans);
-      font-size: 12px;
-      color: var(--fg-faint);
-      margin-top: 2rem;
-      line-height: 1.6;
-    }
-    .footer-meta a { color: var(--on-dark); text-decoration: none; border-bottom: 1px dotted rgba(255,255,255,0.25); }
-    .footer-meta a:hover { color: #fff; border-bottom-color: #fff; }
-
-    /* ==========================================================
        Responsive
        ========================================================== */
     @media (max-width: 768px) {
@@ -605,7 +589,6 @@
       .benchmarks-content { padding: 3rem 1.5rem 4rem; }
       .benchmarks-content h1 { font-size: 44px; margin-top: 120px; }
       .benchmarks-body { margin: 72px 0 32px; }
-      .site-footer .footer-inner { padding-left: 1.5rem; padding-right: 1.5rem; }
     }
     @media (max-width: 480px) {
       .perspectives-header { padding: 1.25rem 1.25rem; }
@@ -618,7 +601,6 @@
       .benchmarks-body li { font-size: 18px; }
       .tldr p { font-size: 18px; }
       .stat .v { font-size: 24px; }
-      .site-footer .footer-inner { padding: 0 1.25rem 80px; }
     }
   </style>
 </head>
@@ -626,8 +608,8 @@
   <div class="page-surface">
 
     <header class="perspectives-header">
-      <a href="#" class="logo-centered">MULTI<span class="accent">·</span>MODEL</a>
-      <a href="mailto:contact@example.com" class="contact-link" aria-label="Contact">Contact</a>
+      <a href="index.html" class="header-link">Home</a>
+      <a href="blog_interp.html" class="header-link">Next</a>
     </header>
 
     <main class="main">
@@ -638,8 +620,8 @@
         <p class="date">STEPHEN CASELLA · APRIL 2026</p>
 
         <div class="paper-links">
-          <a href="#" class="btn-pill">Github</a>
-          <a href="#" class="btn-pill">Recipe</a>
+          <a href="https://github.com/scasella/multi-model" class="btn-pill">GitHub repo</a>
+          <a href="../case_study/gallery.html" class="btn-pill">20-problem gallery</a>
         </div>
 
         <div class="benchmarks-body">
@@ -651,14 +633,14 @@
                 The same backbone, post-trained two ways. Trained as a panel of experts arguing inside a debate tag, it produces reasoning traces that sit <strong>+78.2%</strong> further apart in mpnet-space on MATH500 (paired t = 5.91, p &lt; 10⁻⁸) and <strong>+75.6%</strong> further apart on AIME (t = 4.72, p &lt; 10⁻⁵) than the same model post-trained to think privately. The pass@k gap to Qwen3-thinking narrows monotonically in k across three independent slices.
               </p>
               <p>
-                <strong>And the deployment-cost consequence.</strong> On the 374 paired draws across MATH500 L5 and AIME 24+25 where both arms produced a correct answer, thinking burns <strong>5.9–6.9× more tokens (median)</strong> than the panel — and is longer than the panel in <strong>99.6–99.7%</strong> of all paired draws regardless of correctness. At the cost-per-correct-answer level — total tokens divided by correct samples — thinking is <strong>2.5–5×</strong> more expensive than the panel. Per-sample accuracy still favors thinking; per-token efficiency reverses the comparison. (Wilcoxon signed-rank: <em>p</em> = 6×10⁻⁵² on MATH, <em>p</em> = 8×10⁻¹³ on AIME.)
+                <strong>And the deployment-cost consequence.</strong> On the 374 paired draws across MATH500 L5 and AIME 24+25 where both arms produced a correct answer, thinking burns <strong>5.9–6.9× more tokens (median)</strong> than the panel — and is longer than the panel in <strong>99.6–99.7%</strong> of all paired draws regardless of correctness. At the cost-per-correct-answer level — total tokens divided by correct samples — thinking is <strong>2.5–5×</strong> more expensive than the panel. Per-sample accuracy still favors thinking; per-token efficiency reverses the comparison. The visceral version is a <a href="../case_study/gallery.html">20-problem side-by-side gallery</a> where the asymmetry is visible row by row. (Wilcoxon signed-rank: <em>p</em> = 6×10⁻⁵² on MATH, <em>p</em> = 8×10⁻¹³ on AIME.)
               </p>
               <p>
                 <strong>Update — Apr 25.</strong> Wider per-sample search shows up where it matters for RL. On a fresh 877-problem olympiad pool the panel has 382 variance-band problems against thinking's 209: the only regime where group-relative RLVR generates non-zero gradient, and a <strong>1.83×</strong> ratio in panel's favor. 100 RL steps on that band carry panel from 14% to 29% on a shared held-out, with per-source gains scaling with training-pool representation. Training adapter: LoRA rank 32 on the frozen base, four to five orders of magnitude under the baseline's post-training compute.
               </p>
             </div>
 
-            <h2 id="question">The question we couldn't skip</h2>
+            <h2 id="question">Is the scaffold doing real work?</h2>
 
             <p>
               The default reasoning scaffold is <code>&lt;think&gt;</code>: a long private monologue, often tens of thousands of tokens, before the answer. Every frontier lab ships a thinking model. The format has become invisible the way <em>"let's think step by step"</em> became invisible a few years before it.
@@ -701,7 +683,7 @@
 
             <h3>The baseline</h3>
             <p>
-              Qwen's production thinking model. Same base architecture, same parameter count, full proprietary post-training stack. We access it through <code>apply_chat_template(enable_thinking=True)</code>, which routes the request to the post-trained policy that emits <code>&lt;think&gt;…&lt;/think&gt;</code> before the answer. It is the closest peer the architecture allows.
+              Qwen's production thinking model. Same base architecture, same parameter count, full proprietary post-training stack. I access it through <code>apply_chat_template(enable_thinking=True)</code>, which routes the request to the post-trained policy that emits <code>&lt;think&gt;…&lt;/think&gt;</code> before the answer. It is the closest peer the architecture allows.
             </p>
 
             <div class="callout">
@@ -728,14 +710,14 @@
               <div class="stat">
                 <span class="k">Post-train ratio</span>
                 <div class="v">~10⁴–10⁵×</div>
-                <div class="s">Baseline vs ours · conservative</div>
+                <div class="s">Baseline vs panel adapter · conservative</div>
               </div>
             </div>
 
             <h2 id="method">Measuring "different reasoning"</h2>
 
             <p>
-              Diversity is one of those words that means too many things to be useful without an operational definition. The one we used: draw N completions from each model on the same problem at temperature 1.0, group them per problem and per model, and look at where they sit in semantic space relative to each other. A scaffold that explores more of the solution surface per sample should produce traces that sit further apart.
+              Diversity is one of those words that means too many things to be useful without an operational definition. The one I used: draw N completions from each model on the same problem at temperature 1.0, group them per problem and per model, and look at where they sit in semantic space relative to each other. A scaffold that explores more of the solution surface per sample should produce traces that sit further apart.
             </p>
 
             <div class="mode-grid">
@@ -864,7 +846,7 @@
 
                 <line x1="370" y1="78" x2="402" y2="78" stroke="#3B3B39" stroke-width="2" />
                 <text x="408" y="82" fill="#3B3B39"
-                      font-family="Inter, Helvetica Neue, sans-serif" font-size="12">panel (ours)</text>
+                      font-family="Inter, Helvetica Neue, sans-serif" font-size="12">panel adapter</text>
                 <line x1="498" y1="78" x2="530" y2="78" stroke="#969592" stroke-width="2" stroke-dasharray="4 3" />
                 <text x="536" y="82" fill="#3B3B39"
                       font-family="Inter, Helvetica Neue, sans-serif" font-size="12">Qwen3 thinking</text>
@@ -973,7 +955,7 @@
               The pass@k story says: <em>at fixed sample count, panel closes the gap with k.</em> A reader who actually deploys a model cares about a different question: <em>at fixed correctness, who is cheaper?</em> Cosine distances and pass@k curves are mechanism-level results. Tokens-per-correct-answer is what shows up on a bill.
             </p>
             <p>
-              We re-joined the existing eval rollouts pairwise on (problem, sample-index) — same prompts, same temperature, same max-token budgets — and looked at the <code>completion_tokens</code> field that sampling already wrote out. No re-tokenization, no embeddings, no judgment calls. The comparison is paired by construction.
+              I re-joined the existing eval rollouts pairwise on (problem, sample-index) — same prompts, same temperature, same max-token budgets — and looked at the <code>completion_tokens</code> field that sampling already wrote out. No re-tokenization, no embeddings, no judgment calls. The comparison is paired by construction. For the visceral version of the same finding, the <a href="../case_study/gallery.html">20-problem side-by-side gallery</a> renders one panel and one thinking sample on each problem in adjacent columns.
             </p>
 
             <div class="stat-row">
@@ -1120,17 +1102,17 @@
 
             <div class="callout">
               <span class="callout-label">What the result is not</span>
-              <p>Per-sample accuracy on the panel is lower than on thinking: about 33 pp lower on MATH500 L5, about 51 pp lower on AIME. In the k range we tested the curves converge but never cross. On AIME, panel solves a strict subset of what thinking solves (11/20 vs 18/20, no panel-only wins). The MATH RL stage also compressed diversity from 0.174 to 0.095; the released checkpoint is an exploration–reliability compromise, not a pure-diversity win. The cost-per-correct comparison flips the per-sample-accuracy picture, but it doesn't make the per-sample-accuracy picture untrue: at fixed sample budget thinking still wins, and that's the right denominator for some applications.</p>
+              <p>Per-sample accuracy on the panel is lower than on thinking: about 33 pp lower on MATH500 L5, about 51 pp lower on AIME. In the k range I tested, the curves converge but never cross. On AIME, panel solves a strict subset of what thinking solves (11/20 vs 18/20, no panel-only wins). The MATH RL stage also compressed diversity from 0.174 to 0.095; the released checkpoint is an exploration–reliability compromise, not a pure-diversity win. The cost-per-correct comparison flips the per-sample-accuracy picture, but it doesn't make the per-sample-accuracy picture untrue: at fixed sample budget thinking still wins, and that's the right denominator for some applications.</p>
             </div>
 
             <p>
-              The reviewer question we'd most like answered next: is the effect the scaffold, or is it our specific RL recipe? Answering it requires a matched-compute <code>&lt;think&gt;</code>-scaffolded LoRA trained with the same reward, same step count, same base. That experiment is still open.
+              The reviewer question I most want answered next: is the effect the scaffold, or is it my specific RL recipe? Answering it requires a matched-compute <code>&lt;think&gt;</code>-scaffolded LoRA trained with the same reward, same step count, same base. That experiment is still open.
             </p>
 
             <h2 id="rlvr">From wider search to faster hill-climbing</h2>
 
             <p>
-              The original draft promised a third benchmark as the next step. The follow-up went further than that. Instead of a pass@k re-replication on a new dataset, we asked whether the per-sample diversity converts into gradient signal under RLVR.
+              The original draft promised a third benchmark as the next step. The follow-up went further than that. Instead of a pass@k re-replication on a new dataset, I asked whether the per-sample diversity converts into gradient signal under RLVR.
             </p>
             <p>
               Group-relative RLVR (GRPO, RLOO) only produces non-zero advantage when a group of rollouts on the same problem contains both correct and incorrect samples. The <em>variance band</em> — problems with 0 &lt; pass@G &lt; 1 — is therefore the only regime that contributes to the policy gradient. Wider per-sample search predicts a wider variance band: more rollouts that fall outside both ceilings, more problems with usable advantage, more trainable data.
@@ -1232,7 +1214,7 @@
             <h3>Panel hill-climbs on its own variance band</h3>
 
             <p>
-              Only the panel arm reached step 100. At ~17× the per-rollout token cost, the matched 100-step thinking run would have taken about 37 hours of Tinker compute against panel's ~2.6, and we hit a billing wall about three hours in. The panel trajectory:
+              Only the panel arm reached step 100. At ~17× the per-rollout token cost, the matched 100-step thinking run would have taken about 37 hours of Tinker compute against panel's ~2.6, and I hit a billing wall about three hours in. The panel trajectory:
             </p>
 
             <figure class="chart">
@@ -1376,7 +1358,7 @@
             <h3>Diversity through RL — entropy collapses, length-spread doesn't</h3>
 
             <p>
-              RL is a known diversity-killer. The natural worry was that 100 steps of RLVR would collapse the policy distribution and quietly erase the property the scaffold was chosen for. We tracked two diversity proxies across the run: per-token policy entropy, and trajectory-length spread within a group of 16 rollouts on the same problem.
+              RL is a known diversity-killer. The natural worry was that 100 steps of RLVR would collapse the policy distribution and quietly erase the property the scaffold was chosen for. I tracked two diversity proxies across the run: per-token policy entropy, and trajectory-length spread within a group of 16 rollouts on the same problem.
             </p>
 
             <div class="stat-row">
@@ -1415,8 +1397,8 @@
             <div class="neg-list">
               <span class="neg-list-label">Honest scope</span>
               <ul>
-                <li><strong>Does say:</strong> the variance-band advantage the diversity claim predicts is real (382 vs 209 on the 877-problem pool). It converts to RL gradient signal: 100 steps double panel's olympiad held-out pass rate (14% → 29%), with per-source gains scaling with training-pool representation. The diversity reservoir survives the run on the proxy we measured — per-token entropy collapses, but length spread within a group grows.</li>
-                <li><strong>Does not say:</strong> the matched <code>&lt;think&gt;</code> RL comparison ran to completion. At ~17× the per-rollout token cost, the matched 100-step thinking run would have taken about 37 hours of Tinker compute, and we hit the billing wall first. The static reference is vanilla Qwen3-thinking on the shared held-out: ~60% pass@1 aggregate, ~55% on OlympiadBench, ~75% on AMC, all at G=8. Panel ends at 29%, about half. The result here is about rate of climb under matched hyperparameters, not absolute capability.</li>
+                <li><strong>Does say:</strong> the variance-band advantage the diversity claim predicts is real (382 vs 209 on the 877-problem pool). It converts to RL gradient signal: 100 steps double panel's olympiad held-out pass rate (14% → 29%), with per-source gains scaling with training-pool representation. The diversity reservoir survives the run on the proxy I measured — per-token entropy collapses, but length spread within a group grows.</li>
+                <li><strong>Does not say:</strong> the matched <code>&lt;think&gt;</code> RL comparison ran to completion. At ~17× the per-rollout token cost, the matched 100-step thinking run would have taken about 37 hours of Tinker compute, and I hit the billing wall first. The static reference is vanilla Qwen3-thinking on the shared held-out: ~60% pass@1 aggregate, ~55% on OlympiadBench, ~75% on AMC, all at G=8. Panel ends at 29%, about half. The result here is about rate of climb under matched hyperparameters, not absolute capability.</li>
                 <li><strong>Single seed, single run:</strong> the +15 pp number is one seed. The curve's shape replicates across the per-source breakdown; the absolute number wants a second seed before its CI gets reported.</li>
               </ul>
             </div>
@@ -1439,12 +1421,12 @@
 
             <h3>Held-out diversity post-RL</h3>
             <p>
-              We measured RL-time entropy (collapsed) and length CV (grew). The semantic measurement on a post-RL checkpoint, the same mpnet-cosine pipeline that produced the +78% and +76% numbers earlier, is the missing piece. If those numbers survive 100 steps of RL, the scaffold's diversity is a stable equilibrium under gradient pressure rather than a starting condition.
+              I measured RL-time entropy (collapsed) and length CV (grew). The semantic measurement on a post-RL checkpoint, the same mpnet-cosine pipeline that produced the +78% and +76% numbers earlier, is the missing piece. If those numbers survive 100 steps of RL, the scaffold's diversity is a stable equilibrium under gradient pressure rather than a starting condition.
             </p>
 
             <h3>Scaling study on n</h3>
             <p>
-              Does the gap-closure curve keep tightening past the sample budgets we tried? Pushing panel to n=64 or n=128 on the L5 slice gives the asymptote, which decides between "diversity that eventually catches up" and "diversity that plateaus below thinking." Current data points to the latter. The slope at n=16 is not zero.
+              Does the gap-closure curve keep tightening past the sample budgets I tried? Pushing panel to n=64 or n=128 on the L5 slice gives the asymptote, which decides between "diversity that eventually catches up" and "diversity that plateaus below thinking." Current data points to the latter. The slope at n=16 is not zero.
             </p>
 
             <div class="break">· · ·</div>
@@ -1460,24 +1442,6 @@
         </div>
       </article>
     </main>
-
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <form class="footer-subscribe" novalidate>
-          <label class="footer-subscribe-label" for="footer-email">Get early access to research, products, and more.</label>
-          <div class="footer-subscribe-row">
-            <input class="footer-subscribe-input" type="email" id="footer-email" name="email" placeholder="you@example.com" autocomplete="email" required />
-            <button class="footer-subscribe-button" type="submit">Subscribe</button>
-          </div>
-          <p class="footer-subscribe-status" role="status" aria-live="polite"></p>
-        </form>
-        <div class="footer-meta">
-          Stephen Casella · multi-model lab · Apr 24 · updated Apr 25, 2026<br />
-          Backbone: Qwen/Qwen3-30B-A3B-Base · adapter: LoRA rank 32<br />
-          Code &amp; data: <a href="#">manifest</a> · <a href="#">eval scripts</a> · <a href="#">analysis</a>
-        </div>
-      </div>
-    </footer>
 
   </div>
 </body>

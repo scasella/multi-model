@@ -9,7 +9,7 @@ reference, multi-step word problems, decision/game theory, cross-domain
 transfer, Fermi estimation, and counterfactual/causal.
 
 The panel checkpoint defaults to the published post-MATH-RL session referenced
-as eval session 44722365 in reports/blog_post/diversity.html. Override with
+as eval session 44722365 in reports/blog_post/blog_multipersona.html. Override with
 PANEL_MATH_CHECKPOINT_SAMPLER. The thinking arm uses the public
 Qwen/Qwen3-30B-A3B production model via apply_chat_template(enable_thinking=True).
 

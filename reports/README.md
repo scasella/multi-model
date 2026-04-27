@@ -8,7 +8,7 @@ so the blog figures and tables can be regenerated without rerunning a full eval.
 
 | Folder | Written by | Contents |
 |---|---|---|
-| `blog_post/` | (hand-written) | `diversity.html` — the writeup |
+| `blog_post/` | (hand-written) | `blog_multipersona.html` — the writeup |
 | `eval_math500_vibecheck/` | `scripts/eval_math500_vibecheck.py`, `eval_math500_thinking_ceiling.py`, `eval_math500_instruct_ceiling.py` | Per-tag run dirs: `summary.json` (tracked), `rollouts.jsonl` (ignored) |
 | `eval_aime_vibecheck/` | `scripts/eval_aime_vibecheck.py`, `eval_aime_thinking_ceiling.py` | Same layout, AIME 24 + 25 |
 | `eval_gsm8k/` | `scripts/eval_gsm8k.py` | GSM8K sanity checks |

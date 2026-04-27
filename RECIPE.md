@@ -3,7 +3,7 @@
 This recipe produces a LoRA adapter on `Qwen/Qwen3-30B-A3B-Base` that emits a
 panel-of-experts debate (`<mutipersonaDebate>…</mutipersonaDebate>`) in place
 of a `<think>` monologue before answering. The headline finding is
-**wider search per sample** — see `reports/blog_post/diversity.html`.
+**wider search per sample** — see `reports/blog_post/blog_multipersona.html`.
 
 For the full pre-pivot history (Qwen3-8B-Base with `<debate>/<proposer>/<skeptic>/<arbiter>`),
 see `archive/RECIPE_pre_pivot.md`.
@@ -116,7 +116,7 @@ python scripts/analyze_hard_problems.py   # per-problem overlap: panel-only / th
 ```
 
 Each analyzer writes its own folder under `reports/` (e.g. `reports/diversity_analysis/`,
-`reports/pass_at_k_aime/`). The blog post `reports/blog_post/diversity.html`
+`reports/pass_at_k_aime/`). The blog post `reports/blog_post/blog_multipersona.html`
 reads those files directly.
 
 ## 6. Olympiad RLVR hill-climbing experiment
