@@ -255,6 +255,52 @@ HTML_TEMPLATE_HEAD = """\
     }
     .tldr p { font-size: 17px; font-weight: 400; line-height: 1.6; color: var(--fg); }
 
+    /* Headline-finding banner: surfaces the population-scale token-efficiency
+       numbers so a reader scanning the gallery can see that the per-row length
+       asymmetry holds at scale (n=374 paired both-correct draws). */
+    .cost-lens {
+      margin: 32px 0 48px;
+      padding: 28px 32px;
+      background: var(--surface-muted);
+      border-radius: 6px;
+      border-left: 3px solid var(--accent);
+    }
+    .cost-lens .label {
+      font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--fg-faint);
+      margin-bottom: 14px; display: block;
+    }
+    .cost-lens .lede {
+      font-size: 17px; font-weight: 400; line-height: 1.6;
+      color: var(--fg); margin-bottom: 0;
+    }
+    .cost-lens table {
+      width: 100%; border-collapse: collapse;
+      margin: 20px 0 8px;
+      font-family: var(--font-sans); font-size: 14px;
+    }
+    .cost-lens th, .cost-lens td {
+      padding: 10px 12px; border-bottom: 1px solid var(--grid);
+    }
+    .cost-lens th {
+      font-weight: 500; color: var(--fg-mute); font-size: 11px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      text-align: left;
+    }
+    .cost-lens th.num, .cost-lens td.num {
+      text-align: right; font-variant-numeric: tabular-nums;
+    }
+    .cost-lens .stat-num { font-weight: 700; color: var(--accent); }
+    .cost-lens .footer {
+      font-size: 14px; color: var(--fg-mute); margin-top: 14px;
+      font-family: var(--font-sans);
+    }
+    .cost-lens code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em; background: rgba(0,0,0,0.06);
+      padding: 0.08em 0.3em; border-radius: 4px;
+    }
+
     /* Gallery */
     .gallery {
       max-width: 1280px; margin: 0 auto; padding: 0 2rem 5rem;
@@ -529,6 +575,46 @@ def render(items: list[dict], meta: dict) -> str:
             </p>
             <p>
               The multi-persona debate often arrives at the same answer with a fraction of the tokens; thinking often takes a longer route and lands somewhere different. On the underspecified, paradoxical, and counterfactual problems both arms can fail interestingly &mdash; the brackets matter more than the bottom line.
+            </p>
+          </div>
+
+          <div class="cost-lens">
+            <span class="label">Headline finding · cost lens</span>
+            <p class="lede">
+              Reading the rows below you'll notice the thinking column is consistently several times longer than the multi-persona one. That's not a curatorial trick &mdash; it holds at population scale. Across the full <strong>MATH-500 L5</strong> and <strong>AIME 24+25</strong> eval rollouts, on every paired draw where both arms were correct:
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Benchmark</th>
+                  <th class="num">Paired both-correct</th>
+                  <th class="num">Median tokens, panel</th>
+                  <th class="num">Median tokens, thinking</th>
+                  <th class="num">Median ratio</th>
+                  <th class="num">Cost per correct</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MATH-500 L5</td>
+                  <td class="num">306</td>
+                  <td class="num">652</td>
+                  <td class="num">4,958</td>
+                  <td class="num"><span class="stat-num">6.91&times;</span></td>
+                  <td class="num"><span class="stat-num">5.07&times;</span> more for thinking</td>
+                </tr>
+                <tr>
+                  <td>AIME 24+25</td>
+                  <td class="num">68</td>
+                  <td class="num">1,034</td>
+                  <td class="num">5,510</td>
+                  <td class="num"><span class="stat-num">5.89&times;</span></td>
+                  <td class="num"><span class="stat-num">2.48&times;</span> more for thinking</td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="footer">
+              Thinking-longer in <strong>99.6%</strong> (MATH) and <strong>99.7%</strong> (AIME) of <em>all</em> paired draws, regardless of correctness. Wilcoxon signed-rank on the both-correct subset: <em>p</em> = 6&times;10<sup>&minus;52</sup> (MATH), <em>p</em> = 8&times;10<sup>&minus;13</sup> (AIME). Per-sample accuracy still favors thinking (90.9% vs 59.3% on MATH; 73.1% vs 22.5% on AIME) &mdash; but the panel's per-token efficiency reverses the comparison once compute is in the denominator. Reproduce: <code>python scripts/analyze_token_efficiency.py</code>; full per-bucket breakdown at <code>reports/token_efficiency/summary.json</code>.
             </p>
           </div>
 """)
