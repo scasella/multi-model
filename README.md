@@ -27,6 +27,7 @@ post-training compute is roughly four to five orders of magnitude under
 Qwen's investment in the thinking baseline.
 
 👉 **Full writeup:** [`reports/blog_post/diversity.html`](reports/blog_post/diversity.html)
+🤗 **Adapter on Hugging Face:** [`scasella91/qwen3-30b-a3b-multipersona-debate-lora`](https://huggingface.co/scasella91/qwen3-30b-a3b-multipersona-debate-lora)
 
 ---
 
@@ -122,6 +123,52 @@ The first five rows fit comfortably in a single afternoon of Tinker spend.
 Row six is the highest-cost open item; we hit a billing wall before it
 finished and never restarted. Stage URIs are passed through `.env` (see
 `.env.example`); no script in the repo embeds account-specific session IDs.
+
+## Try the model
+
+The post-MATH-RL adapter is published as a standalone PEFT LoRA at
+[`scasella91/qwen3-30b-a3b-multipersona-debate-lora`](https://huggingface.co/scasella91/qwen3-30b-a3b-multipersona-debate-lora)
+(MIT, 3.4 GB bf16). It loads on top of `Qwen/Qwen3-30B-A3B-Base` via
+`transformers + peft` — no Tinker account required. You'll want ~60 GB of
+GPU memory for the base model; the adapter itself adds negligible runtime
+overhead.
+
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
+
+base_id = "Qwen/Qwen3-30B-A3B-Base"
+adapter_id = "scasella91/qwen3-30b-a3b-multipersona-debate-lora"
+
+tok = AutoTokenizer.from_pretrained(base_id, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    base_id, torch_dtype=torch.bfloat16, device_map="auto"
+)
+model = PeftModel.from_pretrained(model, adapter_id)
+model.eval()
+
+PROMPT = (
+    "A conversation between User and Multi-Persona Panel of Experts. "
+    "The user asks a question, and the Multi-Persona Panel of Experts solves it. "
+    "The Multi-Persona Panel of Experts first deliberates and debates the reasoning "
+    "process with each other and then provides the user with the answer. "
+    "The deliberation process and answer are enclosed within "
+    "<mutipersonaDebate>...</mutipersonaDebate> and <answer>...</answer> tags, "
+    "respectively, i.e., <mutipersonaDebate> deliberation process here "
+    "</mutipersonaDebate> <answer>answer here </answer>. "
+    "User: {problem}. Assistant: "
+)
+
+inputs = tok(PROMPT.format(problem="If 2x + 3 = 11, what is x?"),
+             return_tensors="pt").to(model.device)
+out = model.generate(**inputs, max_new_tokens=1024, temperature=1.0, do_sample=True)
+print(tok.decode(out[0][inputs.input_ids.shape[1]:], skip_special_tokens=True))
+```
+
+The model card on Hugging Face has the full caveat list, including the known
+gap on per-sample accuracy and the experimental status of MoE expert LoRA
+serving in vLLM/SGLang.
 
 ## License
 
