@@ -1,13 +1,14 @@
 """Read reports/case_study/transcripts.json and render a static gallery
-HTML page that compares the panel checkpoint against vanilla
-Qwen3-30B-A3B-Thinking side-by-side.
+HTML page that compares the multi-persona debate checkpoint against
+vanilla Qwen3-30B-A3B-Thinking side-by-side.
 
 The output style follows reports/blog_post/diversity.html: warm cream
 background, Libre Baskerville serif body, Inter sans labels, the same
 header link chips and design tokens. Each problem is rendered as a
-section with the prompt up top and two columns below — panel reasoning
-+ answer on the left, thinking reasoning + answer on the right. Long
-reasoning bodies collapse into <details> blocks that expand on click.
+section with the prompt up top and two columns below — multi-persona
+debate reasoning + answer on the left, thinking reasoning + answer on
+the right. Both the reasoning and the answer are always visible and
+both are rendered as Markdown via marked + KaTeX from CDN.
 
 The "tests" and "expected" fields from the source JSON drive a per-
 problem caption box so a reader can see at a glance what the problem
@@ -36,17 +37,18 @@ HTML_TEMPLATE_HEAD = """\
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Side-by-side: panel vs Qwen3-thinking | Stephen Casella</title>
-  <meta name="description" content="A static gallery comparing one sample from a panel-of-experts checkpoint against one sample from vanilla Qwen3-30B-A3B-Thinking on twenty reasoning problems across nine categories." />
+  <title>Side-by-side: multi-persona debate vs Qwen3-thinking | Stephen Casella</title>
+  <meta name="description" content="A static gallery comparing one sample from a multi-persona debate checkpoint against one sample from vanilla Qwen3-30B-A3B-Thinking on twenty reasoning problems across nine categories." />
   <meta name="author" content="Stephen Casella" />
   <meta name="theme-color" content="#F9F9F6" />
   <meta property="og:site_name" content="Stephen Casella" />
-  <meta property="og:title" content="Side-by-side: panel vs Qwen3-thinking" />
+  <meta property="og:title" content="Side-by-side: multi-persona debate vs Qwen3-thinking" />
   <meta property="og:description" content="One sample, twenty problems, two reasoning scaffolds rendered next to each other." />
   <meta property="og:type" content="article" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
   <style>
     :root {
       --bg:           #F9F9F6;
@@ -222,41 +224,76 @@ HTML_TEMPLATE_HEAD = """\
       font-family: var(--font-serif); font-size: 17px; font-weight: 700; color: var(--fg);
       margin-bottom: 0.85rem;
     }
-    .answer-final {
-      font-family: var(--font-serif); font-size: 18px; font-weight: 400;
-      line-height: 1.45; color: var(--fg);
-      padding: 0.85rem 1rem; border-radius: 8px;
-      background: var(--bg); border: 1px solid var(--grid); margin-bottom: 1rem;
-      white-space: pre-wrap; word-break: break-word;
+    .section-label {
+      font-family: var(--font-sans); font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--fg-faint);
+      margin: 1.1rem 0 0.5rem;
     }
-    .answer-final.empty { color: var(--fg-faint); font-style: italic; }
-    details.reasoning {
-      margin-top: 0.5rem; border-top: 1px dashed var(--grid); padding-top: 0.75rem;
+    .section-label:first-of-type { margin-top: 0.25rem; }
+    .reasoning-body, .answer-body {
+      font-family: var(--font-serif);
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--fg);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      background: var(--surface-muted);
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
-    details.reasoning summary {
-      font-family: var(--font-sans); font-size: 12px; letter-spacing: 0.06em;
-      color: var(--fg-mute); cursor: pointer; user-select: none;
-      list-style: none; padding: 0.25rem 0;
+    .answer-body {
+      background: var(--bg);
+      border: 1px solid var(--grid);
+      font-size: 16px;
     }
-    details.reasoning summary::-webkit-details-marker { display: none; }
-    details.reasoning summary::before {
-      content: "▸ "; color: var(--fg-faint); transition: transform 150ms;
-      display: inline-block;
+    .answer-body.empty { color: var(--fg-faint); font-style: italic; }
+    /* Markdown rendering inside the reasoning + answer blocks. */
+    .markdown-body p { margin: 0 0 0.7em; line-height: 1.55; }
+    .markdown-body p:last-child { margin-bottom: 0; }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+      font-family: var(--font-serif); font-weight: 700;
+      letter-spacing: -0.005em; color: var(--fg);
+      margin: 1.1em 0 0.45em; line-height: 1.25;
     }
-    details[open].reasoning summary::before { content: "▾ "; }
-    .reasoning-body {
-      font-family: var(--font-sans); font-size: 13px; line-height: 1.6;
-      color: var(--fg-soft); margin-top: 0.6rem; white-space: pre-wrap; word-break: break-word;
-      max-height: 320px; overflow-y: auto;
-      padding: 0.75rem 0.85rem; background: var(--surface-muted); border-radius: 6px;
-      font-variant-numeric: tabular-nums;
+    .markdown-body h1 { font-size: 1.15em; }
+    .markdown-body h2 { font-size: 1.08em; }
+    .markdown-body h3 { font-size: 1.02em; }
+    .markdown-body h4 { font-size: 0.98em; }
+    .markdown-body ul, .markdown-body ol { margin: 0.45em 0 0.7em 1.4em; }
+    .markdown-body li { margin: 0.2em 0; line-height: 1.5; }
+    .markdown-body code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.86em; background: rgba(0,0,0,0.06);
+      padding: 0.06em 0.32em; border-radius: 4px;
     }
-    .reasoning-body::-webkit-scrollbar { width: 8px; }
-    .reasoning-body::-webkit-scrollbar-thumb { background: var(--fg-faint); border-radius: 4px; }
-    .reasoning-stats {
-      font-family: var(--font-sans); font-size: 11px; color: var(--fg-faint);
-      margin-top: 0.5rem;
+    .markdown-body pre {
+      background: rgba(0,0,0,0.05);
+      padding: 0.7rem 0.9rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 0.6rem 0;
+      font-size: 12.5px; line-height: 1.55;
     }
+    .markdown-body pre code { background: none; padding: 0; font-size: inherit; }
+    .markdown-body blockquote {
+      margin: 0.5em 0; padding: 0 0 0 0.9em;
+      border-left: 2px solid var(--fg-faint); color: var(--fg-mute);
+    }
+    .markdown-body strong { font-weight: 700; color: var(--fg); }
+    .markdown-body em { font-style: italic; }
+    .markdown-body hr { border: 0; border-top: 1px solid var(--grid); margin: 0.9em 0; }
+    .markdown-body a { color: var(--accent); border-bottom: 1px dotted var(--fg-faint); text-decoration: none; }
+    /* KaTeX should respect the body color */
+    .markdown-body .katex { font-size: 1em; color: var(--fg); }
+    .markdown-body .katex-display { margin: 0.6em 0; }
+    /* Hide pre-render flash: cards are visually inert until JS renders the bodies */
+    .markdown-body[data-md] { color: var(--fg-faint); }
+    .markdown-body[data-md]::before {
+      content: "rendering…";
+      font-family: var(--font-sans); font-size: 11px;
+      color: var(--fg-faint); letter-spacing: 0.06em;
+    }
+    .markdown-body[data-md] > * { display: none; }
 
     .footnote {
       max-width: 720px; margin: 5rem auto 0; padding: 2rem;
@@ -289,8 +326,8 @@ def render(items: list[dict], meta: dict) -> str:
     for it in items:
         grouped.setdefault(it["category"], []).append(it)
 
-    panel_label = "panel adapter (LoRA r32 on Qwen3-30B-A3B-Base)"
-    thinking_label = "Qwen3-30B-A3B (native thinking)"
+    panel_label = "LoRA r32 on Qwen3-30B-A3B-Base"
+    thinking_label = "Qwen3-30B-A3B thinking"
 
     out = [HTML_TEMPLATE_HEAD]
 
@@ -303,8 +340,8 @@ def render(items: list[dict], meta: dict) -> str:
     <main class="main">
       <article class="benchmarks-content">
 
-        <h1>Side-by-side: panel vs Qwen3-thinking</h1>
-        <p class="subtitle">Twenty reasoning problems, sampled once each from the published panel checkpoint and from vanilla Qwen3-30B-A3B-Thinking, rendered next to each other.</p>
+        <h1>Side-by-side: multi-persona debate vs Qwen3-thinking</h1>
+        <p class="subtitle">Twenty reasoning problems, sampled once each from the published multi-persona debate checkpoint and from vanilla Qwen3-30B-A3B-Thinking, rendered next to each other.</p>
         <p class="date">STEPHEN CASELLA · APRIL 2026</p>
 
         <div class="paper-links">
@@ -317,10 +354,10 @@ def render(items: list[dict], meta: dict) -> str:
           <div class="tldr">
             <span class="tldr-label">How to read this page</span>
             <p>
-              Each row below shows one problem and one fresh sample from each scaffold at <strong>temperature 1.0</strong> &mdash; not best-of-N, not retrieval, just a single shot. Click <strong>show reasoning</strong> on either card to expand the full <code>&lt;mutipersonaDebate&gt;</code> body or the full <code>&lt;think&gt;</code> body. The point isn't to crown a winner per row: it's to let the difference in <em>shape</em> of the two reasoning traces speak for itself.
+              Each row below shows one problem and one fresh sample from each scaffold at <strong>temperature 1.0</strong> &mdash; not best-of-N, not retrieval, just a single shot. The full <code>&lt;mutipersonaDebate&gt;</code> body and the full <code>&lt;think&gt;</code> body are shown alongside each final answer; both are rendered as Markdown with math. The point isn't to crown a winner per row: it's to let the difference in <em>shape</em> of the two reasoning traces speak for itself.
             </p>
             <p>
-              The panel often arrives at the same answer with a fraction of the tokens; thinking often takes a longer route and lands somewhere different. On the underspecified, paradoxical, and counterfactual problems both arms can fail interestingly &mdash; the brackets matter more than the bottom line.
+              The multi-persona debate often arrives at the same answer with a fraction of the tokens; thinking often takes a longer route and lands somewhere different. On the underspecified, paradoxical, and counterfactual problems both arms can fail interestingly &mdash; the brackets matter more than the bottom line.
             </p>
           </div>
 """)
@@ -359,28 +396,26 @@ def render(items: list[dict], meta: dict) -> str:
             tests_html = html.escape(it.get("tests", ""))
             expected_html = html.escape(it.get("expected", ""))
 
-            panel_answer_block = (
-                f'<div class="answer-final">{html.escape(panel_answer)}</div>'
-                if panel_answer.strip()
-                else '<div class="answer-final empty">(no &lt;answer&gt; tag emitted)</div>'
-            )
-            think_answer_block = (
-                f'<div class="answer-final">{html.escape(think_answer)}</div>'
-                if think_answer.strip()
-                else '<div class="answer-final empty">(no post-think output)</div>'
-            )
+            def md_block(text: str, kind: str, empty_msg: str) -> str:
+                if not text.strip():
+                    return f'<div class="{kind}-body empty">{empty_msg}</div>'
+                # data-md flag tells the runtime JS to parse this body's text as
+                # Markdown + math. The text content stays HTML-escaped on the
+                # server side so the page is well-formed before JS runs.
+                return f'<div class="{kind}-body markdown-body" data-md="1">{html.escape(text)}</div>'
 
-            panel_reasoning_block = (
-                f'<details class="reasoning"><summary>show reasoning ({panel_chars:,} chars)</summary>'
-                f'<div class="reasoning-body">{html.escape(panel_reasoning)}</div>'
-                '</details>'
-            ) if panel_reasoning.strip() else ""
-
-            think_reasoning_block = (
-                f'<details class="reasoning"><summary>show reasoning ({think_chars:,} chars)</summary>'
-                f'<div class="reasoning-body">{html.escape(think_reasoning)}</div>'
-                '</details>'
-            ) if think_reasoning.strip() else ""
+            panel_answer_block = md_block(
+                panel_answer, "answer", "(no &lt;answer&gt; tag emitted)"
+            )
+            think_answer_block = md_block(
+                think_answer, "answer", "(no post-think output)"
+            )
+            panel_reasoning_block = md_block(
+                panel_reasoning, "reasoning", "(no &lt;mutipersonaDebate&gt; body)"
+            )
+            think_reasoning_block = md_block(
+                think_reasoning, "reasoning", "(no &lt;think&gt; body)"
+            )
 
             out.append(f"""
         <div class="problem" id="prob-{html.escape(it['id'])}">
@@ -392,16 +427,20 @@ def render(items: list[dict], meta: dict) -> str:
           </div>
           <div class="answer-grid">
             <div class="answer-card panel">
-              <div class="arm-label">arm <span class="pill">panel</span></div>
+              <div class="arm-label">arm <span class="pill">mutli-persona</span></div>
               <div class="arm-name">{html.escape(panel_label)}</div>
-              {panel_answer_block}
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· {panel_chars:,} chars</span></div>
               {panel_reasoning_block}
+              <div class="section-label">Answer</div>
+              {panel_answer_block}
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">{html.escape(thinking_label)}</div>
-              {think_answer_block}
+              <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· {think_chars:,} chars</span></div>
               {think_reasoning_block}
+              <div class="section-label">Answer</div>
+              {think_answer_block}
             </div>
           </div>
         </div>
@@ -413,7 +452,7 @@ def render(items: list[dict], meta: dict) -> str:
     out.append(f"""
     <div class="footnote">
       <p>
-        Sampled at temperature {meta.get('temperature', 1.0)} with <code>max_tokens={meta.get('max_tokens', '—')}</code>; one sample per problem per arm. The panel side hits
+        Sampled at temperature {meta.get('temperature', 1.0)} with <code>max_tokens={meta.get('max_tokens', '—')}</code>; one sample per problem per arm. The multi-persona debate side hits
         <code>{html.escape(meta.get('panel_checkpoint', ''))}</code>; the thinking side hits the public <code>{html.escape(meta.get('thinking_backbone', ''))}</code> via <code>apply_chat_template(enable_thinking=True)</code>.
         Generated {html.escape(meta.get('produced_at', ''))} from <code>{html.escape(meta.get('panel_backbone', ''))}</code>. Source: <a href="https://github.com/scasella/multi-model/blob/case-study/scripts/build_case_study_transcripts.py">build_case_study_transcripts.py</a>.
       </p>
@@ -422,6 +461,77 @@ def render(items: list[dict], meta: dict) -> str:
 
     out.append("""
   </div>
+
+  <!-- Markdown + math rendering. Strategy: parse Markdown for ALL bodies
+       eagerly (fast — just string manipulation) so anyone scrolling sees
+       headings/lists/code immediately. KaTeX is heavy on rendered DOMs so
+       we lazy-render math only when a body comes near the viewport. -->
+  <script defer src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer>
+    window.addEventListener('DOMContentLoaded', function () {
+      const KATEX_OPTS = {
+        // Only unambiguous delimiters: single-$ would catch every "$50" / "$8"
+        // in the prose and produce nonsense math.
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\\\[', right: '\\\\]', display: true},
+          {left: '\\\\(', right: '\\\\)', display: false},
+        ],
+        throwOnError: false,
+        errorColor: '#C18549',
+        ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+      };
+
+      // 1) Parse all Markdown bodies up front, in chunks so we don't block.
+      let pending = Array.from(document.querySelectorAll('.markdown-body[data-md]'));
+      function parseChunk() {
+        if (typeof marked === 'undefined') {
+          // marked still loading; try again shortly.
+          setTimeout(parseChunk, 50);
+          return;
+        }
+        marked.setOptions({ breaks: false, gfm: true, headerIds: false, mangle: false });
+        const start = performance.now();
+        while (pending.length && (performance.now() - start) < 30) {
+          const el = pending.shift();
+          if (!el || !el.hasAttribute('data-md')) continue;
+          try {
+            el.innerHTML = marked.parse(el.textContent);
+          } catch (e) {
+            // leave the raw text in place if parse fails
+          }
+          el.removeAttribute('data-md');
+          el.dataset.mdReady = '1';
+        }
+        if (pending.length) setTimeout(parseChunk, 0);
+        else setupLazyMath();
+      }
+
+      // 2) Math rendering is lazy. Each rendered body becomes a
+      //    candidate; an IntersectionObserver renders KaTeX as the
+      //    body approaches the viewport.
+      function setupLazyMath() {
+        if (typeof renderMathInElement === 'undefined') {
+          setTimeout(setupLazyMath, 100);
+          return;
+        }
+        const obs = new IntersectionObserver(function (entries) {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            const el = entry.target;
+            obs.unobserve(el);
+            try { renderMathInElement(el, KATEX_OPTS); }
+            catch (e) { /* ignore */ }
+          }
+        }, { rootMargin: '400px 0px' });
+        document.querySelectorAll('.markdown-body[data-md-ready]').forEach(el => obs.observe(el));
+      }
+
+      parseChunk();
+    });
+  </script>
 </body>
 </html>
 """)

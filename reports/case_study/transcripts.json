@@ -4,7 +4,7 @@
       "id": "a",
       "category": "Two-route convergence",
       "category_short": "two_route",
-      "category_blurb": "Problems with two natural solution paths. A panel that's working should produce two routes that meet at the same answer.",
+      "category_blurb": "Problems with two natural solution paths. A multi-persona debate that's working should produce two routes that meet at the same answer.",
       "problem": "A circle passes through the points (0,0), (8,0), and (0,6). What is the radius?",
       "tests": "Whether the persona structure surfaces two distinct methods (perpendicular bisectors vs. general circle equation) before converging.",
       "expected": "r = 5.",
