@@ -222,9 +222,47 @@
     .answer-body {
       background: var(--bg);
       border: 1px solid var(--grid);
-      font-size: 16px;
+      font-size: 17px;
+      max-height: none;
+      overflow: visible;
+    }
+    /* Plain-text answers (the boxed value extracted as plaintext) shouldn't
+       inherit the markdown body's max-height/overflow even if class-marked. */
+    .answer-body.plaintext {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      line-height: 1.45;
+      white-space: pre-wrap;
     }
     .answer-body.empty { color: var(--fg-faint); font-style: italic; }
+    /* Status pill rendered next to the "Answer" section label. Two states:
+       "ok" (subtle teal) and "wrong" (warm orange) — picked from existing
+       palette so it reads as editorial flagging, not red-alarm. */
+    .section-label .status {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      padding: 1px 7px;
+      border-radius: 999px;
+      margin-left: 6px;
+      vertical-align: 1px;
+    }
+    .section-label .status.ok    { background: rgba(92,138,149,0.14); color: var(--teal); }
+    .section-label .status.wrong { background: rgba(193,133,73,0.18); color: var(--warn); }
+    .answer-note {
+      font-family: var(--font-sans); font-size: 12.5px; line-height: 1.55;
+      color: var(--fg-mute); margin-top: 0.55rem;
+      padding: 0.55rem 0.75rem; border-radius: 6px;
+      background: var(--surface-muted); border-left: 2px solid var(--warn);
+    }
+    .answer-note.paraphrase {
+      border-left-color: var(--teal);
+      color: var(--fg-mute);
+    }
+    .answer-note strong { color: var(--fg); font-weight: 500; }
     /* Section-label ratio annotation (e.g. "29× the multi-persona side").
        Only emitted when the thinking trace is materially longer than the
        multi-persona trace on the same problem, so the per-rollout token
@@ -431,8 +469,9 @@ For (0,6):
 (0 - 4)^2 + (6 - 3)^2 = 16 + 9 = 25
 \]
 All points satisfy the equation, so the radius is indeed correct.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">5</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">5</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -507,8 +546,9 @@ So both methods lead me to the same answer. I think that&#x27;s solid. So the ra
 
 **Final Answer**
 The radius of the circle is \boxed{5}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{5}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">5</div>
+              
             </div>
           </div>
         </div>
@@ -532,8 +572,9 @@ Expert 2: However, we need to exclude the outcomes where the maximum value is le
 Expert 1: So, the number of outcomes where the maximum value is exactly 4 is the number of outcomes where the maximum value is 4 or less minus the number of outcomes where the maximum value is less than 4. This is 64 - 27 = 37.
 Expert 2: Therefore, the probability that the maximum value showing is exactly 4 is the number of favorable outcomes divided by the total number of possible outcomes, which is 37 / 216. Let&#x27;s simplify this fraction.
 Expert 1: The fraction 37 / 216 cannot be simplified further, so the probability is 37 / 216.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">37 / 216</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">37 / 216</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -595,8 +636,9 @@ So, after all these checks and different approaches, I feel confident that 37/21
 
 **Final Answer**
 The probability that the maximum value showing is exactly 4 is \boxed{\dfrac{37}{216}}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{\dfrac{37}{216}}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">37/216</div>
+              
             </div>
           </div>
         </div>
@@ -632,8 +674,9 @@ Expert 2: That seems correct. Let&#x27;s double-check the steps to make sure we 
 Expert 3: Yes, everything looks good. We have 10 ways to choose the rows, 10 ways to choose the columns, and 6 ways to arrange the rooks within the chosen rows and columns.
 
 Expert 1: Therefore, the final answer is 600.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">600</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">600</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -789,8 +832,9 @@ Therefore, the answer is 600.
 
 **Final Answer**
 The number of ways is \boxed{600}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{600}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">600</div>
+              
             </div>
           </div>
         </div>
@@ -822,8 +866,9 @@ The number of ways is \boxed{600}.</div>
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 927 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: Let&#x27;s begin by breaking down the problem step-by-step. We need to find out how much money Sarah has after buying the books and receiving money from her friend.  Expert 2: Good idea. We&#x27;ll start with her initial amount. Sarah starts with $50.  Expert 1: Next, we need to calculate the cost of the three paperback books. Each book costs $8, and she buys 3 books. So, 3 books * $8/book = $24.  Expert 3: Correct. Now, we&#x27;ll subtract the cost of the books from Sarah&#x27;s initial amount. $50 - $24 = $26.  Expert 2: Then, Sarah&#x27;s friend gives her $10. We add this to the remaining amount: $26 + $10 = $36.  Expert 1: The number of pages in the books and the bookstore closing time are irrelevant to the question. We only need to focus on the financial transactions.  Expert 3: Therefore, after buying the books and receiving the birthday money, Sarah has $36.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$36</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">$36</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -840,8 +885,9 @@ Wait, but the problem also mentions something about each book being 320 pages lo
 So, focusing back on the money. Starting with $50, subtracting the cost of the books, then adding the birthday money. So 50 - 24 = 26, then 26 + 10 = 36. So the answer should be $36. 
 
 But let me verify again. 3 books at $8 each: 3*8=24. 50-24=26. Then +10 is 36. Yep, that seems right. The other details about the books&#x27; pages and the store closing time don&#x27;t impact the money calculation. So I think the answer is $36.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body empty">(no \boxed{} in trace — see reasoning above)</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">$36</div>
+              <div class="answer-note paraphrase"><strong>Paraphrased from the reasoning trace — model did not emit a \boxed{}.</strong></div>
             </div>
           </div>
         </div>
@@ -859,8 +905,9 @@ But let me verify again. 3 books at $8 each: 3*8=24. 50-24=26. Then +10 is 36. Y
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 1,310 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: Alright, let&#x27;s break this down. If three workers can paint three rooms in three hours, then one worker can paint one room in three hours. So, the rate of work for one worker is one room per three hours.  Expert 2: That&#x27;s correct. So, if we have 100 workers, each working at the same rate, they can paint 100 rooms in the same amount of time it takes one worker to paint one room. Since one worker takes three hours to paint one room, 100 workers can paint 100 rooms in three hours.  Expert 3: Exactly. The number of workers and the number of rooms scale up linearly, so the time remains the same. The key here is that the rate of work per worker doesn&#x27;t change.  Expert 4: To confirm, if 3 workers can paint 3 rooms in 3 hours, then 100 workers can paint 100 rooms in 3 hours. The time taken is the same because the number of workers and rooms scale proportionally.  Expert 1: I agree with everyone. The answer is straightforward once we understand the basic rate of work.  Expert 2: Yes, the time remains three hours regardless of the increase in the number of workers and rooms.  Expert 3: That&#x27;s right. The proportional relationship holds true.  Expert 4: Exactly. The answer is consistent with our understanding of the problem.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">3 hours</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">3 hours</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -998,8 +1045,9 @@ Therefore, after checking multiple approaches and making sure that the different
 
 **Final Answer**
 The time it would take 100 workers to paint 100 rooms is \boxed{3} hours.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{3}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">3</div>
+              
             </div>
           </div>
         </div>
@@ -1051,8 +1099,9 @@ Expert 3: To summarize, we calculated the time it takes for the bird to meet the
 Expert 4: Let&#x27;s double-check our calculations to ensure accuracy. The train travels 60 mph, and the bird travels 120 mph. The sum of their speeds is 180 mph. The distance between them is 90 miles. Dividing the distance by their combined speed gives us 0.5 hours, which is 30 minutes. This confirms our previous result.
 
 Expert 1: Everything checks out. The bird is indeed in the air for 30 minutes.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">30 minutes</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">30 minutes</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -1188,8 +1237,9 @@ So I think that&#x27;s the answer.
 
 **Final Answer**
 The bird is in the air for \boxed{0.5} hours.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{0.5}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">0.5</div>
+              
             </div>
           </div>
         </div>
@@ -1221,8 +1271,9 @@ The bird is in the air for \boxed{0.5} hours.</div>
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 2,124 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Persona 1: Hi there! I&#x27;m an expert in basic arithmetic and number operations. Let&#x27;s tackle this question step by step. First, I need to understand the given information. You bought a dozen apples. A dozen means 12 apples. So, we start with 12 apples. Then, you ate some apples at lunch. However, the problem doesn&#x27;t specify how many you ate. Without that information, I can&#x27;t accurately determine the exact number of apples you have left.  Persona 2: Hello! I have a background in teaching basic mathematics and problems-solving strategies. I agree with Persona 1 that we start with 12 apples since a dozen equals twelve. But Persona 1 also pointed out something crucial: we don&#x27;t know how many apples were eaten. This makes it impossible to give a precise answer. Maybe we should assume that no apples were eaten if we want to provide a general idea. In that case, you would still have 12 apples. However, if only one apple was eaten, you&#x27;d have 11 left; if two were eaten, 10 would remain, and so on.  Persona 3: Greetings! I&#x27;m a logician and a puzzle expert. Starting from scratch, we indeed begin with 12 apples. Eating some at lunch implies that the number of apples left will be fewer than 12. But without knowing the exact quantity consumed, we face an indeterminate situation. It&#x27;s like trying to solve an equation with one unknown variable (the amount eaten). The answer could be any number between 0 and 11, inclusive.  Persona 4: Hello! I specialize in critical thinking and problem structuring. We can&#x27;t broadly generalize without considering all variables. Since the number of apples eaten is unspecified, a definite solution is untenable. However, we can list all possible scenarios: you could have between 0 and 11 apples remaining, depending on how many were eaten at lunch. Without further detail, that&#x27;s our complete range of possibilities.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">Ultimately, without knowing how many apples you ate at lunch, the exact number of apples left can&#x27;t be determined. You can have anywhere from 0 to 11 apples remaining, depending on the quantity consumed.</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">Ultimately, without knowing how many apples you ate at lunch, the exact number of apples left can&#x27;t be determined. You can have anywhere from 0 to 11 apples remaining, depending on the quantity consumed.</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -1239,8 +1290,9 @@ Alternatively, maybe the user is testing if I recognize that &quot;some&quot; is
 Wait, but maybe in the original context, there was more information? The user just provided this sentence. No, they just said &quot;I bought a dozen apples this morning and ate some at lunch. How many apples do I have left?&quot; So no other details. So the answer must be that it&#x27;s impossible to determine without knowing how many were eaten. Unless there&#x27;s a play on words. Like, &quot;a dozen&quot; could refer to something else, but no, a dozen is 12. Maybe the answer is 12 minus the number eaten, but since the number eaten isn&#x27;t given, we can&#x27;t compute it.
 
 So, I think the correct response is that the question doesn&#x27;t provide enough information to determine the exact number of apples left. The answer can&#x27;t be calculated without knowing how many were eaten.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body empty">(no \boxed{} in trace — see reasoning above)</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">12 − x apples; underspecified without x.</div>
+              <div class="answer-note paraphrase"><strong>Paraphrased from the reasoning trace — model did not emit a \boxed{}.</strong></div>
             </div>
           </div>
         </div>
@@ -1258,8 +1310,9 @@ So, I think the correct response is that the question doesn&#x27;t provide enoug
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 1,648 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: Alright, let&#x27;s tackle this problem step by step. The question is &quot;What is half of two plus two?&quot; To solve this, we need to first understand the mathematical operations involved and the order in which they should be performed. According to the order of operations (PEMDAS/BODMAS), we should handle parentheses, exponents, multiplication and division (from left to right), and finally addition and subtraction (from left to right). In this case, there are no parentheses or exponents, so we focus on the operations of division and addition. The phrase &quot;half of two&quot; implies division, and then we add two to the result. So, the expression can be written as: (2 ÷ 2) + 2. First, we divide 2 by 2, which equals 1. Then we add 2 to this result. Expert 2: I agree with your approach, Expert 1. Let&#x27;s calculate it step by step to ensure accuracy. Half of two is indeed 1, because 2 divided by 2 equals 1. And then adding two to that result gives us 1 + 2, which equals 3. So, the final answer to the question &quot;What is half of two plus two?&quot; is 3. Expert 3: Just to double-check, we can also interpret the question in a slightly different way, but usually, the standard interpretation would follow the order of operations as outlined. If we were to consider the entire &quot;two plus two&quot; as a single unit being halved, the expression would be (2 + 2) / 2. In this case, we would add 2 and 2 first, which gives us 4, and then divide by 2, resulting in 2. However, the more common and standard interpretation is to follow the order of operations strictly, which leads us to the answer of 3.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">3</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">3</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -1378,8 +1431,9 @@ But since I need to provide a definitive answer, I&#x27;ll have to state both po
 Alternatively, to check with an example: If the question was &quot;What is half of four plus four?&quot;, would you interpret it as (4+4)/2 = 4 or (4/2)+4 = 6? If the former, then 4; if the latter, 6. But if a person says &quot;half of four plus four,&quot; it&#x27;s more natural to think they mean (4 + 4)/2. 
 
 However, I&#x27;m not sure. It&#x27;s really a matter of interpretation. Given that, I think the safest answer is 2, assuming that the &quot;two plus two&quot; is the entire quantity, but I must mention the ambiguity.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{2}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">2</div>
+              
             </div>
           </div>
         </div>
@@ -1397,8 +1451,9 @@ However, I&#x27;m not sure. It&#x27;s really a matter of interpretation. Given t
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 530 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: Alright, let&#x27;s consider the range from 5 to 9. The integers within this range are 5, 6, 7, 8, and 9.  Expert 2: Correct. Since we need to find one integer within this specified range, any of these would be valid. However, if we need to choose just one without further criteria, we can pick any of them.  Expert 1: Let&#x27;s pick 7 for simplicity. It&#x27;s a straightforward choice and within the given range.  Expert 2: Agree, 7 is a valid integer between 5 and 9.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">7</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">7</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -1423,8 +1478,9 @@ Since the user hasn&#x27;t provided options, I&#x27;ll just pick one. Let me cho
 So, final answer: 7.
 
 But just to be thorough, maybe I should mention that there are multiple correct answers, but since the question asks for &quot;an integer,&quot; just one is needed. So 6, 7, or 8. But the user might want the middle one, so 7. Yeah, that&#x27;s probably the best choice.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{7}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">7</div>
+              
             </div>
           </div>
         </div>
@@ -1456,8 +1512,9 @@ But just to be thorough, maybe I should mention that there are multiple correct 
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 1,447 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Persona 1: Alright, let&#x27;s think about this logically. If A is a truth-teller, then A telling the statement &quot;I am a liar&quot; would be false, which would mean A is lying, contradicting the assumption that A is a truth-teller. Therefore, A cannot be a truth-teller.  Persona 2: Correct, Persona 1. If A were a truth-teller, A&#x27;s statement would be false, which is a contradiction. So, if &quot;I am a liar&quot; cannot be true if A is a truth-teller, then A must be a liar.  Persona 3: But wait, if A is a liar, then the statement &quot;I am a liar&quot; would be a lie. So, A is actually not a liar, which creates another contradiction.  Persona 1: That&#x27;s a good point, Persona 3. A is a consistent liar, so if A says &quot;I am a liar,&quot; and A is indeed lying, then A is not a liar. This seems to be a paradox, similar to the liar paradox.  Persona 2: Exactly, Persona 1. The statement &quot;I am a liar&quot; leads to a paradox which means that the question itself is a logical contradiction.  Persona 3: So, based on the information and the logical contradiction we&#x27;ve found, we can conclude that A cannot be placed in either category of truth-teller or liar without causing a paradox. Thus, A does not fit the given assumptions.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">A is a statement that creates a paradox, similar to the liar paradox. A cannot logically be assigned as either a perfectly honest truth-teller or a consistent liar based on the given assumptions.</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">A is a statement that creates a paradox, similar to the liar paradox. A cannot logically be assigned as either a perfectly honest truth-teller or a consistent liar based on the given assumptions.</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -1561,8 +1618,9 @@ Therefore, even though there is a contradiction, the answer expected is that A i
 
 **Final Answer**
 \boxed{liar}</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{liar}$$</div>
+              <div class="section-label">Answer<span class="status wrong">✗ does not match expected</span></div>
+              <div class="answer-body plaintext">liar</div>
+              <div class="answer-note"><strong></strong>Boxed &quot;liar&quot; — but under the problem&#x27;s two-classification rule the statement is a paradox that excludes both options.</div>
             </div>
           </div>
         </div>
@@ -1615,8 +1673,9 @@ Expert 3: I see the pattern emerging. It seems like there&#x27;s no immediate ma
 Expert 1: It seems that twenty is a match since the word &quot;twenty&quot; has six letters.
 
 Expert 2: Yes, the word &quot;twenty&quot; has six letters, which matches the number 20.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">20</div>
+              <div class="section-label">Answer<span class="status wrong">✗ does not match expected</span></div>
+              <div class="answer-body plaintext">20</div>
+              <div class="answer-note"><strong></strong>Boxed 20 — the answer N must satisfy len(word(N)) = N. The only fixed point is 4 (&quot;four&quot; has four letters).</div>
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -1790,8 +1849,9 @@ I think that&#x27;s solid. I don&#x27;t see any other numbers that satisfy this 
 
 **Final Answer**
 The value of N is \boxed{4}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{4}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">4</div>
+              
             </div>
           </div>
         </div>
@@ -1848,8 +1908,9 @@ So, the snail will reach the top of the well in 8 days.
 Expert 1: Yes, the snail will reach the top of the well in 8 days. 
 
 Expert 3: Agreed. The final answer is 8 days.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">8</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">8</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -2005,8 +2066,9 @@ Therefore, the snail reaches the top in 8 days.
 
 **Final Answer**
 The snail reaches the top of the well in \boxed{8} days.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{8}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">8</div>
+              
             </div>
           </div>
         </div>
@@ -2024,8 +2086,9 @@ The snail reaches the top of the well in \boxed{8} days.</div>
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 1,146 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: Let&#x27;s start by defining the digits of the 3-digit number. We can call the hundreds digit \( h \), the tens digit \( t \), and the units digit \( u \). According to the problem, we have the following equations: 1. \( h = 2t \) (the hundreds digit is twice the tens digit) 2. \( t = u + 3 \) (the tens digit is three more than the units digit) 3. \( h + t + u = 13 \) (the digits sum to 13)  Let&#x27;s substitute the first two equations into the third equation to find the values of \( h \), \( t \), and \( u \).  From equation 1: \( h = 2t \)  From equation 2: \( t = u + 3 \)  Substituting \( t \) from equation 2 into equation 1: \( h = 2(u + 3) = 2u + 6 \)  Now, substituting \( h \) and \( t \) into equation 3: \( (2u + 6) + (u + 3) + u = 13 \) Simplifying this: \( 4u + 9 = 13 \) Solving for \( u \): \( 4u = 4 \) \( u = 1 \) Now, substituting \( u = 1 \) back into equation 2: \( t = 1 + 3 = 4 \) And substituting \( t = 4 \) into equation 1: \( h = 2 \times 4 = 8 \) So, the digits are \( h = 8 \), \( t = 4 \), and \( u = 1 \). Therefore, the 3-digit number is 841.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">841</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">841</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -2131,8 +2194,9 @@ So, 841 is the only number that fits. So I think that&#x27;s the answer.
 
 **Final Answer**
 The number is \boxed{841}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{841}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">841</div>
+              
             </div>
           </div>
         </div>
@@ -2180,8 +2244,9 @@ Expert 1: Right. So, with 20 stones, which is a multiple of 4, the first player 
 Expert 2: To summarize, with perfect play, the second player will always win if the initial number of stones is a multiple of 4. The first player&#x27;s best move would be to leave the second player with a multiple of 4 stones, but in this case, it&#x27;s impossible if the second player also plays perfectly.
 
 Expert 3: Therefore, the first player&#x27;s first move should be to take 3 stones, leaving 17 stones (which is not a losing position). However, since the second player can also play perfectly, the game&#x27;s outcome hinges on the second player&#x27;s response. But given the structure of the game, the second player can always respond in such a way that leaves the first player with a losing position eventually.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">The second player will win the game with perfect play. The first player&#x27;s first move should ideally aim to leave a non-losing position, but since 20 is a multiple of 4, no matter what the first player does (taking 1, 2, or 3 stones), the second player can always respond in a way that leaves the first player with a losing position. Therefore, the second player will win.</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">The second player will win the game with perfect play. The first player&#x27;s first move should ideally aim to leave a non-losing position, but since 20 is a multiple of 4, no matter what the first player does (taking 1, 2, or 3 stones), the second player can always respond in a way that leaves the first player with a losing position. Therefore, the second player will win.</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -2683,8 +2748,9 @@ The first player cannot force a win. The second player wins. Therefore, no move 
 
 **Final Answer**
 \boxed{1}</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{1}$$</div>
+              <div class="section-label">Answer<span class="status wrong">✗ does not match expected</span></div>
+              <div class="answer-body plaintext">1</div>
+              <div class="answer-note"><strong></strong>Boxed &quot;1&quot; — but the question asks who wins; 1 is a move count, not the answer. Correct: second player wins (20 ≡ 0 mod 4).</div>
             </div>
           </div>
         </div>
@@ -2702,8 +2768,9 @@ The first player cannot force a win. The second player wins. Therefore, no move 
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 1,833 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: Alright, let&#x27;s calculate the expected value for option (ii) first. The probability of heads is 0.5, and the probability of tails is 0.5. So, the expected value is (0.5 * $250) + (0.5 * $0) = $125. This is higher than the $100 guaranteed in option (i).  Expert 2: That&#x27;s correct. The expected value of option (ii) is indeed higher at $125 compared to the $100 from option (i). However, the decision-making process isn&#x27;t always based solely on expected value. Many people are risk-averse and prefer a guaranteed outcome over a gamble, even if the expected value of the gamble is higher.  Expert 3: Exactly. Risk aversion plays a significant role here. The utility of money isn&#x27;t always linear, meaning someone might value $100 more than half the utility of $250, especially if they don&#x27;t want to risk getting nothing. Additionally, factors like the person&#x27;s current financial situation can influence their decision. For example, someone who really needs $100 right now might prefer the guaranteed amount over the risky chance at $250.  Expert 1: So, while the math shows option (ii) has a higher expected value, the actual decision can vary based on individual preferences and circumstances. Some might choose option (i) for its certainty, and that choice is perfectly valid.  Expert 2: Indeed, it boils down to personal risk tolerance and the specific context of the decision.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">Option (ii) has the higher expected value at $125 compared to the $100 guaranteed in option (i). However, the actual decision can vary based on individual preferences and circumstances. Some people might prefer the certainty of option (i) over the uncertain but higher expected value of option (ii). This choice reflects personal risk tolerance and the specific context of the decision.</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">Option (ii) has the higher expected value at $125 compared to the $100 guaranteed in option (i). However, the actual decision can vary based on individual preferences and circumstances. Some people might prefer the certainty of option (i) over the uncertain but higher expected value of option (ii). This choice reflects personal risk tolerance and the specific context of the decision.</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -2765,8 +2832,9 @@ Therefore, the final answer: the expected value of option (ii) is higher. Howeve
 The expected value of option (ii) is higher. However, I would take option (i) due to risk aversion. Therefore, the final answer is:
 
 Expected value: \boxed{125} for option (ii), but the actual choice is \boxed{100} (option i).</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{100}$$</div>
+              <div class="section-label">Answer<span class="status wrong">✗ does not match expected</span></div>
+              <div class="answer-body plaintext">100</div>
+              <div class="answer-note"><strong></strong>Boxed &quot;100&quot; — but the question asks for both the EV and the actual pick with rationale. EV(coin) = $125; the rational pick depends on risk preferences.</div>
             </div>
           </div>
         </div>
@@ -2804,8 +2872,9 @@ Expert 2: That&#x27;s correct. The period would decrease by a factor of √2. Si
 Expert 3: Exactly. The period of the grandfather clock would decrease by a factor of √2, making it approximately 0.707 times the original period.
 
 Expert 4: And just to clarify, the direction of the change is that the period would become shorter. The gravitational force is now double, which means the pendulum wants to swing back faster, thus reducing the time it takes to complete one full swing.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">The period of the grandfather clock would decrease by a factor of \(\sqrt{2}\), making it approximately 0.707 times the original period.</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">The period of the grandfather clock would decrease by a factor of \(√2\), making it approximately 0.707 times the original period.</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -2841,8 +2910,9 @@ So, in conclusion, if Earth&#x27;s gravity doubled, the period of the grandfathe
 
 **Final Answer**
 The period of the grandfather clock would decrease, and the multiplicative factor is \boxed{\dfrac{1}{\sqrt{2}}}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{\dfrac{1}{\sqrt{2}}}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">1/√2</div>
+              
             </div>
           </div>
         </div>
@@ -2860,8 +2930,9 @@ The period of the grandfather clock would decrease, and the multiplicative facto
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 2,850 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">User: Let&#x27;s start by considering the information given: we have two children, and at least one of them is a boy born on a Tuesday. We need to find the probability that both children are boys. Panelist 1: First, let&#x27;s consider the total number of possible combinations for two children without any additional information. Each child can be either a boy (B) or a girl (G), so there are four possible combinations: BB, BG, GB, GG. However, since we know that at least one child is a boy, we can eliminate the GG combination. So we are left with three possible combinations: BB, BG, and GB. Panelist 2: But we also know that the boy is born on a Tuesday. This adds another layer of complexity because the day of the week introduces more specific information. Let&#x27;s consider all the possible combinations of children and their birth days. Each child can be born on any of the 7 days of the week, so each child has 14 possibilities (7 days for a boy and 7 days for a girl). For two children, there are a total of 14 * 14 = 196 possible combinations. Panelist 3: Now, let&#x27;s count the number of these combinations where at least one child is a boy born on a Tuesday. We can break this down into two cases: 1. The first child is a boy born on a Tuesday, and the second child can be either a boy or a girl born on any day. This gives us 14 combinations (7 for the second child being a boy and 7 for the second child being a girl). 2. The second child is a boy born on a Tuesday, and the first child can be either a boy or a girl born on any day. This also gives us 14 combinations, but we have already counted the case where both children are boys born on a Tuesday, so we need to subtract 1 to avoid double-counting. Therefore, the total number of combinations where at least one child is a boy born on a Tuesday is 14 + 14 - 1 = 27. Panelist 4: Out of these 27 combinations, we need to count how many of them result in both children being boys. This is the case where both children are boys, and at least one of them is born on a Tuesday. There are 14 combinations where the first child is a boy born on a Tuesday, and 14 combinations where the second child is a boy born on a Tuesday. However, we need to subtract the case where both children are boys born on a Tuesday, which we have counted twice. Therefore, the number of combinations where both children are boys and at least one of them is born on a Tuesday is 14 + 14 - 1 = 27 - 13 = 13. 5: To find the probability that both children are boys given that at least one of them is a boy born on a Tuesday, we divide the number of favorable outcomes (both children are boys and at least one is born on a Tuesday) by the total number of possible outcomes (at least one child is a boy born on a Tuesday). This gives us a probability of 13/27.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">13/27</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">13/27</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -3079,8 +3150,9 @@ So, after all these verifications, I think the answer is indeed 13/27. Therefore
 
 **Final Answer**
 The probability that both children are boys is \boxed{\dfrac{13}{27}}.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{\dfrac{13}{27}}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">13/27</div>
+              
             </div>
           </div>
         </div>
@@ -3126,8 +3198,9 @@ Expert 2: Now we have all the pieces: 7 haircuts/day * 250 working days/year = 1
 Expert 1: To ensure our estimate is reasonable, let&#x27;s consider rounding. It&#x27;s often useful to make the numbers round to total somewhere around 1,500 to 2,500 haircuts per year, considering variations like taking days off, scheduling breaks, or working part-time days differently.
 
 Expert 3: Given all these considerations and the conservative estimates used, I feel comfortable endorsing 1,750 haircuts per year as a fair estimation. This number accounts for a comprehensive yet realistic approach to a hairstylist&#x27;s workload in a year.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">1,750 haircuts per year</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">1,750 haircuts per year</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -3238,8 +3311,9 @@ So, 40 * 50 = 2000 hours/year
 But maybe haircuts per hour is 1.2, leading to 2400.
 
 Given the uncertainty, a plausible estimate is around 2000-3000. However, I think 2000 is a common estimate, so maybe the answer is approximately 2000.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{2500}$$</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">2500</div>
+              
             </div>
           </div>
         </div>
@@ -3257,8 +3331,9 @@ Given the uncertainty, a plausible estimate is around 2000-3000. However, I thin
               <div class="arm-name">LoRA r32 on Qwen3-30B-A3B-Base</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· 1,729 chars</span></div>
               <div class="reasoning-body markdown-body" data-md="1">Expert 1: To estimate the total mass of air inside a typical home, we first need to determine the volume of the home and the density of air at a given temperature and pressure. A typical home has a floor area of about 2000 square feet and a ceiling height of around 8 feet. Let&#x27;s calculate the volume first.  Expert 2: Volume of a home is calculated as length x width x height. If we assume a rectangular shape, we can use the given dimensions to find the volume. Volume = 2000 sq ft x 8 ft = 16,000 cubic feet. Now, we need to convert this volume to cubic meters because the density of air is usually given in kg/m³.  Expert 3: Yes, to convert cubic feet to cubic meters, we use the conversion factor 1 cubic meter = 35.3147 cubic feet. So, the volume of the home in cubic meters is approximately 16,000 / 35.3147 ≈ 453.07 cubic meters.  Expert 1: Now that we have the volume, we need the density of air. At standard temperature and pressure (STP), which is 0°C (32°F) and 1 atmosphere, the density of air is about 1.225 kg/m³. However, a typical home is warmer than 0°C, so the density of air inside the home would be slightly less. Let&#x27;s assume an average indoor temperature of 20°C (68°F).  Expert 2: At 20°C, the density of air is a bit less than at STP. According to standard conditions, the density of air at 20°C is approximately 1.204 kg/m³. We can use this value to estimate the mass of the air inside the home.  Expert 3: With the volume in cubic meters and the density of air at 20°C, we can now calculate the mass of the air. Mass = volume x density. So, the mass of the air inside the home is approximately 453.07 m³ x 1.204 kg/m³ ≈ 545.46 kg.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">545.46 kg</div>
+              <div class="section-label">Answer<span class="status wrong">✗ does not match expected</span></div>
+              <div class="answer-body plaintext">545.46 kg</div>
+              <div class="answer-note"><strong></strong>Estimated 545 kg — typical home volume is ~150 m³ × 1.225 kg/m³ ≈ 180 kg. The volume estimate ran ~3× high.</div>
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -3351,8 +3426,9 @@ So, summarizing:
 Therefore, the estimated total mass of air inside a typical home is approximately 540-550 kg. Rounding to two significant figures, it would be about 550 kg or 5.5 x 10² kg.
 
 Alternatively, if the initial assumption of the home&#x27;s volume is different, the answer might vary. But with the given assumptions, this is the calculation.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">$$\boxed{550 \, \text{kg}}$$</div>
+              <div class="section-label">Answer<span class="status wrong">✗ does not match expected</span></div>
+              <div class="answer-body plaintext">550 kg</div>
+              <div class="answer-note"><strong></strong>Boxed 550 kg — same over-estimate of the home volume.</div>
             </div>
           </div>
         </div>
@@ -3400,8 +3476,9 @@ Expert 1: In conclusion, while the opening of the park coincides with the drop i
 Expert 2: Therefore, based on the available information, we cannot conclusively state that the park caused the drop in the cancer rate. We need more context and data to make a well-informed judgment.
 
 Expert 3: It&#x27;s also worth noting that correlation does not imply causation. Just because two events occur together does not mean one caused the other. We need more evidence to establish a causal relationship.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body markdown-body" data-md="1">Based on the information provided, we cannot conclusively determine that the public park caused the drop in the cancer rate. While the park opening coincides with the population increase and the drop in cancer diagnoses, there are other factors to consider, such as changes in population demographics, improvements in healthcare, and other external influences. To draw a reliable conclusion, we would need more comprehensive data and a comparative analysis with other towns without the park.</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">Based on the information provided, we cannot conclusively determine that the public park caused the drop in the cancer rate. While the park opening coincides with the population increase and the drop in cancer diagnoses, there are other factors to consider, such as changes in population demographics, improvements in healthcare, and other external influences. To draw a reliable conclusion, we would need more comprehensive data and a comparative analysis with other towns without the park.</div>
+              
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
@@ -3444,8 +3521,9 @@ Also, the pool of people is different. Maybe the new residents did not have canc
 In terms of statistics, to make a causal conclusion, we&#x27;d need to rule out alternative explanations, control for confounders, and have a proper study design (like a controlled experiment). Since this is an observational study with only one instance, it&#x27;s hard to establish causality. 
 
 So, in summary, while the park might have had a positive effect on the environment or public health, the observed drop in cancer rates could be due to other factors such as population composition changes, statistical fluctuations, or other unrelated events. The temporal relationship alone isn&#x27;t enough to conclude causation. The population increase could have contributed to the rate decrease, and without more data, it&#x27;s not possible to attribute it solely to the park.</div>
-              <div class="section-label">Answer</div>
-              <div class="answer-body empty">(no \boxed{} in trace — see reasoning above)</div>
+              <div class="section-label">Answer<span class="status ok">✓ matches expected</span></div>
+              <div class="answer-body plaintext">No — correlation is not causation. The model cites population growth (denominator change), demographic confounders, statistical noise, and lack of a control group as alternative explanations.</div>
+              <div class="answer-note paraphrase"><strong>Paraphrased from the reasoning trace — model did not emit a \boxed{}.</strong></div>
             </div>
           </div>
         </div>

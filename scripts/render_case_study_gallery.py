@@ -58,6 +58,84 @@ def extract_last_boxed(text: str) -> str | None:
     return None
 
 
+import re as _re
+
+def latex_to_plain(s: str) -> str:
+    """Convert common LaTeX expressions to readable plaintext.
+
+    Handles \\dfrac{a}{b} → a/b, \\frac{a}{b} → a/b, \\sqrt{x} → √x,
+    \\text{x} → x, \\, → space, and strips a leading/trailing $ pair.
+    Anything more exotic falls through unchanged.
+    """
+    if not s:
+        return s
+    out = s.strip()
+    # Strip surrounding math-mode $ or $$ pairs.
+    if out.startswith("$$") and out.endswith("$$"):
+        out = out[2:-2].strip()
+    elif out.startswith("$") and out.endswith("$") and len(out) >= 2:
+        out = out[1:-1].strip()
+    # Strip a single \boxed{...} wrapper if present.
+    bx = "\\boxed{"
+    if out.startswith(bx) and out.endswith("}"):
+        out = out[len(bx):-1].strip()
+    # Iterate fraction/sqrt/text rewrites until stable (handles nesting).
+    for _ in range(6):
+        new = out
+        new = _re.sub(r"\\d?frac\{([^{}]+)\}\{([^{}]+)\}", r"\1/\2", new)
+        new = _re.sub(r"\\sqrt\{([^{}]+)\}", r"√\1", new)
+        new = _re.sub(r"\\text\{([^{}]+)\}", r"\1", new)
+        new = _re.sub(r"\\(?:,|;|:|!)", " ", new)
+        new = new.replace("\\\\", "")
+        if new == out:
+            break
+        out = new
+    out = _re.sub(r"\s+", " ", out).strip()
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Hand-curated correctness map for the gallery's 20 problems.
+# ---------------------------------------------------------------------------
+# - "ok" / "wrong" mark each arm's response.
+# - mp_note / think_note add a one-line explainer when the answer is wrong.
+# - think_writein is the answer paraphrased from the model's reasoning when
+#   the model didn't emit a \boxed{} (problems d, g, t — qualitative
+#   responses that the model wrote in prose rather than boxing).
+# Curation rationale lives in the commit message that introduced this map.
+CORRECTNESS: dict = {
+    "a": {"mp": "ok", "think": "ok"},
+    "b": {"mp": "ok", "think": "ok"},
+    "c": {"mp": "ok", "think": "ok"},
+    "d": {"mp": "ok", "think": "ok",
+          "think_writein": "$36"},
+    "e": {"mp": "ok", "think": "ok"},
+    "f": {"mp": "ok", "think": "ok"},
+    "g": {"mp": "ok", "think": "ok",
+          "think_writein": "12 − x apples; underspecified without x."},
+    "h": {"mp": "ok", "think": "ok"},
+    "i": {"mp": "ok", "think": "ok"},
+    "j": {"mp": "ok", "think": "wrong",
+          "think_note": "Boxed \"liar\" — but under the problem's two-classification rule the statement is a paradox that excludes both options."},
+    "k": {"mp": "wrong", "think": "ok",
+          "mp_note": "Boxed 20 — the answer N must satisfy len(word(N)) = N. The only fixed point is 4 (\"four\" has four letters)."},
+    "l": {"mp": "ok", "think": "ok"},
+    "m": {"mp": "ok", "think": "ok"},
+    "n": {"mp": "ok", "think": "wrong",
+          "think_note": "Boxed \"1\" — but the question asks who wins; 1 is a move count, not the answer. Correct: second player wins (20 ≡ 0 mod 4)."},
+    "o": {"mp": "ok", "think": "wrong",
+          "think_note": "Boxed \"100\" — but the question asks for both the EV and the actual pick with rationale. EV(coin) = $125; the rational pick depends on risk preferences."},
+    "p": {"mp": "ok", "think": "ok"},
+    "q": {"mp": "ok", "think": "ok"},
+    "r": {"mp": "ok", "think": "ok"},
+    "s": {"mp": "wrong", "think": "wrong",
+          "mp_note": "Estimated 545 kg — typical home volume is ~150 m³ × 1.225 kg/m³ ≈ 180 kg. The volume estimate ran ~3× high.",
+          "think_note": "Boxed 550 kg — same over-estimate of the home volume."},
+    "t": {"mp": "ok", "think": "ok",
+          "think_writein": "No — correlation is not causation. The model cites population growth (denominator change), demographic confounders, statistical noise, and lack of a control group as alternative explanations."},
+}
+
+
 HTML_TEMPLATE_HEAD = """\
 <!DOCTYPE html>
 <html lang="en">
@@ -283,9 +361,47 @@ HTML_TEMPLATE_HEAD = """\
     .answer-body {
       background: var(--bg);
       border: 1px solid var(--grid);
-      font-size: 16px;
+      font-size: 17px;
+      max-height: none;
+      overflow: visible;
+    }
+    /* Plain-text answers (the boxed value extracted as plaintext) shouldn't
+       inherit the markdown body's max-height/overflow even if class-marked. */
+    .answer-body.plaintext {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      line-height: 1.45;
+      white-space: pre-wrap;
     }
     .answer-body.empty { color: var(--fg-faint); font-style: italic; }
+    /* Status pill rendered next to the "Answer" section label. Two states:
+       "ok" (subtle teal) and "wrong" (warm orange) — picked from existing
+       palette so it reads as editorial flagging, not red-alarm. */
+    .section-label .status {
+      display: inline-block;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: none;
+      padding: 1px 7px;
+      border-radius: 999px;
+      margin-left: 6px;
+      vertical-align: 1px;
+    }
+    .section-label .status.ok    { background: rgba(92,138,149,0.14); color: var(--teal); }
+    .section-label .status.wrong { background: rgba(193,133,73,0.18); color: var(--warn); }
+    .answer-note {
+      font-family: var(--font-sans); font-size: 12.5px; line-height: 1.55;
+      color: var(--fg-mute); margin-top: 0.55rem;
+      padding: 0.55rem 0.75rem; border-radius: 6px;
+      background: var(--surface-muted); border-left: 2px solid var(--warn);
+    }
+    .answer-note.paraphrase {
+      border-left-color: var(--teal);
+      color: var(--fg-mute);
+    }
+    .answer-note strong { color: var(--fg); font-weight: 500; }
     /* Section-label ratio annotation (e.g. "29× the multi-persona side").
        Only emitted when the thinking trace is materially longer than the
        multi-persona trace on the same problem, so the per-rollout token
@@ -440,19 +556,26 @@ def render(items: list[dict], meta: dict) -> str:
             panel = it.get("panel", {})
             think = it.get("thinking", {})
             panel_reasoning = panel.get("reasoning", "")
-            panel_answer = panel.get("answer", "") or ""
+            panel_answer_raw = panel.get("answer", "") or ""
             think_reasoning = think.get("reasoning", "")
-            # For the thinking arm, the reader-facing answer is whatever sits
-            # inside the last \boxed{...} in the model's full trace. The full
-            # narrative answer remains visible in the reasoning body above.
-            # Fall back to a placeholder when the model emits no boxed value
-            # (qualitative problems where there is no closed-form answer).
             think_raw = think.get("raw", "") or ""
+
+            # Multi-persona answer: render as plaintext (LaTeX → readable form
+            # for any embedded expressions like \(\sqrt{2}\)).
+            panel_answer = latex_to_plain(panel_answer_raw)
+
+            # Thinking answer: extract the last \boxed{...} and present its
+            # contents as plaintext. No KaTeX box wrapping. Write-ins are used
+            # for the qualitative problems where the model didn't box anything.
+            verdict = CORRECTNESS.get(it["id"], {})
             boxed = extract_last_boxed(think_raw)
+            think_writein = verdict.get("think_writein")
+            think_is_writein = False
             if boxed is not None and boxed.strip():
-                # Wrap in display math so KaTeX typesets it the same way the
-                # model intended (numeric or LaTeX expressions both render).
-                think_answer = f"$$\\boxed{{{boxed.strip()}}}$$"
+                think_answer = latex_to_plain(boxed.strip())
+            elif think_writein:
+                think_answer = think_writein
+                think_is_writein = True
             else:
                 think_answer = ""
 
@@ -471,11 +594,33 @@ def render(items: list[dict], meta: dict) -> str:
                 # server side so the page is well-formed before JS runs.
                 return f'<div class="{kind}-body markdown-body" data-md="1">{html.escape(text)}</div>'
 
-            panel_answer_block = md_block(
-                panel_answer, "answer", "(no &lt;answer&gt; tag emitted)"
+            def plain_answer_block(text: str, empty_msg: str) -> str:
+                if not text.strip():
+                    return f'<div class="answer-body plaintext empty">{empty_msg}</div>'
+                return f'<div class="answer-body plaintext">{html.escape(text)}</div>'
+
+            def status_pill(state: str) -> str:
+                if state == "ok":
+                    return '<span class="status ok">✓ matches expected</span>'
+                if state == "wrong":
+                    return '<span class="status wrong">✗ does not match expected</span>'
+                return ""
+
+            def note_block(note: str | None, kind: str) -> str:
+                if not note:
+                    return ""
+                cls = "answer-note paraphrase" if kind == "paraphrase" else "answer-note"
+                prefix = (
+                    "Paraphrase from the reasoning trace — model did not emit a \\boxed{}. "
+                    if kind == "paraphrase" else ""
+                )
+                return f'<div class="{cls}"><strong>{prefix}</strong>{html.escape(note)}</div>'
+
+            panel_answer_block = plain_answer_block(
+                panel_answer, "(no &lt;answer&gt; tag emitted)"
             )
-            think_answer_block = md_block(
-                think_answer, "answer", "(no \\boxed{} in trace — see reasoning above)"
+            think_answer_block = plain_answer_block(
+                think_answer, "(no \\boxed{} in trace — see reasoning above)"
             )
             panel_reasoning_block = md_block(
                 panel_reasoning, "reasoning", "(no &lt;mutipersonaDebate&gt; body)"
@@ -483,6 +628,17 @@ def render(items: list[dict], meta: dict) -> str:
             think_reasoning_block = md_block(
                 think_reasoning, "reasoning", "(no &lt;think&gt; body)"
             )
+
+            # Status + notes from the hand-curated correctness map.
+            panel_status = status_pill(verdict.get("mp", ""))
+            think_status = status_pill(verdict.get("think", ""))
+
+            panel_note = note_block(verdict.get("mp_note"), "wrong")
+            if think_is_writein:
+                think_note = note_block(think_answer, "paraphrase")
+                think_note = '<div class="answer-note paraphrase"><strong>Paraphrased from the reasoning trace — model did not emit a \\boxed{}.</strong></div>'
+            else:
+                think_note = note_block(verdict.get("think_note"), "wrong")
 
             # When thinking's reasoning is materially longer than the
             # multi-persona reasoning on the same problem, surface the ratio
@@ -508,16 +664,18 @@ def render(items: list[dict], meta: dict) -> str:
               <div class="arm-name">{html.escape(panel_label)}</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· {panel_chars:,} chars</span></div>
               {panel_reasoning_block}
-              <div class="section-label">Answer</div>
+              <div class="section-label">Answer{panel_status}</div>
               {panel_answer_block}
+              {panel_note}
             </div>
             <div class="answer-card thinking">
               <div class="arm-label">arm <span class="pill">thinking</span></div>
               <div class="arm-name">{html.escape(thinking_label)}</div>
               <div class="section-label">Reasoning <span style="color:var(--fg-faint);font-weight:400;">· {think_chars:,} chars</span>{ratio_pill}</div>
               {think_reasoning_block}
-              <div class="section-label">Answer</div>
+              <div class="section-label">Answer{think_status}</div>
               {think_answer_block}
+              {think_note}
             </div>
           </div>
         </div>
