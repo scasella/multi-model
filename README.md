@@ -2,6 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Backbone: Qwen3-30B-A3B](https://img.shields.io/badge/backbone-Qwen3--30B--A3B-ff6b6b.svg)](https://huggingface.co/Qwen/Qwen3-30B-A3B-Base)
+[![Model on HF](https://img.shields.io/badge/%F0%9F%A4%97%20Model-multipersona--debate--lora-FFD21E.svg)](https://huggingface.co/scasella91/qwen3-30b-a3b-multipersona-debate-lora)
 [![RL: Tinker](https://img.shields.io/badge/RL-Tinker-blueviolet.svg)](https://tinker-console.thinkingmachines.ai/)
 
 A LoRA rank-32 fine-tune of `Qwen/Qwen3-30B-A3B-Base` that replaces the usual
