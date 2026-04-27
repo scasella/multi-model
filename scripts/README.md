@@ -25,6 +25,12 @@ RL drivers built on `tinker_cookbook`. Panel = `<mutipersonaDebate>` scaffold, t
 | `rl_panel_olympiad.py` / `.sh` | **Olympiad hill-climbing exp, panel arm.** RL continuation on the joint-variance-band olympiad pool. |
 | `rl_thinking_olympiad.py` / `.sh` | **Olympiad hill-climbing exp, thinking arm.** Same pool + hyperparams; Qwen3-30B-A3B native thinking template. |
 
+### Interactive
+
+| Script | What it does |
+|---|---|
+| `chat_panel.py` | **REPL against a panel checkpoint.** Type a problem, get back the `<mutipersonaDebate>` body and the extracted `<answer>`. Defaults to the published panel-MATH checkpoint (eval session 44722365); override via `PANEL_MATH_CHECKPOINT_SAMPLER` or `--checkpoint-path`. Also supports one-shot mode via `--problem "..."`. |
+
 ### RLVR hill-climbing experiment (run order)
 
 Tests the hypothesis that the panel scaffold's wider per-sample diversity
