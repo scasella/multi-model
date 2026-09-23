@@ -27,16 +27,14 @@ efficiency reverses the comparison once compute is in the denominator.
 (Wilcoxon signed-rank: *p* = 6×10⁻⁵² on MATH, *p* = 8×10⁻¹³ on AIME. Run
 `python scripts/analyze_token_efficiency.py` to reproduce.)
 
-**Follow-up — Apr 25.** The diversity shows up where it matters for RL. On a
-fresh 877-problem olympiad-math pool the panel has **1.83× more variance-band
-problems** than Qwen3-thinking (382 vs 209) — the only regime where
-group-relative RLVR generates non-zero gradient. 100 RL steps on that band
-carry the panel from **14% → 29%** on a shared held-out, with per-source
-gains scaling with training-pool representation.
+**Follow-up — Apr 25.** On a fresh 877-problem olympiad-math pool the panel has
+more mixed-outcome ("variance-band") problems than Qwen3-thinking (382 vs 209), but
+280 of the panel's are problems thinking already solves 8/8, so this locates each
+model's learning frontier rather than showing wider exploration. One exploratory
+100-step RL run on the panel's band took it from **14% → 29%** on a shared held-out
+(single run; the matching thinking arm was not completed).
 
-The full pipeline is a LoRA rank-32 adapter on the frozen base. The
-post-training compute is roughly four to five orders of magnitude under
-Qwen's investment in the thinking baseline.
+The full pipeline is a LoRA rank-32 adapter on the frozen base.
 
 **Adapter on Hugging Face:** [`scasella91/qwen3-30b-a3b-multipersona-debate-lora`](https://huggingface.co/scasella91/qwen3-30b-a3b-multipersona-debate-lora)
 
@@ -64,7 +62,8 @@ uv venv .venv && source .venv/bin/activate
 uv pip install -e .   # or install tinker_cookbook deps directly
 cp .env.example .env  # fill in TINKER_API_KEY + HF_TOKEN
 
-# 2. stage 1: GSM8K warmup (80 RL steps, ~2 h on Tinker)
+# 2. stage 1: GSM8K warmup (80 RL steps by default, ~2 h on Tinker;
+#    the published adapter's run was resumed to 128 steps — see logs/)
 bash scripts/rl_multipersona_gsm8k.sh
 
 # Export the resulting checkpoint URI (printed by the run) before stage 2:
@@ -119,10 +118,9 @@ data actually supports:
    (median, both-correct subset; n = 374 paired draws). At the cost-per-correct
    level, thinking is 2.5–5× more expensive. This is the deployment-cost
    reading of the same diversity mechanism.**
-4. On a 877-problem olympiad pool, that same spread yields 1.83× more
-   variance-band problems than thinking — and 100 LoRA RL steps on those
-   problems lift the panel's shared held-out from 14% to 29%.
-5. The compute behind all of this is ~10⁴–10⁵× under Qwen's post-training stack.
+4. On an 877-problem olympiad pool the panel has more variance-band problems than
+   thinking (382 vs 209), mostly problems thinking already solves every time; one
+   exploratory 100-step LoRA RL run lifts the panel's shared held-out from 14% to 29%.
 
 See the blog post for the full caveat set: embedding-based diversity metric,
 small AIME slice, no token-budget-matched baseline (the cost-per-correct
@@ -197,3 +195,5 @@ serving in vLLM/SGLang.
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
+
+> **Revised 2026-09-23.** The write-ups at [casella.dev/blog_multipersona.html](https://casella.dev/blog_multipersona.html) and [blog_multipersona_rl.html](https://casella.dev/blog_multipersona_rl.html) were corrected: the embedding-dispersion window check was ineffective (all-mpnet-base-v2 truncates at 384 word pieces, so the 2,000- and 8,000-character runs are identical), the per-character ratio used token counts, and mechanism readings of pass@k convergence and band counts were withdrawn. Numbered findings above that describe a "diversity mechanism" should be read in that light.
