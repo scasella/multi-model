@@ -1,5 +1,13 @@
 # Panel-only RLVR on the olympiad variance band
 
+> **Correction (2026-09-23).** The run logs show this run started from the
+> GSM8K-stage adapter (Tinker session `e1a9b8bf-…`), not the panel-MATH LoRA
+> named below. The reading of the result as evidence that a "wider variance
+> band" drives hill-climbing is withdrawn: the band counts reflect where the pool
+> sits relative to each model's ability, and there is no thinking-arm curve to
+> compare against. Revised write-up:
+> [casella.dev/blog_multipersona_rl.html](https://casella.dev/blog_multipersona_rl.html).
+
 100 RL steps, LoRA rank 32, on `Qwen/Qwen3-30B-A3B-Base + panel-MATH LoRA`,
 training on the panel-arm variance band of an 877-problem olympiad-math
 union pool, scored on a stratified 100-problem held-out eval shared

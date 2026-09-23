@@ -14,7 +14,7 @@ so the blog figures and tables can be regenerated without rerunning a full eval.
 | `eval_gsm8k/` | `scripts/eval_gsm8k.py` | GSM8K sanity checks |
 | `diversity_analysis/` | `scripts/analyze_diversity.py` | MATH-500 diversity: summary + per-problem |
 | `diversity_analysis_aime/` | `scripts/analyze_diversity.py` (AIME inputs) | AIME diversity |
-| `diversity_analysis_longhead/` | `scripts/analyze_diversity.py` | Sensitivity pass at a longer trace-head cutoff |
+| `diversity_analysis_longhead/` | `scripts/analyze_diversity.py` | Longer trace-head cutoff (8,000 chars). Not an effective sensitivity check: the embedder truncates at ~384 word pieces, so results match the 2,000-char run |
 | `pass_at_k_crossover/` | `scripts/pass_at_k_crossover.py` | MATH-500 L5 pass@k curves + deltas |
 | `pass_at_k_aime/` | `scripts/pass_at_k_aime.py` | AIME pass@k + gap-closure |
 | `hard_problem_analysis/` | `scripts/analyze_hard_problems.py` | Per-problem overlap: panel-only / think-only / both / neither |
@@ -28,13 +28,13 @@ regenerate any number you see in the writeup:
 
 | section in blog | artifact |
 |---|---|
-| Headline diversity (`+78.2%`/`+75.6%`) | `diversity_analysis/summary.json`, `diversity_analysis_aime/summary.json` |
-| Pass@k closure on AIME — Figure 1 | `pass_at_k_aime/` |
-| Pass@k closure on MATH500 L5 | `pass_at_k_crossover/` |
+| Between-trace embedding dispersion (`+78%`/`+76%`) | `diversity_analysis/summary.json`, `diversity_analysis_aime/summary.json` |
+| Pass@k on AIME — Figure 1 | `pass_at_k_aime/` |
+| Pass@k on MATH500 L5 | `pass_at_k_crossover/` |
 | Variance-band sizes (panel 382 / thinking 209) | `variance_band/panel_g8/summary.json`, `variance_band/thinking_g8/summary.json` |
 | Joint-band contingency table | `../data/olympiad_pool/split_summary.json` |
 | Hill-climbing curve — Figure 2 + per-source gains | `olympiad_panel_only/summary.json` (+ sibling `heldout_trajectory.jsonl`, `train_per_batch.jsonl`, `diversity_proxy.jsonl`) |
-| Vanilla Qwen3-thinking baseline (~60% pass@1) | `eval_aime_vibecheck/aime_thinking_n16/summary.json`, `eval_math500_vibecheck/thinking_l5_full/summary.json` |
+| Qwen3-thinking baseline (AIME 73.1%, MATH500 L5 90.9% pass@1) | `eval_aime_vibecheck/aime_thinking_n16/summary.json`, `eval_math500_vibecheck/thinking_l5_full/summary.json` |
 | Per-problem solve overlap (panel-only vs think-only) | `hard_problem_analysis/summary.json` |
 
 ## A note on `tinker://` URIs in these files

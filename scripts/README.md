@@ -33,9 +33,10 @@ RL drivers built on `tinker_cookbook`. Panel = `<mutipersonaDebate>` scaffold, t
 
 ### RLVR hill-climbing experiment (run order)
 
-Tests the hypothesis that the panel scaffold's wider per-sample diversity
-translates to faster / more efficient RLVR hill-climbing against Qwen3-thinking
-on non-saturated olympiad math.
+Designed to test whether the panel scaffold hill-climbs faster under RLVR than
+Qwen3-thinking on non-saturated olympiad math. Only the panel arm was run to
+completion, so the comparison is open; see
+[casella.dev/blog_multipersona_rl.html](https://casella.dev/blog_multipersona_rl.html).
 
 **Design note.** On Qwen3-30B-A3B the two arms' variance bands are largely
 disjoint — panel concentrates in OlympiadBench/AMC where thinking is
@@ -85,11 +86,11 @@ All evals emit `rollouts.jsonl` (per-sample) + `summary.json` (aggregated) under
 
 | Script | What it computes |
 |---|---|
-| `analyze_diversity.py` | Mean pairwise cosine distance across n samples per problem — our primary diversity metric. |
+| `analyze_diversity.py` | Mean pairwise cosine distance across n samples per problem (all-mpnet-base-v2, which reads only the first ~384 word pieces of each trace; persona names included). |
 | `analyze_hard_problems.py` | Per-problem breakdown: which problems does panel solve that thinking doesn't, and vice versa. |
-| `analyze_token_efficiency.py` | **Headline finding #2.** Joins panel + thinking rollouts on (problem, sample-index), reports per-bucket token-cost stats + Wilcoxon signed-rank on the both-correct subset. Output: `reports/token_efficiency/summary.json`. |
+| `analyze_token_efficiency.py` | Joins panel + thinking rollouts on (problem, sample-index), reports per-bucket token-cost stats + Wilcoxon signed-rank on the both-correct subset. Output: `reports/token_efficiency/summary.json`. |
 | `pass_at_k_crossover.py` | Unbiased pass@k curves for panel vs thinking on MATH-500 L5. |
-| `pass_at_k_aime.py` | Same for AIME — tests whether the diversity benefit transfers off-saturated benchmarks. |
+| `pass_at_k_aime.py` | Same for AIME 24 + 25 (k up to 16). |
 
 ## Case-study gallery (`*_case_study_*`, `resample_*`)
 

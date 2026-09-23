@@ -2,8 +2,10 @@
 
 This recipe produces a LoRA adapter on `Qwen/Qwen3-30B-A3B-Base` that emits a
 panel-of-experts debate (`<mutipersonaDebate>…</mutipersonaDebate>`) in place
-of a `<think>` monologue before answering. The headline finding is
-**wider search per sample** — see `reports/blog_post/blog_multipersona.html`.
+of a `<think>` monologue before answering. Results and caveats are in the
+write-up at [casella.dev/blog_multipersona.html](https://casella.dev/blog_multipersona.html)
+(revised 2026-09-23; the copy in `reports/blog_post/` is the original April
+version, whose "wider search" reading has been withdrawn).
 
 For the full pre-pivot history (Qwen3-8B-Base with `<debate>/<proposer>/<skeptic>/<arbiter>`),
 see `archive/RECIPE_pre_pivot.md`.
@@ -51,7 +53,7 @@ All scripts are run from the repo root.
 | `envs/think_math.py` | MATH → `<think>` baseline, matched prompt/grader |
 | `envs/think_gsm8k.py` | GSM8K → `<think>` baseline |
 
-Panel envs inject a system prompt that describes the three-persona format and
+Panel envs inject a system prompt that describes the panel-of-experts format and
 reward only when `\boxed{…}` inside `<answer>…</answer>` matches.
 
 ## 3. Training
@@ -59,7 +61,9 @@ reward only when `\boxed{…}` inside `<answer>…</answer>` matches.
 Two stages, run in order:
 
 ```bash
-# Stage 1: GSM8K warmup, 80 steps (the scaffold learns its tag structure here)
+# Stage 1: GSM8K warmup, 80 steps by default (the scaffold learns its tag structure here).
+# The published adapter's run was resumed to 128 steps (the 2,048-problem train set
+# at 16 problems per step); change max_steps=80 to 128 in the launcher to match it.
 bash scripts/rl_multipersona_gsm8k.sh
 
 # Export the resulting weights/final URI before stage 2:
@@ -73,7 +77,9 @@ Both are LoRA rank-32 fine-tunes on a single node via Tinker. The
 `rl_multipersona_math.sh` launcher refuses to start if `PANEL_GSM8K_CHECKPOINT`
 isn't set — that's intentional, since it can't init from anywhere else.
 
-`<think>` baseline matched to the panel run (used in pass@k comparisons):
+`<think>` baseline launcher with the same recipe (a matched-format control; not
+completed, and not used in any reported comparison, which all use
+`Qwen/Qwen3-30B-A3B` with `enable_thinking=True`):
 
 ```bash
 bash scripts/rl_think_math.sh
@@ -128,6 +134,13 @@ produces gradient signal. If true, the panel should hill-climb faster
 than Qwen3-30B-A3B native thinking under matched hyperparameters on an
 off-saturated benchmark.
 
+**Outcome (2026-09-23).** This was the design hypothesis; it was not tested.
+The band counts (panel 382, thinking 209) reflect where the pool sits relative
+to each model's ability — 280 of the panel's band problems are ones thinking
+solves 8/8 — not wider search. Only the panel arm was run (from the
+GSM8K-stage adapter, per the run logs); the thinking arm was stopped early.
+See [casella.dev/blog_multipersona_rl.html](https://casella.dev/blog_multipersona_rl.html).
+
 **Design.** Assemble an olympiad-math union pool (HMMT + AIME + OlympiadBench
 + AMC), classify every problem per-model via G=8 sampling, and train each
 arm on its **own variance band** (not the joint intersection). Both arms
@@ -166,8 +179,9 @@ bash scripts/rl_thinking_olympiad.sh    # trains on thinking_train.jsonl
 **What to look at after training.**
 
 1. **Variance-band size per arm** (step 0 reading) — is
-   `panel_vb_size > thinking_vb_size` on the full pool? This is a
-   direct first-order test of the hypothesis.
+   `panel_vb_size > thinking_vb_size` on the full pool? Band size depends
+   on how many problems sit near each model's ability, so on its own this
+   does not test the hypothesis.
 2. **Variance-band trajectory** — at each checkpoint, rerun the filter
    on that arm's training pool and plot the fraction still in the
    variance band vs step. Panel's should stay wider longer.
