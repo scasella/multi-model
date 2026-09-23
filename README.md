@@ -155,9 +155,9 @@ Run `python scripts/analyze_token_efficiency.py` to reproduce.
 | Dispersion + pass@k evals | ~3 h | the dispersion and pass@k tables |
 | Olympiad pool build + variance-band filter (G=8, both arms, parallelizable) | ~7 h | `data/olympiad_pool/{panel,thinking}_train.jsonl` |
 | Panel olympiad RL (100 steps) | ~3 h | the 14% → 29% hill-climbing curve |
-| Thinking olympiad RL (100 steps, matched) | ~37 h | not yet run — the open follow-up |
+| Thinking olympiad RL (100 steps, matched) | ~37 h (estimate) | not yet run — the open follow-up |
 
-The first five rows fit comfortably in a single afternoon of Tinker spend.
+The first five rows add up to about 21 hours of wall time as listed. The last row's ~37 h is an estimate for a run that has not happened.
 Row six is the highest-cost open item; we hit a billing wall before it
 finished and never restarted. Stage URIs are read from `.env` (see
 `.env.example`). The only Tinker session URI hard-coded as a default in
